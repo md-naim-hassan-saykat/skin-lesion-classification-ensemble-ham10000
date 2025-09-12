@@ -7,24 +7,28 @@ This repository contains the code, results, and supporting material for the pape
 
 skin-lesion-classification-ensemble-ham10000/
 │
-├── main.tex
-├── references.bib
-├── README.md
-├── .gitignore
+├── main.tex                         # LaTeX source of the paper
+├── references.bib                   # References for ESWA submission
+├── README.md                        # Project documentation
+├── .gitignore                       # Ignore large model files
+│
 ├── notebooks/
-│   └── skin-lesion-classification-ensemble-ham10000.ipynb
+│   └── skin-lesion-classification-ensemble-ham10000.ipynb   # End-to-end pipeline
+│
 ├── results/
-│   ├── figures/
+│   ├── figures/                     # Plots and visualizations
 │   │   ├── confusion_matrix.png
 │   │   ├── roc_curves_ensemble.png
 │   │   ├── gradcam_grid.png
-│   │   └── ...
-│   ├── tables/
+│   │   └── …
+│   ├── tables/                      # LaTeX-ready tables
 │   │   ├── master_results_with_95CI.tex
-│   │   └── delta_ensemble_vs_models.tex
+│   │   ├── delta_ensemble_vs_models.tex
+│   │   └── mcnemar_ensemble_vs_models.tex
 │   └── metrics_with_95CI.csv
+│
 └── paper/
-    └── skin_lesion_classification_ensemble_ham10000.pdf
+└── skin_lesion_classification_ensemble_ham10000.pdf     # Compiled paper
 
 ---
 
