@@ -1,14 +1,9 @@
-# safer: match model.safetensors at any depth under output/
+# safer pattern (any depth)
 output/**/model.safetensors
-
-# these are already robust (any depth under output/)
 output/**/*.pt
 output/**/*.pth
 output/**/*.onnx
 
-# notebook checkpoints and misc build/cache
+# optional extra
 **/.ipynb_checkpoints/
-*.ipynb_checkpoints
 .DS_Store
-output/**/*.ckpt
-output/**/*.bin
