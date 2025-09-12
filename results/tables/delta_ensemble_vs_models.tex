@@ -1,0 +1,17 @@
+\begin{table}
+\caption{Performance deltas (Ensemble minus each individual model) on the HAM10000 test set.}
+\label{tab:delta_ensemble_vs_models}
+\begin{tabular}{lcccc}
+\toprule
+Model & Δ Accuracy & Δ F1 (weighted) & Δ AUC (macro, OvR) & Δ AUC (micro, OvR) \\
+\midrule
+CNN & +0.1603 & +0.1699 & +0.0650 & +0.0289 \\
+ConvNeXt-Tiny & +0.1644 & +0.2089 & +0.0577 & +0.0370 \\
+DenseNet-121 & +0.0303 & +0.0317 & +0.0125 & +0.0047 \\
+EfficientNet-B3 & +0.0383 & +0.0384 & +0.0133 & +0.0063 \\
+MobileNetV3 & +0.0504 & +0.0513 & +0.0113 & +0.0048 \\
+ResNet-50 & +0.2652 & +0.2338 & +0.0652 & +0.0601 \\
+ViT & -0.0171 & -0.0180 & -0.0021 & -0.0014 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,17 @@
+\begin{table}
+\caption{McNemar’s test between the Ensemble and each individual model on the HAM10000 test set.}
+\label{tab:mcnemar_ensemble_vs_models}
+\begin{tabular}{lrrrrc}
+\toprule
+Model & b (Model wrong, Ensemble right) & c (Model right, Ensemble wrong) & Disagreements (b+c) & p-value & Sig. \\
+\midrule
+CNN & 167 & 8 & 175 & 8.13e-40 & *** \\
+ConvNeXt-Tiny & 166 & 3 & 169 & 2.151e-45 & *** \\
+DenseNet-121 & 42 & 12 & 54 & 5.209e-05 & *** \\
+EfficientNet-B3 & 55 & 17 & 72 & 8.14e-06 & *** \\
+MobileNetV3 & 60 & 10 & 70 & 8.005e-10 & *** \\
+ResNet-50 & 275 & 12 & 287 & 4.342e-66 & *** \\
+ViT & 20 & 37 & 57 & 0.03314 & * \\
+\bottomrule
+\end{tabular}
+\end{table}
