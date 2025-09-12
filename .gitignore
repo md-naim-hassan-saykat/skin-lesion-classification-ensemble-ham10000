@@ -1,0 +1,4 @@
+output/*/model.safetensors
+output/**/*.pt
+output/**/*.pth
+output/**/*.onnx
