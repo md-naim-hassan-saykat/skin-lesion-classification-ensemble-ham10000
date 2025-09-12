@@ -1,16 +1,10 @@
 # Ensemble Deep Learning for Robust Skin Lesion Classification (HAM10000)
 
-<p align="center">
-  <a href="https://colab.research.google.com/github/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/skin-lesion-classification-ensemble-ham10000.ipynb">
-    <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab">
-  </a>
-</p>
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/skin-lesion-classification-ensemble-ham10000.ipynb)
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.9%2B-blue" alt="Python 3.9+">
-  <img src="https://img.shields.io/badge/PyTorch-2.x-red" alt="PyTorch 2.x">
-  <img src="https://img.shields.io/badge/License-MIT-green" alt="License: MIT">
-</p>
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/release/python-390/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 This repository contains the code, results, and paper for our study on **ensemble deep learning for robust skin lesion classification** using the [HAM10000 dataset](https://www.isic-archive.com/).
 
