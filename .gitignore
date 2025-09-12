@@ -5,3 +5,10 @@ output/**/model.safetensors
 output/**/*.pt
 output/**/*.pth
 output/**/*.onnx
+
+# notebook checkpoints and misc build/cache
+**/.ipynb_checkpoints/
+*.ipynb_checkpoints
+.DS_Store
+output/**/*.ckpt
+output/**/*.bin
