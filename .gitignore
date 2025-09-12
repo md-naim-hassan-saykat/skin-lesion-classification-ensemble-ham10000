@@ -1,4 +1,7 @@
-output/*/model.safetensors
+# safer: match model.safetensors at any depth under output/
+output/**/model.safetensors
+
+# these are already robust (any depth under output/)
 output/**/*.pt
 output/**/*.pth
 output/**/*.onnx
