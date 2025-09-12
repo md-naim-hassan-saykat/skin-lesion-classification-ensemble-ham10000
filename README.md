@@ -5,16 +5,26 @@ This repository contains the code, results, and supporting material for the pape
 
 ---
 
-## Project Structure
-├── main.tex                # LaTeX source of the manuscript
-├── references.bib          # Bibliography
-├── output/                 # Results (metrics, confusion matrices, plots)
-│   ├── calibration_ece.png
-│   ├── confusion_matrix.png
-│   ├── gradcam_grid.png
-│   ├── roc_curves_ensemble.png
-│   └── …
-└── notebooks/              # Jupyter notebooks (training, evaluation, visualization)
+skin-lesion-classification-ensemble-ham10000/
+│
+├── main.tex
+├── references.bib
+├── README.md
+├── .gitignore
+├── notebooks/
+│   └── skin-lesion-classification-ensemble-ham10000.ipynb
+├── results/
+│   ├── figures/
+│   │   ├── confusion_matrix.png
+│   │   ├── roc_curves_ensemble.png
+│   │   ├── gradcam_grid.png
+│   │   └── ...
+│   ├── tables/
+│   │   ├── master_results_with_95CI.tex
+│   │   └── delta_ensemble_vs_models.tex
+│   └── metrics_with_95CI.csv
+└── paper/
+    └── skin_lesion_classification_ensemble_ham10000.pdf
 
 ---
 
