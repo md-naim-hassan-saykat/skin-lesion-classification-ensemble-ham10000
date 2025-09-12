@@ -1,9 +1,22 @@
 # Ensemble Deep Learning for Robust Skin Lesion Classification (HAM10000)
 
-This repository contains the code, results, and supporting material for the paper:  
-**"Ensemble Deep Learning for Robust Skin Lesion Classification: A Comprehensive Study on HAM10000"** (Submitted to *Expert Systems with Applications*, 2025).
+This repository contains the code, results, and paper for our study on **ensemble deep learning for robust skin lesion classification** using the [HAM10000 dataset](https://www.isic-archive.com/).
 
 ---
+
+## Data & Weights
+
+- **Dataset**  
+  HAM10000 (ISIC Archive): https://www.isic-archive.com/
+
+- **Trained Weights**  
+  Due to GitHub's file size limits, trained model weights are hosted externally:  
+  - [Zenodo DOI (recommended for citation)](https://doi.org/xxxx)  
+  - [Hugging Face Model Hub (optional mirror)](https://huggingface.co/xxxx)
+
+---
+
+## Repository Structure
 
 skin-lesion-classification-ensemble-ham10000/
 │
@@ -32,72 +45,69 @@ skin-lesion-classification-ensemble-ham10000/
 
 ---
 
+## How to Reproduce
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
+   cd skin-lesion-classification-ensemble-ham10000
+
 ---
 
-## 📊 Dataset
-- **HAM10000 dataset** (10,015 dermoscopic images, 7 diagnostic categories):  
-  🔗 [ISIC Archive](https://www.isic-archive.com/)
+## Install dependencies:
+pip install -r requirements.txt
 
 ---
 
-## 🏗️ Models
-We evaluated **7 architectures**:
-- CNN (baseline)
-- ResNet-50
-- DenseNet-121
-- EfficientNet-B3
-- ConvNeXt-Tiny
-- MobileNetV3
-- Vision Transformer (ViT)
+## Download dataset:
+Register and download HAM10000 from the ISIC Archive.
+Place images under ./data/HAM10000/.
 
-Final predictions were aggregated via **probability-level ensembling**.
+---
+
+## Train models:
+python train.py --model resnet50 --epochs 50
+python train.py --model densenet121 --epochs 50
+# ... repeat for other backbones
+
+---
+
+## Run ensemble evaluation:
+python ensemble.py --models resnet50 densenet121 vit efficientnet_b3
+
+---
+
+## 	Reproduce tables/figures:
+Use the Jupyter notebook in ./notebooks/ to regenerate plots and LaTeX-ready tables.
 
 ---
 
 ## Results
-- ROC–AUC (macro) > **0.90** for all individual models.
-- Ensemble outperformed every single backbone (Accuracy, Weighted F1, ROC–AUC).
-- Statistical significance validated with:
-  - Bootstrap CIs  
-  - McNemar’s test  
+	•	Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
+	•	Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
+	•	Grad-CAM visualizations confirmed clinically relevant lesion focus.
 
-See figures in `output/`:
-- `confusion_matrix.png`  
-- `roc_curves_ensemble.png`  
-- `calibration_ece.png`  
-- `gradcam_grid.png`  
+## See full results in the paper:
+skin_lesion_classification_ensemble_ham10000.pdf
 
 ---
-
-## Reproduce
-Clone the repository:
-```bash
-git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-cd skin-lesion-classification-ensemble-ham10000
-
----
-
-## Weights & Checkpoints
-
-Due to GitHub’s file size limits, trained weights are not stored here.
-They will be shared via:
-	•	GitHub Release v1.0
-	•	Zenodo (recommended for citation)
-	•	Hugging Face Hub (optional, if added)
 
 ## Citation
-@article{saykat2025ensemble,
+@article{your2025eswa,
   title   = {Ensemble Deep Learning for Robust Skin Lesion Classification: A Comprehensive Study on HAM10000},
-  author  = {Saykat, Md Naim Hassan},
-  journal = {Expert Systems with Applications},
-  year    = {2025},
-  note    = {Submitted}
+  author  = {Md Naim Hassan Saykat},
+  journal = {Expert Systems With Applications},
+  year    = {2025}
 }
 
 ---
 
-## Contact
+## License
+This project is released under the MIT License.
+See the LICENSE file for details.
 
-Md Naim Hassan Saykat
-University email: md-naim-hassan.saykat@universite-paris-saclay.fr
-Personal email: mdnaimhassansaykat@gmail.com
+---
+
+## Acknowledgements
+	•	ISIC Archive for providing the HAM10000 dataset.
+	•	Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
