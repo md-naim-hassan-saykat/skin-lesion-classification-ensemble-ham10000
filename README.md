@@ -111,3 +111,11 @@ See the LICENSE file for details.
 ## Acknowledgements
 	•	ISIC Archive for providing the HAM10000 dataset.
 	•	Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
+
+ ---
+
+ ## Author
+
+Md Naim Hassan Saykat
+University email: md-naim-hassan.saykat@universite-paris-saclay.fr
+Personal email: mdnaimhassansaykat@gmail.com
