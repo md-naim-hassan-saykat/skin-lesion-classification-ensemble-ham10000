@@ -57,7 +57,8 @@ skin-lesion-classification-ensemble-ham10000/
    ```bash
    git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
    cd skin-lesion-classification-ensemble-ham10000
-
+   ```
+   
 ---
 
 ## Install dependencies:
