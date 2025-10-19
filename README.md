@@ -1,4 +1,4 @@
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019
+# Ensemble Deep Learning for Robust Skin Lesion Classification (HAM10000)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
 
@@ -6,19 +6,16 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-This repository contains the code, results, and paper for our study on **ensemble deep learning for robust skin lesion classification** using the [HAM10000 dataset](https://www.isic-archive.com/).
+This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
+“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
 
 ---
 
-## Data & Weights
-
-- **Dataset**  
-  HAM10000 (ISIC Archive): https://www.isic-archive.com/
-
-- **Trained Weights**  
-  Due to GitHub's file size limits, trained model weights are hosted externally:  
-  - [Zenodo DOI (recommended for citation)](https://doi.org/xxxx)  
-  - [Hugging Face Model Hub (optional mirror)](https://huggingface.co/xxxx)
+## Data & Pretrained Weights
+	•	Dataset:
+HAM10000 (ISIC Archive)
+	•	Trained Weights:
+Download from Zenodo (DOI: 10.5281/zenodo.17390952)
 
 ---
 
