@@ -37,7 +37,6 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
   - Evaluation metrics (Accuracy, ROC-AUC, etc.)  
   - Grad-CAM visualizations  
   - LaTeX tables and figures  
-  - PDF of the full paper  
   [Zenodo DOI](https://doi.org/10.5281/zenodo.17390952)
 
 ---
@@ -122,12 +121,13 @@ Use the Jupyter notebook in ./notebooks/ to regenerate plots and LaTeX-ready tab
 ---
 
 ## Results
-
 - Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
 - Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
 - Grad-CAM visualizations confirmed clinically relevant lesion focus.
 
-See full results and analysis in [`skin_lesion_classification_ensemble_ham10000.pdf`](paper/skin_lesion_classification_ensemble_ham10000.pdf).
+
+![Skin Lesion Classification Overview](results/figures/gradcam_grid.png)
+*Grad-CAM visualizations of ensemble models highlighting diagnostic regions for skin lesions.*
 
 ---
 
