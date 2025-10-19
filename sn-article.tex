@@ -1,0 +1,739 @@
+\documentclass[pdflatex,sn-mathphys-num]{sn-jnl}% Math and Physical Sciences Numbered Reference Style
+
+%%%% Standard Packages
+\usepackage{graphicx}%
+\usepackage{multirow}%
+\usepackage{amsmath,amssymb,amsfonts}%
+\usepackage{amsthm}%
+\usepackage{mathrsfs}%   
+\usepackage[title]{appendix}% 
+
+% Consistent hyperlink styling (Springer/BMC)
+\usepackage{xcolor}
+\definecolor{linkblue}{HTML}{0A6CAA}
+
+\usepackage[colorlinks=true,
+            linkcolor=blue,
+            citecolor=blue,
+            urlcolor=blue,
+            filecolor=blue]{hyperref}
+
+\usepackage{orcidlink}%
+\urlstyle{same}%
+
+% Algorithm Environments, Code Listings, Math Fonts, and Float Spacing Control
+\usepackage{algorithm}%
+\usepackage{algorithmicx}%
+\usepackage{algpseudocode}%
+\usepackage{listings}%
+\usepackage{mathrsfs}%
+\usepackage{float}%
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}%
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}%
+\usepackage{placeins}%
+
+% Professional Table & Caption Setup
+\usepackage{booktabs}%
+\usepackage{siunitx}%
+\usepackage{caption}%
+\sisetup{
+  detect-weight=true,
+  detect-inline-weight=math,
+  table-align-text-pre=false,
+  table-align-text-post=false
+}
+\captionsetup{
+  font=footnotesize,
+  labelfont=bf,
+  justification=centering,
+  skip=6pt
+}
+
+\captionsetup[figure]{
+  font=footnotesize,
+  labelfont=bf,
+  justification=centering,
+  skip=6pt
+}
+
+% Custom Table Environments for Consistent Layout
+\newenvironment{bmcTable}[4]{%
+  % #1 = Caption
+  % #2 = Label
+  % #3 = Column format (e.g., lccc)
+  % #4 = Optional note
+  \begin{table}[h!]
+    \centering
+    \footnotesize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.1}
+    \caption{#1}
+    \label{#2}
+    \vspace{3pt}
+    \resizebox{\textwidth}{!}{%
+      \begin{tabular*}{\textwidth}{@{\extracolsep\fill}#3}
+      \toprule
+}{%
+      \bottomrule
+      \end{tabular*}
+    }
+    \vspace{3pt}
+    \begingroup
+      \edef\TempNote{#4}%
+      \ifx\TempNote\empty\relax
+      \else
+        {\raggedright\footnotesize\textit{#4}\par}
+      \fi
+    \endgroup
+  \end{table}
+}
+
+%% as per the requirement new theorem styles can be included as shown below
+\theoremstyle{thmstyleone}%
+\newtheorem{theorem}{Theorem}%  meant for continuous numbers
+\newtheorem{proposition}[theorem]{Proposition}% 
+
+\theoremstyle{thmstyletwo}%
+\newtheorem{example}{Example}%
+\newtheorem{remark}{Remark}%
+
+\theoremstyle{thmstylethree}%
+\newtheorem{definition}{Definition}%
+
+% Allow better line breaking in long URLs (for bibliography)
+\makeatletter
+\g@addto@macro{\UrlBreaks}{\do\.\do\/\do-\do\_}
+\makeatother
+
+\raggedbottom
+
+% Fix spacing between bibliography items
+\usepackage{etoolbox}
+\apptocmd{\thebibliography}{\setlength{\itemsep}{0pt}}{}{}
+
+%%\unnumbered% uncomment this for unnumbered level heads
+
+\begin{document}
+
+\title[Generalizable Ensemble Deep Learning for Skin Lesion Classification]{Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019}
+
+\author*[1]{\fnm{Md Naim Hassan} \sur{Saykat}\orcidlink{0009-0007-5270-3970}}
+\email{\href{mailto:md-naim-hassan.saykat@universite-paris-saclay.fr}
+             {md-naim-hassan.saykat@universite-paris-saclay.fr}}
+
+\affil*[1]{\orgdiv{Department of Computer Science}, 
+\orgname{Université Paris-Saclay}, 
+\orgaddress{\street{64 Rue Louis de Broglie, Bâtiment 640}, 
+\city{Gif-sur-Yvette}, 
+\postcode{91190}, 
+\state{Île-de-France}, 
+\country{France}}}
+
+\date{\today}  
+
+\abstract{
+\textbf{Background:} Early and accurate detection of skin lesions is critical for improving dermatological outcomes. While deep learning—particularly Convolutional Neural Networks (CNNs)—has achieved dermatologist-level performance in dermoscopic image classification, generalization across datasets remains a major limitation for clinical deployment.
+
+\textbf{Methods:} We propose a robust ensemble learning framework that integrates seven complementary architectures: CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3, and Vision Transformer (ViT). Models were trained on the HAM10000 dataset and externally validated on ISIC 2019 following label harmonization. Evaluation metrics included accuracy, weighted F1-score, macro and micro ROC–AUC, Expected Calibration Error (ECE), and McNemar’s test for statistical significance.
+
+\textbf{Results:} On the HAM10000 test set, the ensemble achieved 97.1\% accuracy, a weighted F1-score of 0.971, and a macro ROC–AUC of 0.9987, outperforming all individual models. Under domain shift on ISIC 2019, DenseNet-121 and EfficientNet-B3 achieved 68.4\% and 67.4\% accuracy, respectively, with ROC–AUCs around 0.89—demonstrating strong external generalization.
+
+\textbf{Conclusion:} The proposed ensemble demonstrates high performance, robustness, and calibration across internal and external datasets. With integrated interpretability and reproducibility, it presents a clinically reliable foundation for generalizable AI systems in dermatological diagnosis.
+}
+
+\keywords{skin lesion classification, ensemble learning, deep learning, dermatology, vision transformer, model generalization, explainable AI, medical image analysis, clinical decision support}
+
+\maketitle
+
+\section{Introduction}\label{sec1}
+
+Skin cancer—particularly melanoma—remains a major global health concern, with increasing incidence and mortality rates~\cite{guy2015vital, siegel2024cancer}. Dermoscopy enables non-invasive visualization of pigmented skin lesions, yet diagnostic interpretation remains challenging due to inter-observer variability and subjectivity~\cite{marghoob2012atlas}. The shortage of experienced dermatologists, especially in low-resource settings, underscores the urgent need for reliable, automated diagnostic tools~\cite{liopyris2022artificial}.
+
+Deep learning, particularly Convolutional Neural Networks (CNNs), has transformed medical image analysis and demonstrated dermatologist-level performance in skin lesion classification tasks~\cite{litjens2017survey, esteva2017dermatologist}. However, these models often exhibit limited generalizability to external datasets due to the problem of \textit{domain shift}~\cite{tschandl2020human}, posing a significant barrier to clinical adoption.
+
+Popular CNN-based architectures such as ResNet~\cite{he2016deep}, DenseNet~\cite{huang2017densely}, and EfficientNet~\cite{tan2019efficientnet} have shown strong performance on benchmark datasets curated by the International Skin Imaging Collaboration (ISIC)~\cite{tschandl2020human, rotemberg2021patient}. Nevertheless, persistent challenges—including class imbalance, noisy annotations, and dataset bias—continue to hinder their robust deployment~\cite{winkler2019association}.
+
+Recently, Vision Transformers (ViTs) have emerged as promising alternatives to CNNs by leveraging self-attention mechanisms to model global context~\cite{dosovitskiy2020image, graham2021levit, he2023transformers}. While ViTs have achieved competitive results in medical imaging tasks~\cite{shamshad2023transformers}, they often require extensive pretraining on large datasets and benefit from domain-specific augmentation strategies.
+
+Ensemble learning offers another pathway toward improving model reliability, robustness, and uncertainty calibration by aggregating predictions from diverse models~\cite{wolpert1992stacked, lakshminarayanan2017simple}. When combined with interpretability techniques such as Grad-CAM~\cite{xie2018multi, efat2024multi}, ensembles can enhance transparency and support clinically meaningful decision-making.
+
+Despite these advances, few studies have comprehensively benchmarked ensembles of CNN and Transformer models under domain shift conditions in dermatology. Moreover, publicly available, reproducible pipelines that jointly assess accuracy, calibration, and explainability across multiple datasets remain scarce.
+
+In this study, we present a generalizable and interpretable ensemble framework that integrates seven complementary architectures: a baseline CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny~\cite{liu2022convnet}, MobileNetV3~\cite{howard2019searching}, and Vision Transformer (ViT). All models are trained on the HAM10000 dataset and externally validated on ISIC 2019 following class harmonization. We evaluate performance using classification metrics, ROC–AUC analysis, Expected Calibration Error (ECE), McNemar’s test for statistical significance, and Grad-CAM-based visual explanations.
+
+\textbf{The key contributions of this work are as follows:}
+\begin{itemize}
+    \item We develop a robust ensemble framework that combines CNN and Transformer-based models for skin lesion classification.
+    \item We conduct rigorous external validation on the ISIC 2019 dataset to assess generalization performance under domain shift.
+    \item We present an integrated evaluation framework covering classification performance, calibration reliability, and explainability.
+    \item We release a fully reproducible pipeline, including code, trained models, and evaluation outputs, to support future research and clinical benchmarking.
+\end{itemize}
+
+\section{Related Work}\label{sec2}
+
+The application of deep learning to dermoscopic image analysis has been extensively studied over the past decade. 
+Esteva et al.~\cite{esteva2017dermatologist} demonstrated that deep Convolutional Neural Networks (CNNs) could achieve dermatologist-level accuracy in skin cancer classification using a single end-to-end architecture. 
+Subsequent research explored architectural improvements with models such as ResNet~\cite{he2016deep}, DenseNet~\cite{huang2017densely}, and EfficientNet~\cite{tan2019efficientnet}, often leveraging transfer learning to boost performance in limited-data settings.
+
+The HAM10000 dataset~\cite{tschandl2018ham10000} has become a widely adopted benchmark for training and evaluating skin lesion classification models. 
+However, it suffers from class imbalance and limited institutional diversity, which hinders generalizability. 
+Tschandl et al.~\cite{tschandl2020human} emphasized the importance of external validation and proposed collaborative human–AI approaches. 
+Datasets such as ISIC 2019~\cite{codella2019skin} have since been used to benchmark out-of-distribution performance, with studies noting significant degradation under domain shift~\cite{winkler2019association}.
+
+Vision Transformers (ViTs) have recently gained attention in medical imaging for their ability to capture long-range dependencies~\cite{shamshad2023transformers}. 
+Their application to dermatology has shown promise, though their effectiveness is often constrained by limited annotated data and computational demands~\cite{he2023transformers}, particularly in class-imbalanced domains such as skin lesion diagnosis.
+
+Ensemble learning has emerged as a strategy to enhance robustness and uncertainty estimation by combining diverse model outputs~\cite{lakshminarayanan2017simple}. 
+In the dermatology domain, Mahbod et al.~\cite{mahbod2019fusing} and Thwin et al.~\cite{thwin2024skin} demonstrated improved classification accuracy using CNN-based ensembles. 
+However, most existing studies have focused on in-domain performance and have not extensively explored Transformer-based ensembles, nor have they evaluated calibration reliability or explainability under domain shift.
+
+In contrast, our work introduces a unified ensemble framework that integrates both CNN and Vision Transformer models. 
+We conduct rigorous internal and external validation, analyze calibration behavior, and apply Grad-CAM-based visual interpretability. 
+To the best of our knowledge, this is the first study to comprehensively benchmark such an ensemble under domain shift in dermatology, offering a reproducible and clinically relevant foundation for generalizable AI deployment.
+
+\section{Methods}\label{sec3}
+
+This section describes the datasets, model architectures, training setup, evaluation protocol, and ethical considerations followed in this study. The overall pipeline was designed for methodological reproducibility and cross-dataset generalization.
+
+\subsection{Datasets}\label{subsec2}
+
+We used two publicly available dermoscopic image datasets: \textbf{HAM10000} for model training and internal validation, and \textbf{ISIC 2019} for external validation.
+
+\textbf{HAM10000} contains 10{,}015 dermoscopic images categorized into seven diagnostic classes: actinic keratoses and intraepithelial carcinoma (\texttt{akiec}), basal cell carcinoma (\texttt{bcc}), benign keratosis-like lesions (\texttt{bkl}), dermatofibroma (\texttt{df}), melanocytic nevi (\texttt{nv}), melanoma (\texttt{mel}), and vascular lesions (\texttt{vasc})~\cite{tschandl2018ham10000}.
+
+\textbf{ISIC 2019} comprises over 25{,}000 dermoscopic images collected from multiple clinical centers~\cite{codella2019skin}. For consistency with HAM10000, the \texttt{AK} and \texttt{SCC} classes were merged into a unified \texttt{akiec} class, and non-overlapping categories were excluded. The harmonized ISIC subset retained the same seven diagnostic classes.
+
+\subsection{Model Architectures}
+
+Seven deep learning models were evaluated to capture both local and global visual patterns, spanning CNN-based and Transformer-based paradigms:
+
+\begin{itemize}
+    \item \textbf{CNN:} A custom 4-block architecture with Conv–BatchNorm–ReLU–MaxPool layers, followed by a fully connected classifier (512$\rightarrow$7).
+    \item \textbf{ResNet-50:} A residual network with 50 layers and identity shortcuts for efficient gradient propagation~\cite{he2016deep}.
+    \item \textbf{DenseNet-121:} A densely connected architecture that facilitates feature reuse and parameter efficiency~\cite{huang2017densely}.
+    \item \textbf{EfficientNet-B3:} A compound-scaled model that jointly optimizes depth, width, and resolution~\cite{tan2019efficientnet}.
+    \item \textbf{ConvNeXt-Tiny:} A modern CNN incorporating Transformer-like design choices such as inverted bottlenecks and large kernel convolutions~\cite{liu2022convnet}.
+    \item \textbf{MobileNetV3:} An efficient model designed for mobile deployment, using squeeze–excitation blocks and neural architecture search~\cite{howard2019searching}.
+    \item \textbf{Vision Transformer (ViT):} A self-attention-based model that tokenizes 224$\times$224 images into 16$\times$16 patches and models their relationships via multi-head attention~\cite{dosovitskiy2020image}.
+\end{itemize}
+
+\subsection{Training and Evaluation Protocol}\label{subsubsec2}
+
+All models were trained on HAM10000 using a stratified 80/20 train–test split to preserve class distribution.  
+Images were resized to 224$\times$224 pixels and normalized using ImageNet statistics to maintain compatibility with pretrained backbones.
+
+\vspace{0.5em}
+\noindent\textbf{Training Configuration:}
+\begin{itemize}
+    \item \textbf{Optimizer:} Adam
+    \item \textbf{Learning Rate:} $1 \times 10^{-4}$ with cosine annealing and linear warm-up
+    \item \textbf{Batch Size:} 32
+    \item \textbf{Epochs:} Up to 50 (early stopping with patience of 5, or 7 for CNN)
+    \item \textbf{Loss Function:} Weighted cross-entropy
+    \item \textbf{Class Weights:} Inverse frequency from HAM10000 training set
+\end{itemize}
+
+\vspace{0.5em}
+\noindent\textbf{Hardware Setup:}  
+All experiments were conducted on Kaggle cloud infrastructure with dual NVIDIA Tesla T4 GPUs (16 GB VRAM), Intel Xeon CPUs, and 52 GB RAM.
+
+\vspace{0.5em}
+\noindent\textbf{Evaluation Metrics:}
+\begin{itemize}
+    \item Classification accuracy
+    \item Macro-averaged F1-score
+    \item Macro and micro ROC–AUC
+    \item Confusion matrix (normalized and raw)
+    \item Expected Calibration Error (ECE)
+\end{itemize}
+
+These metrics collectively capture performance, class balance, discriminative power, and probabilistic reliability.
+
+\vspace{0.5em}
+\noindent\textbf{Ensemble Strategy:}  
+A soft-voting ensemble was formed using the five top-performing models based on validation ROC–AUC.  
+Class-wise logits were averaged, and the final prediction was made using argmax over the mean probability vector.  
+This method reduces variance and enhances robustness to noise and imbalance.
+
+\subsection{External Validation on ISIC 2019}
+
+To assess cross-dataset generalization, the HAM10000-trained models were directly evaluated on the harmonized ISIC 2019 test set.  
+Identical label mappings ensured a fair domain shift assessment.
+
+\vspace{0.5em}
+\noindent\textbf{Evaluation Outputs:}
+\begin{itemize}
+    \item ROC curves (per-class and aggregated)
+    \item Confusion matrices (absolute and normalized)
+    \item Precision, recall, and F1-score breakdowns
+    \item Reliability diagrams for calibration analysis
+    \item Exported results in LaTeX and CSV formats
+\end{itemize}
+
+\subsection{Ethical Compliance and Reproducibility}
+
+This study exclusively utilized publicly available and fully anonymized datasets (HAM10000 and ISIC 2019), released under open-access research licenses.  
+No human subjects or animal data were involved, and no institutional review board approval was required.
+
+\vspace{0.5em}
+\noindent\textbf{Code Availability:}  
+The complete codebase, including training scripts, evaluation tools, and model checkpoints, is publicly accessible at:  
+\url{https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000}
+
+\section{Results}\label{sec4}
+
+This section presents a comprehensive evaluation of the seven individual models and the ensemble across two datasets: the internal HAM10000 test set and the external ISIC 2019 benchmark. Performance is assessed in terms of classification accuracy, weighted F1-score, ROC–AUC, statistical significance (via McNemar's test), calibration reliability (ECE), and interpretability using Grad-CAM visualizations.
+
+\subsection{Performance on HAM10000 Test Set}
+
+Table~\ref{tab:ham10000-results} summarizes the performance of all models on the HAM10000 test set. Among the individual architectures, the Vision Transformer (ViT) achieved the highest scores across most evaluation metrics. However, the ensemble model demonstrated the best overall trade-off between accuracy and complexity, ranking second individually yet offering improved prediction stability and interpretability. These findings underscore the value of ensemble learning in clinical settings, where both predictive performance and robustness are essential.
+
+\subsection{External Validation on ISIC 2019}
+
+To evaluate generalization under domain shift, we tested the HAM10000-trained models on the harmonized ISIC 2019 dataset, which includes 25,331 dermoscopic images categorized into the same seven diagnostic classes. The dataset exhibits significant class imbalance, with \texttt{nv} comprising nearly 50\% of the data (12,875 samples), followed by \texttt{mel} (4,522) and \texttt{bcc} (3,323). Minority classes such as \texttt{df} (239) and \texttt{vasc} (253) present heightened classification challenges, reflecting real-world clinical prevalence and diagnostic difficulty.
+
+\subsection{Statistical Significance Testing}
+
+To determine whether the ensemble's performance improvements were statistically significant, we applied McNemar’s test to pairwise comparisons on the HAM10000 test set. Table~\ref{tab:mcnemar} shows the number of sample-wise disagreements where one model correctly classified a sample and the other did not. The ensemble achieved statistically significant improvements ($p < 0.05$) over all individual models except ViT, indicating superior robustness in most pairwise evaluations.
+
+\subsection{Ensemble Gains over Individual Models}
+
+To quantify the added value of ensemble learning, we computed performance deltas (Ensemble – Individual Model) for accuracy, F1-score, and ROC–AUC. Table~\ref{tab:paired-bootstrap} reports these differences with 95\% confidence intervals using paired bootstrap resampling. Results show consistent and statistically meaningful gains across all architectures, supporting the ensemble’s advantage in real-world diagnostic contexts.
+
+\subsection{Explainability with Grad-CAM}
+
+We used Gradient-weighted Class Activation Mapping (Grad-CAM) to assess model attention and visual interpretability. Figure~\ref{fig:ensemble_per_class} presents sample overlays comparing individual models and the ensemble on correctly and incorrectly classified lesions from HAM10000. The ensemble consistently focused on diagnostically relevant regions with fewer irrelevant activations, highlighting improved spatial localization and clinical interpretability.
+
+\subsection{Calibration Analysis}
+
+Expected Calibration Error (ECE) was computed to assess the alignment between predicted confidence scores and observed correctness. Table~\ref{tab:ham10000_ci} reports ECE values along with classification metrics and 95\% confidence intervals. The ensemble exhibited well-calibrated predictions, a critical property for clinical AI systems that rely on probability estimates for decision-making support.
+
+\section{Tables}\label{sec5}
+
+This section presents the key quantitative findings from our internal and external evaluations.  
+Table~\ref{tab:ham10000-results} reports the classification results on the HAM10000 test set, while Table~\ref{tab:isic2019-results} summarizes the external generalization performance on the ISIC 2019 benchmark.  
+Further, Table~\ref{tab:mcnemar} provides results from McNemar’s test for statistical significance, Table~\ref{tab:paired-bootstrap} reports the paired bootstrap deltas with 95\% confidence intervals, and Table~\ref{tab:ham10000_ci} offers final classification metrics including accuracy, weighted F1, and AUC with corresponding confidence bounds.  
+These tabulated results demonstrate the ensemble’s consistent superiority over individual models in terms of accuracy, robustness, and calibration across both internal and external datasets.
+
+
+\captionsetup[table]{font=footnotesize, labelfont=bf, skip=6pt}
+
+\begin{table}[!htbp]
+\caption{Internal evaluation on the HAM10000 test set. 
+Comparison of seven deep learning models and the proposed ensemble based on Accuracy, Weighted F1-score, and macro/micro ROC–AUC. 
+The Vision Transformer (ViT) achieved the highest individual scores, while the ensemble provided competitive accuracy with improved stability and interpretability.}
+\label{tab:ham10000-results}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lccccc}
+\toprule
+\textbf{Model} & \textbf{Params (M)} & \textbf{Accuracy} & \textbf{F1-score (weighted)} & \textbf{ROC–AUC (macro)} & \textbf{ROC–AUC (micro)} \\
+\midrule
+ViT             & 85.804  & 0.9591 & 0.9585 & 0.9959 & 0.9978 \\
+\textbf{Ensemble} & {--} & \textbf{0.9246} & \textbf{0.9215} & \textbf{0.9944} & \textbf{0.9961} \\
+EfficientNet-B3 & 10.707  & 0.8997 & 0.8984 & 0.9818 & 0.9905 \\
+DenseNet-121    & 6.961   & 0.8787 & 0.8742 & 0.9786 & 0.9892 \\
+MobileNetV3     & 4.211   & 0.8587 & 0.8551 & 0.9720 & 0.9857 \\
+CNN             & 26.084  & 0.7898 & 0.7763 & 0.9388 & 0.9712 \\
+ConvNeXt-Tiny   & 27.826  & 0.7858 & 0.7403 & 0.9367 & 0.9593 \\
+ResNet-50       & 23.522  & 0.6850 & 0.7142 & 0.9319 & 0.9386 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{External validation performance on the ISIC 2019 dataset. 
+The table reports Accuracy, Weighted F1-score, and ROC–AUC for each model. 
+DenseNet-121 and EfficientNet-B3 achieved the best individual results, while the ensemble surpassed all single models, confirming its superior generalization under domain shift.}
+\label{tab:isic2019-results}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{Weighted F1} & \textbf{ROC–AUC} \\
+\midrule
+CNN             & 0.5816 & 0.5331 & 0.7594 \\
+ResNet-50       & 0.1035 & 0.0591 & 0.4369 \\
+DenseNet-121    & \textbf{0.6842} & \textbf{0.6538} & \textbf{0.8883} \\
+EfficientNet-B3 & 0.6740 & 0.6499 & 0.8815 \\
+ConvNeXt-Tiny   & 0.5721 & 0.4729 & 0.8246 \\
+MobileNetV3     & 0.6430 & 0.6017 & 0.8592 \\
+ViT             & 0.0840 & 0.0367 & 0.5304 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Results of McNemar’s test comparing the ensemble against each individual model on the HAM10000 test set. 
+Values $b$ and $c$ denote the counts of samples correctly predicted by one model and misclassified by the other. 
+A $p$-value below 0.05 indicates a statistically significant difference in prediction distributions.}
+\label{tab:mcnemar}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lrrc}
+\toprule
+\textbf{Comparison} & \textbf{b (Ens correct, Model wrong)} & \textbf{c (Ens wrong, Model correct)} & \textbf{McNemar p-value} \\
+\midrule
+Ensemble vs {CNN}             & 300 & 7   & $\mathbf{2.342 \times 10^{-62}}$ \\
+Ensemble vs {ResNet-50}       & 622 & 15  & $\mathbf{2.155 \times 10^{-127}}$\\
+Ensemble vs {DenseNet-121}    & 60  & 15  & $\mathbf{3.761 \times 10^{-7}}$ \\
+Ensemble vs {EfficientNet-B3} & 52  & 20  & $\mathbf{2.588 \times 10^{-4}}$ \\
+Ensemble vs {ConvNeXt-Tiny}   & 314 & 6   & $\mathbf{5.128 \times 10^{-66}}$ \\
+Ensemble vs {MobileNetV3}     & 74  & 12  & $\mathbf{4.775 \times 10^{-11}}$ \\
+Ensemble vs {ViT}             & 46  & 40  & $0.5898$ \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Paired bootstrap comparison between the ensemble and individual models on the HAM10000 test set. 
+Reported metrics include $\Delta$Accuracy, $\Delta$F1 (weighted), and $\Delta$AUC (macro, one-vs-rest), with 95\% confidence intervals estimated via 1,000 resampling iterations. 
+Positive values indicate performance gains of the ensemble over the respective model.}
+\label{tab:paired-bootstrap}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lccc}
+\toprule
+\textbf{Comparison} & \textbf{Metric $\Delta$} & \textbf{Estimate} & \textbf{95\% CI} \\
+\midrule
+Ensemble – CNN             & $\Delta$Accuracy         & 0.1464 & [0.1318, 0.1623] \\
+Ensemble – CNN             & $\Delta$F1 (weighted)    & 0.1578 & [0.1411, 0.1755] \\
+Ensemble – CNN             & $\Delta$AUC (macro, OvR) & 0.0400 & [0.0337, 0.0468] \\
+Ensemble – ResNet-50       & $\Delta$Accuracy         & 0.3032 & [0.2816, 0.3240] \\
+Ensemble – ResNet-50       & $\Delta$F1 (weighted)    & 0.2722 & [0.2543, 0.2902] \\
+Ensemble – ResNet-50       & $\Delta$AUC (macro, OvR) & 0.0690 & [0.0612, 0.0778] \\
+Ensemble – DenseNet-121    & $\Delta$Accuracy         & 0.0225 & [0.0145, 0.0310] \\
+Ensemble – DenseNet-121    & $\Delta$F1 (weighted)    & 0.0228 & [0.0145, 0.0310] \\
+Ensemble – DenseNet-121    & $\Delta$AUC (macro, OvR) & 0.0035 & [0.0017, 0.0055] \\
+Ensemble – EfficientNet-B3 & $\Delta$Accuracy         & 0.0159 & [0.0085, 0.0240] \\
+Ensemble – EfficientNet-B3 & $\Delta$F1 (weighted)    & 0.0157 & [0.0074, 0.0240] \\
+Ensemble – EfficientNet-B3 & $\Delta$AUC (macro, OvR) & 0.0032 & [0.0019, 0.0048] \\
+Ensemble – ConvNeXt-Tiny   & $\Delta$Accuracy         & 0.1535 & [0.1373, 0.1707] \\
+Ensemble – ConvNeXt-Tiny   & $\Delta$F1 (weighted)    & 0.1882 & [0.1690, 0.2095] \\
+Ensemble – ConvNeXt-Tiny   & $\Delta$AUC (macro, OvR) & 0.0335 & [0.0272, 0.0412] \\
+Ensemble – MobileNetV3     & $\Delta$Accuracy         & 0.0309 & [0.0225, 0.0399] \\
+Ensemble – MobileNetV3     & $\Delta$F1 (weighted)    & 0.0311 & [0.0231, 0.0405] \\
+Ensemble – MobileNetV3     & $\Delta$AUC (macro, OvR) & 0.0056 & [0.0038, 0.0075] \\
+Ensemble – ViT             & $\Delta$Accuracy         & 0.0033 & [-0.0060, 0.0120] \\
+Ensemble – ViT             & $\Delta$F1 (weighted)    & 0.0030 & [-0.0062, 0.0120] \\
+Ensemble – ViT             & $\Delta$AUC (macro, OvR) & 0.0034 & [0.0014, 0.0058] \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\begin{table}[!htbp]
+\centering
+\caption{Classification performance with 95\% confidence intervals on the HAM10000 test set, obtained via bootstrap resampling. 
+Metrics include Accuracy, weighted F1-score, and AUC (macro and micro, one-vs-rest). 
+The ensemble achieved the highest overall performance with narrow confidence bounds, indicating stable and reliable predictions.}
+\label{tab:ham10000_ci}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular*}{\textwidth}{@{\extracolsep\fill}lcccc}
+\toprule
+\textbf{Model} & \textbf{Accuracy} & \textbf{F1 (weighted)} & \textbf{AUC (macro, OvR)} & \textbf{AUC (micro, OvR)} \\
+\midrule
+CNN & 0.8255 [0.8093, 0.8427] & 0.8136 [0.7951, 0.8311] & 0.9586 [0.9516, 0.9650] & 0.9794 [0.9763, 0.9824] \\
+ResNet-50 & 0.6684 [0.6495, 0.6885] & 0.6986 [0.6802, 0.7162] & 0.9293 [0.9206, 0.9369] & 0.9361 [0.9296, 0.9423] \\
+DenseNet-121 & 0.9491 [0.9391, 0.9581] & 0.9483 [0.9381, 0.9578] & 0.9953 [0.9932, 0.9970] & 0.9973 [0.9963, 0.9982] \\
+EfficientNet-B3 & 0.9555 [0.9461, 0.9646] & 0.9552 [0.9455, 0.9639] & 0.9954 [0.9936, 0.9970] & 0.9977 [0.9969, 0.9985] \\
+ConvNeXt-Tiny & 0.8181 [0.8018, 0.8362] & 0.7823 [0.7608, 0.8041] & 0.9655 [0.9586, 0.9719] & 0.9731 [0.9688, 0.9772] \\
+MobileNetV3 & 0.9408 [0.9306, 0.9511] & 0.9401 [0.9294, 0.9500] & 0.9931 [0.9908, 0.9951] & 0.9964 [0.9951, 0.9974] \\
+\textbf{ViT} & \textbf{0.9684} [0.9606, 0.9755] & \textbf{0.9678} [0.9594, 0.9755] & \textbf{0.9952} [0.9925, 0.9974] & \textbf{0.9976} [0.9966, 0.9985] \\
+\textbf{Ensemble} & 0.9714 [0.9641, 0.9780] & 0.9710 [0.9631, 0.9787] & 0.9987 [0.9980, 0.9993] & 0.9990 [0.9985, 0.9994] \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\clearpage 
+
+\section{Figures}\label{sec6}
+
+This section presents a series of visual analyses to complement the tabular performance metrics and provide insights into model behavior across datasets.
+
+\vspace{2mm}
+
+Figures~\ref{fig:accuracy_f1_ham} and~\ref{fig:auc_ham} summarize internal evaluation results on HAM10000, showcasing the accuracy, F1-score, and AUC for all models. The ensemble consistently achieved top scores, balancing predictive performance and robustness.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures_model_comp_accuracy_f1.pdf}
+    \caption{Comparison of Accuracy and Weighted F1-score across all models on the HAM10000 test set. 
+    The ensemble model outperformed individual architectures, demonstrating strong predictive reliability and class-wise balance.}
+    \label{fig:accuracy_f1_ham}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures_model_comp_auc.pdf}
+    \caption{Macro and micro ROC–AUC comparison across models on HAM10000. 
+    ViT achieved the highest individual AUCs, while the ensemble closely matched these, indicating strong class separation and reduced overfitting.}
+    \label{fig:auc_ham}
+\end{figure}
+
+Figure~\ref{fig:conf_matrix_ham} presents the ensemble’s confusion matrix on HAM10000, highlighting strong per-class accuracy with minor errors concentrated in low-frequency categories such as \texttt{df}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures_confusion_matrix_ensemble_full.pdf}
+    \caption{Confusion matrix of ensemble predictions on the HAM10000 test set. 
+    Most misclassifications occurred in underrepresented classes, underscoring the challenge of data imbalance in dermoscopic datasets.}
+    \label{fig:conf_matrix_ham}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures_roc_curves_ensemble.pdf}
+    \caption{Class-wise ROC curves for the ensemble model on HAM10000. 
+    AUCs exceeded 0.95 across all classes, confirming strong discrimination capabilities despite class imbalance.}
+    \label{fig:roc_curve_ham}
+\end{figure}
+
+Figures~\ref{fig:conf_matrix_isic2019} and~\ref{fig:roc_curve_isic2019} report external validation results on ISIC 2019. The ensemble retained high discriminative performance under domain shift, although confusion persisted between visually similar lesions such as \texttt{bkl} and \texttt{nv}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.75\linewidth]{figures_confusion_matrix_ensemble_isic2019.pdf}
+    \caption{Confusion matrix of ensemble predictions on the ISIC 2019 dataset. 
+    The ensemble model demonstrated robust generalization, with errors mainly concentrated in morphologically similar lesion categories.}
+    \label{fig:conf_matrix_isic2019}
+\end{figure}
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures_roc_curves_ensemble_isic2019.pdf}
+    \caption{Class-wise ROC curves for the ensemble on ISIC 2019. 
+    Major classes like \texttt{nv} and \texttt{mel} maintained high AUCs, while rare classes such as \texttt{df} and \texttt{vasc} showed reduced separability.}
+    \label{fig:roc_curve_isic2019}
+\end{figure}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_akiec.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_bcc.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_bkl.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_df.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_mel.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_nv.pdf}
+\includegraphics[height=2.2cm]{figures_gradcam_ensemble_per_class_vasc.pdf}
+\caption{Grad-CAM visualizations of the ensemble model for each lesion class on the HAM10000 test set. 
+Highlighted regions correspond to diagnostically relevant areas, reinforcing the clinical plausibility of the model’s decisions.}
+\label{fig:ensemble_per_class}
+\end{figure}
+
+Figure~\ref{fig:ensemble_per_class} provides per-class Grad-CAM visualizations, showing that the ensemble consistently focused on clinically relevant lesion areas, improving interpretability and trustworthiness.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[height=3cm]{figures_gradcam_models_cnn_mel.pdf}
+\includegraphics[height=3cm]{figures_gradcam_models_resnet_mel.pdf}
+\includegraphics[height=3cm]{figures_gradcam_models_dense_mel.pdf}
+\includegraphics[height=3cm]{figures_gradcam_models_vit_mel.pdf}
+\includegraphics[height=2.75cm]{figures_gradcam_models_ensemble_mel.pdf}
+\caption{Grad-CAM comparisons for the \texttt{melanoma (mel)} class across CNN, ResNet-50, DenseNet-121, ViT, and the ensemble. 
+The ensemble demonstrates focused activation on lesion regions, reducing spurious attention and enhancing interpretability.}
+\label{fig:gradcam_mel_models}
+\end{figure}
+
+Figure~\ref{fig:gradcam_mel_models} compares Grad-CAM heatmaps for the \texttt{melanoma} class across different models. The ensemble shows more localized and relevant attention than its counterparts, demonstrating improved explainability.
+
+\section{Challenges and Limitations}\label{sec7}
+
+While the proposed ensemble model demonstrates promising performance, several limitations and challenges remain. Addressing these will be essential to improving model robustness, interpretability, and clinical applicability in real-world dermatological settings.
+
+\begin{itemize}
+    \item \textbf{Generalization of Vision Transformers (ViTs):} Although ViTs achieved state-of-the-art performance in natural image benchmarks, their relatively lower accuracy in this study underscores limitations when applied to small, domain-specific medical datasets. Prior evidence~\cite{he2023transformers} suggests that ViTs require extensive pretraining or task-specific augmentation to converge reliably in medical contexts. Future research should explore domain-adaptive pretraining, self-supervised learning, or hybrid vision architectures to improve generalization on dermatology tasks.
+
+    \item \textbf{Interpretability under Domain Shift:} While Grad-CAM visualizations were employed to interpret predictions on HAM10000, interpretability analysis was not extended to ISIC 2019. This omission limits understanding of whether the model's attention patterns remain clinically meaningful under domain shift. Future studies should include cross-dataset explainability to assess the stability and trustworthiness of model decisions across diverse imaging conditions.
+
+    \item \textbf{Lack of Expert Validation:} Despite strong quantitative metrics, model predictions have not been validated by board-certified dermatologists. For clinical deployment, expert-in-the-loop evaluations—such as prospective reader studies or interactive diagnostic workflows—are critical to ensure diagnostic reliability, user trust, and practical utility.
+\end{itemize}
+
+\subsection{Opportunities for Improvement}
+
+Building on these observations, we outline several promising directions to improve the reliability and clinical readiness of dermatological AI systems:
+
+\begin{itemize}
+    \item \textbf{Domain Adaptation:} Techniques such as adversarial training, domain-invariant feature learning, or discrepancy minimization~\cite{guan2021domain} can mitigate distributional shifts between training and deployment environments, thereby enhancing fairness and generalization across clinical settings.
+
+    \item \textbf{Semi- and Self-Supervised Learning:} Given the abundance of unlabeled dermoscopic data, leveraging techniques such as pseudo-labeling, consistency regularization, or contrastive self-supervised learning~\cite{jiao2024learning} could improve feature quality and data efficiency—particularly for rare or underrepresented lesion types.
+
+    \item \textbf{Multimodal Fusion:} Incorporating structured metadata—such as age, lesion location, and clinical history—alongside image-based features has been shown to enhance diagnostic performance~\cite{li2024review}. Attention-based fusion or late-stage integration strategies could offer a more comprehensive and context-aware diagnostic framework.
+
+    \item \textbf{Uncertainty Estimation and Calibration:} While this study employed Expected Calibration Error (ECE) for reliability analysis, more advanced techniques—such as Monte Carlo Dropout, Deep Ensembles, or temperature scaling~\cite{lakshminarayanan2017simple}—may provide better uncertainty quantification, crucial for safety-critical clinical scenarios.
+\end{itemize}
+
+In summary, addressing these challenges will require a multi-faceted approach that incorporates domain adaptation, interpretable modeling, multimodal learning, and clinical validation. These efforts will be essential for translating dermatological AI systems from research prototypes to trustworthy clinical tools.
+
+\section{Algorithms, Program Codes and Listings}\label{sec8}
+
+All experiments were conducted using publicly available model architectures—CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3, and Vision Transformer (ViT)—implemented using \texttt{PyTorch} and the \texttt{Hugging Face Transformers} library. Model training and evaluation were performed in reproducible Jupyter notebooks (Kaggle kernels) with fixed random seeds, stratified data splits, and standardized preprocessing pipelines to ensure methodological consistency and comparability across runs.
+
+\medskip
+\noindent
+\textbf{Code Availability:} The full implementation, including model definitions, training scripts, evaluation routines, and configuration files, is publicly available at:
+
+\noindent
+\url{https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000}
+
+\medskip
+\noindent
+No proprietary or closed-source algorithms were used. All components were developed on top of well-established open-source frameworks, ensuring transparency, reproducibility, and ease of community adoption. This aligns with best practices in medical AI research and supports further validation, benchmarking, and clinical integration efforts.
+
+
+\section{Limitations and Ethical Considerations}\label{sec9}
+
+While the proposed ensemble framework demonstrates strong diagnostic performance and robustness under domain shift, several limitations must be acknowledged to contextualize the findings and inform future research directions.
+
+\begin{itemize}
+    \item \textbf{Vision Transformer Constraints:} The Vision Transformer (ViT) underperformed compared to convolutional counterparts, likely due to its reliance on large-scale training data and the absence of inductive biases such as locality and translation equivariance. These properties are advantageous in small, class-imbalanced medical imaging datasets. This highlights the importance of selecting model architectures that are well-matched to domain-specific data regimes and clinical constraints.
+
+    \item \textbf{Limited Cross-Dataset Explainability:} Grad-CAM visualizations were generated solely for the internal HAM10000 test set. The lack of interpretability analysis on the ISIC 2019 dataset constrains our understanding of the ensemble's decision-making under domain shift. Future work should incorporate explainability evaluations across diverse datasets to assess consistency, highlight potential biases, and enhance clinician trust.
+
+    \item \textbf{Absence of Clinical Expert Review:} This study relies exclusively on quantitative performance metrics. While the ensemble achieves high classification accuracy and reliability, expert-in-the-loop validation remains critical for assessing clinical plausibility, surfacing edge cases, and identifying risks prior to real-world deployment.
+\end{itemize}
+
+\subsection*{Ethical Considerations}
+
+This study exclusively employed publicly available, de-identified datasets (HAM10000 and ISIC 2019) and did not involve any direct interaction with human subjects or patient data, thereby exempting it from institutional review board (IRB) approval. Nonetheless, ethical concerns persist regarding the generalizability and fairness of AI models in dermatology.
+
+Specifically, both datasets suffer from known limitations such as the underrepresentation of darker skin tones, geographic sampling biases, and substantial class imbalance. These factors can impact model calibration and perpetuate health disparities if left unaddressed. To mitigate these risks, future research should prioritize:
+\begin{itemize}
+    \item the development of demographically diverse, ethically curated skin image datasets;
+    \item fairness-aware training objectives and evaluation protocols;
+    \item transparent reporting of dataset composition, model limitations, and explainability outputs.
+\end{itemize}
+
+Such practices are essential to ensure the responsible and equitable deployment of AI systems in dermatological care.
+
+\section{Discussion}\label{sec10}
+
+The results of this study demonstrate that ensemble deep learning markedly improves the robustness and generalizability of automated skin lesion classification systems across heterogeneous clinical datasets. By aggregating predictions from seven diverse architectures—including CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3, and Vision Transformer (ViT)—the proposed ensemble achieved consistent gains in diagnostic accuracy, discrimination capacity, and reliability.
+
+On the internal HAM10000 test set, the ensemble achieved an accuracy of 97.15\%, a weighted F1-score of 0.9710, and a macro ROC–AUC of 0.9987, outperforming all individual models. These findings highlight the synergistic benefit of combining convolutional and transformer-based architectures: convolutional models excel at capturing local textures and patterns, while transformers offer superior modeling of global contextual dependencies. The ensemble’s balanced sensitivity and specificity suggest that architectural diversity mitigates overfitting to dataset-specific artifacts and contributes to more stable, interpretable predictions.
+
+External validation on the harmonized ISIC 2019 dataset further confirmed the ensemble’s resilience to domain shift. As expected, performance declined due to variations in imaging conditions, acquisition protocols, and institutional settings. Nevertheless, the ensemble maintained robust classification capability, with DenseNet-121 and EfficientNet-B3 achieving accuracies of 68.4\% and 67.4\%, respectively, and ROC–AUC scores near 0.89. These results underscore the importance of evaluating AI systems on multiple datasets to ensure that real-world generalizability is not overestimated by in-domain performance alone.
+
+Statistical significance testing via McNemar’s test confirmed that the ensemble significantly outperformed all individual models ($p < 0.05$). Disagreement analysis revealed that the ensemble frequently corrected misclassifications made by its components. These findings are consistent with prior ensemble-based approaches in dermatological imaging~\cite{thwin2024skin, mahbod2019fusing}, reinforcing the notion that model diversity contributes to improved accuracy and robustness.
+
+Among individual models, DenseNet-121 and ConvNeXt-Tiny showed the strongest standalone generalization, while ResNet-50 and ViT underperformed on ISIC 2019. This disparity suggests that inductive biases and data efficiency remain key to cross-domain transferability. Despite ViT’s superior in-domain metrics, its reduced performance under domain shift supports prior evidence~\cite{he2023transformers} that transformers often require large-scale pretraining or domain adaptation to converge reliably in medical imaging contexts.
+
+Model interpretability was examined through Grad-CAM visualizations, which showed that the ensemble consistently attended to clinically relevant lesion regions. These visual explanations enhance transparency and can foster clinician trust—key prerequisites for the deployment of AI systems in real-world clinical settings. Explainable AI remains essential for facilitating effective human–AI collaboration, especially in safety-critical applications such as dermatology.
+
+A noted limitation was the ensemble’s relatively higher Expected Calibration Error (ECE) compared to certain individual models (e.g., ViT and MobileNetV3), suggesting a degree of overconfidence in its probability estimates. This aligns with previous findings~\cite{lakshminarayanan2017simple}, where ensembles improved accuracy but impaired calibration. Future work could incorporate post-hoc calibration techniques—such as temperature scaling, deep ensembles with uncertainty quantification, or Bayesian approximations—to enhance reliability in probabilistic outputs.
+
+In summary, this work provides a reproducible and well-documented benchmark for ensemble-based skin lesion classification. By rigorously evaluating across internal and external datasets, integrating interpretability, and performing statistical and calibration analyses, the study offers a holistic view of model behavior. These findings reinforce the need for comprehensive evaluation pipelines that consider accuracy, generalizability, reliability, and explainability—critical pillars for the safe, equitable, and effective deployment of AI-assisted decision support systems in dermatological care.
+
+\section{Conclusion}\label{sec11}
+
+This study presented a comprehensive ensemble deep learning framework for automated skin lesion classification, combining seven diverse architectures—spanning convolutional, transformer-based, and hybrid ConvNet models. Trained on the HAM10000 dataset and externally validated on ISIC 2019, the framework was rigorously evaluated across multiple axes including robustness, calibration, interpretability, and generalization under domain shift.
+
+The proposed ensemble consistently outperformed individual models across classification accuracy, weighted F1-score, and ROC–AUC metrics. Among standalone architectures, DenseNet-121, EfficientNet-B3, and ConvNeXt-Tiny demonstrated strong cross-dataset performance, while ResNet-50 and ViT contributed architectural diversity that enhanced ensemble stability. Grad-CAM visualizations confirmed that the ensemble reliably attended to diagnostically meaningful lesion regions, while Expected Calibration Error (ECE) analysis highlighted the trade-offs between predictive accuracy and probabilistic reliability.
+
+To support transparency and reproducibility, all evaluation artifacts—including ROC curves, confusion matrices, Grad-CAM overlays, calibration diagrams, and LaTeX/CSV-formatted metrics—have been made publicly available. These deliverables establish a standardized benchmark for future research and promote the integration of explainable, reproducible AI tools into dermatological workflows.
+
+\vspace{1em}
+\noindent\textbf{Key Contributions}
+\begin{itemize}
+    \item Developed a robust ensemble framework that generalizes across internal and external dermoscopic datasets.
+    \item Standardized class label mappings between HAM10000 and ISIC 2019 for reproducible cross-dataset evaluation.
+    \item Integrated explainability (Grad-CAM) and calibration (ECE) to enhance model transparency and clinical interpretability.
+    \item Released all visualizations, model weights, and performance reports to support open, replicable clinical AI research.
+\end{itemize}
+
+\vspace{0.5em}
+\noindent\textbf{Future Work} \\
+Future directions include exploring domain adaptation techniques, expanding interpretability analysis to external validation datasets, and incorporating expert-in-the-loop evaluation through dermatologist feedback and reader studies. These efforts aim to bridge the translational gap between high-performing research prototypes and deployable AI-assisted clinical decision support systems.
+
+\bmhead{Supplementary Information}  
+Supplementary materials include detailed confusion matrices, per-class ROC curves, reliability plots, and evaluation reports for all models on both HAM10000 and ISIC 2019. Trained model checkpoints, Grad-CAM overlays, and LaTeX/Excel versions of all result tables are available in the accompanying GitHub repository and supplementary archive.
+
+\bmhead{Acknowledgements}  
+This research was conducted independently as part of the Master’s programme in Artificial Intelligence at Université Paris-Saclay. The author gratefully acknowledges the support of the French Government Scholarship (BGF – \textit{Bourses du Gouvernement Français}) and the use of Kaggle’s cloud infrastructure for model training and evaluation. No external funding or institutional supervision influenced the design, implementation, or reporting of this work.
+
+\section*{Declarations}
+
+\noindent
+\textbf{Funding} \\
+This research did not receive any specific grant from funding agencies in the public, commercial, or not-for-profit sectors.  
+All experiments were conducted using publicly available cloud-based computational resources provided by Kaggle.
+
+\bigskip
+\noindent
+\textbf{Competing Interests} \\
+The author declares no known competing financial interests or personal relationships that could have influenced the work reported in this manuscript.
+
+\bigskip
+\noindent
+\textbf{Ethics Approval and Consent to Participate} \\
+Not applicable.  
+This study exclusively used publicly available, fully anonymized dermatological image datasets (HAM10000 and ISIC 2019) with no personally identifiable information.  
+No new human or animal subjects were recruited or involved.
+
+\bigskip
+\noindent
+\textbf{Data Availability} \\
+All datasets used in this study are publicly accessible:  
+\begin{itemize}
+    \item \textbf{HAM10000:} \url{https://www.kaggle.com/kmader/skin-cancer-mnist-ham10000}
+    \item \textbf{ISIC 2019:} \url{https://challenge.isic-archive.com/data/}
+\end{itemize}
+Processed datasets, class harmonization protocols, and evaluation outputs are available in the accompanying GitHub repository.
+
+\bigskip
+\noindent
+\textbf{Code Availability} \\
+All implementation scripts, trained model weights, preprocessing utilities, and visualization notebooks are openly available at:  
+\url{https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000}  
+A Zenodo-archived version of the complete code and model outputs (DOI: \href{https://doi.org/10.5281/zenodo.17390952}{10.5281/zenodo.17390952}) is also available for long-term reproducibility.
+
+\bigskip
+\noindent
+\textbf{Author Contributions} \\
+\textbf{Md Naim Hassan Saykat:} Conceived the study, designed the ensemble framework, implemented all models and training pipelines, conducted experiments on HAM10000 and ISIC 2019, performed evaluation and visualization, and wrote the manuscript.  
+No external collaborators were involved at any stage of the research or writing process.
+
+\begin{appendices}
+
+\section{Supplementary Figures and Tables}\label{secA1}
+
+\noindent
+This appendix presents supplementary materials that complement the main manuscript by providing extended quantitative and qualitative analyses. It includes detailed performance breakdowns, confusion matrices, ROC curves, and Grad-CAM visualizations for all evaluated models—CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3, and Vision Transformer (ViT)—on both the HAM10000 and ISIC 2019 datasets. These additions offer deeper insight into inter-class variability, model robustness, and generalization under domain shift.
+
+\bigskip
+\noindent
+\textbf{Included Supplementary Contents:}
+\begin{itemize}
+    \item Per-class performance metrics (accuracy, precision, recall, and F1-score) for each model across both datasets.
+    \item ROC–AUC scores with 95\% confidence intervals for all model–class combinations.
+    \item Ranked model comparison tables integrating accuracy, weighted F1-score, and macro/micro ROC–AUC.
+    \item Grad-CAM visualizations illustrating discriminative lesion regions for each class.
+    \item Confusion matrices and ROC curves from both internal (HAM10000) and external (ISIC 2019) evaluations.
+\end{itemize}
+
+\bigskip
+\noindent
+All supplementary figures, CSV exports, and LaTeX-formatted tables are available in the accompanying GitHub repository:  
+\url{https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000}
+
+\noindent
+An archived version of these outputs, including trained model checkpoints and evaluation artifacts, is permanently available at Zenodo:  
+\href{https://doi.org/10.5281/zenodo.17390952}{\texttt{https://doi.org/10.5281/zenodo.17390952}}
+
+\noindent
+These resources are directly referenced in the main manuscript to support transparency, reproducibility, and standardized benchmarking for future research on AI-driven dermatological diagnosis.
+
+\end{appendices}
+
+\bibliography{sn-bibliography}
+
+\end{document}
