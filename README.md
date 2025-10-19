@@ -18,7 +18,7 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 - **Trained Weights**  
   Due to GitHub's file size limits, trained model weights are hosted externally:  
-  - [Zenodo DOI (recommended for citation)]([https://doi.org/xxxx](https://doi.org/10.5281/zenodo.17390952))
+  - [Zenodo DOI (recommended for citation)](https://doi.org/10.5281/zenodo.17390952)
 
 
 ---
