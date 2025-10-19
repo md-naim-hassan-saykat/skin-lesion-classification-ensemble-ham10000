@@ -1,8 +1,0 @@
-Comparison,"b (Ens correct, Model wrong)","c (Ens wrong, Model correct)",McNemar p-value
-Ensemble vs cnn,300,7,2.342e-62
-Ensemble vs resnet50,622,15,2.155e-127
-Ensemble vs densenet121,60,15,3.761e-07
-Ensemble vs efficientnet_b3,52,20,0.0002588
-Ensemble vs convnext_tiny,314,6,5.128e-66
-Ensemble vs mobilenet_v3,74,12,4.775e-11
-Ensemble vs vit,46,40,0.5898
