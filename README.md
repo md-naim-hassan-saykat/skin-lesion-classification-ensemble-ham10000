@@ -39,9 +39,9 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 ## Paper (Preprint)
 
-**Zenodo DOI**: [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
-**Title**: *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
-**Status**: Preprint on Zenodo (not yet peer-reviewed or journal-published)
+- **Title**: *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
+- **DOI**: [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
+- **Status**: Preprint on Zenodo (not peer-reviewed or journal-published yet)
 
 ---
 
