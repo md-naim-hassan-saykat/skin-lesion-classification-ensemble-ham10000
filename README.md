@@ -11,11 +11,15 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 ---
 
-## Data & Pretrained Weights
-	•	Dataset:
-HAM10000 (ISIC Archive)
-	•	Trained Weights:
-Download from Zenodo (DOI: 10.5281/zenodo.17390952)
+## Data & Weights
+
+- **Dataset**  
+  HAM10000 (ISIC Archive): https://www.isic-archive.com/
+
+- **Trained Weights**  
+  Due to GitHub's file size limits, trained model weights are hosted externally:  
+  - [Zenodo DOI (recommended for citation)]([https://doi.org/xxxx](https://doi.org/10.5281/zenodo.17390952))
+
 
 ---
 
