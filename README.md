@@ -37,7 +37,7 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
   - Evaluation metrics (Accuracy, ROC-AUC, etc.)  
   - Grad-CAM visualizations  
   - LaTeX tables and figures
- 👉 **Zenodo DOI**: [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+  - **Zenodo DOI**: [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
