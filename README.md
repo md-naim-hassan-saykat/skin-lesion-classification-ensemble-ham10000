@@ -31,9 +31,14 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 - **Dataset**  
   HAM10000 (ISIC Archive): https://www.isic-archive.com/
 
-- **Trained Weights**  
-  Due to GitHub's file size limits, trained model weights are hosted externally:  
-  - [Zenodo DOI](https://doi.org/10.5281/zenodo.17390952)
+- **Trained Weights & Artifacts**  
+  Due to GitHub's file size limits, all reproducibility assets are hosted externally via Zenodo, including:  
+  - Trained model weights (CNN, ResNet50, ViT, etc.)  
+  - Evaluation metrics (Accuracy, ROC-AUC, etc.)  
+  - Grad-CAM visualizations  
+  - LaTeX tables and figures  
+  - PDF of the full paper  
+  [Zenodo DOI](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
@@ -101,7 +106,7 @@ All training, evaluation, and ensemble logic are implemented in a single Jupyter
 
 `skin-lesion-classification-ensemble-ham10000.ipynb`
 
-You can open this notebook in [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
+You can open this notebook in [Google Colab](https://colab.research.google.com/github/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
 
 - Train individual models (ResNet50, DenseNet121, ViT, EfficientNetB3, ConvNeXt, etc.)
 - Perform ensemble evaluation
@@ -117,14 +122,12 @@ Use the Jupyter notebook in ./notebooks/ to regenerate plots and LaTeX-ready tab
 ---
 
 ## Results
-	•	Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
-	•	Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
-	•	Grad-CAM visualizations confirmed clinically relevant lesion focus.
 
-## See full results in the paper:
-skin_lesion_classification_ensemble_ham10000.pdf
+- Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
+- Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
+- Grad-CAM visualizations confirmed clinically relevant lesion focus.
 
----
+See full results and analysis in [`skin_lesion_classification_ensemble_ham10000.pdf`](paper/skin_lesion_classification_ensemble_ham10000.pdf).
 
 ---
 
