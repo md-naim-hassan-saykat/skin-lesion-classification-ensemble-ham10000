@@ -110,11 +110,14 @@ skin_lesion_classification_ensemble_ham10000.pdf
 ---
 
 ## Citation
-@article{your2025eswa,
-  title   = {Ensemble Deep Learning for Robust Skin Lesion Classification: A Comprehensive Study on HAM10000},
-  author  = {Md Naim Hassan Saykat},
-  journal = {Expert Systems With Applications},
-  year    = {2025}
+@misc{saykat2025zenodo,
+  author       = {Hassan, Md Naim},
+  title        = {Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019},
+  year         = 2025,
+  doi          = {10.5281/zenodo.17390952},
+  url          = {https://doi.org/10.5281/zenodo.17390952},
+  publisher    = {Zenodo},
+  note         = {Preprint and accompanying outputs}
 }
 
 ---
