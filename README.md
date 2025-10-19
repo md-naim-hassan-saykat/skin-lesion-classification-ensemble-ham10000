@@ -113,10 +113,7 @@ You can open this notebook in [Google Colab](https://colab.research.google.com/g
 - Visualize Grad-CAMs
 - Export LaTeX tables for paper
 
----
-
-## 	Reproduce tables/figures:
-Use the Jupyter notebook in ./notebooks/ to regenerate plots and LaTeX-ready tables.
+> All experiments were performed using 7 backbone models: CNN, ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, and ConvNeXt.
 
 ---
 
