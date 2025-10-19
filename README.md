@@ -95,15 +95,19 @@ Place images under ./data/HAM10000/.
 
 ---
 
-## Train models:
-python train.py --model resnet50 --epochs 50
-python train.py --model densenet121 --epochs 50
-# ... repeat for other backbones
+## Train Models & Run Ensemble Evaluation
 
----
+All training, evaluation, and ensemble logic are implemented in a single Jupyter notebook:
 
-## Run ensemble evaluation:
-python ensemble.py --models resnet50 densenet121 vit efficientnet_b3
+`skin-lesion-classification-ensemble-ham10000.ipynb`
+
+You can open this notebook in [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
+
+- Train individual models (ResNet50, DenseNet121, ViT, EfficientNetB3, ConvNeXt, etc.)
+- Perform ensemble evaluation
+- Generate plots (e.g., confusion matrix, ROC-AUC)
+- Visualize Grad-CAMs
+- Export LaTeX tables for paper
 
 ---
 
