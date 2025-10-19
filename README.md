@@ -110,6 +110,7 @@ skin_lesion_classification_ensemble_ham10000.pdf
 ---
 
 ## Citation
+If you use this work, please cite the Zenodo preprint:
 @misc{saykat2025zenodo,
   author       = {Hassan, Md Naim},
   title        = {Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019},
