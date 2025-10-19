@@ -12,6 +12,20 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 ---
 
+## Table of Contents
+
+- [Data & Weights](#data--weights)
+- [Paper (Preprint)](#paper-preprint)
+- [Repository Structure](#repository-structure)
+- [How to Reproduce](#how-to-reproduce)
+- [Results](#results)
+- [Citation](#citation)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Author](#author)
+
+---
+
 ## Data & Weights
 
 - **Dataset**  
@@ -28,8 +42,6 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 **Zenodo DOI**: [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
 **Title**: *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
 **Status**: Preprint on Zenodo (not yet peer-reviewed or journal-published)
-
----
 
 ---
 
