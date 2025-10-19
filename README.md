@@ -6,6 +6,7 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
+[![Star](https://img.shields.io/github/stars/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/stargazers)
 
 This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
 “Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
@@ -37,7 +38,7 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
   - Evaluation metrics (Accuracy, ROC-AUC, etc.)  
   - Grad-CAM visualizations  
   - LaTeX tables and figures
- **Zenodo DOI**: [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+**Zenodo DOI**: [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
@@ -80,20 +81,19 @@ skin-lesion-classification-ensemble-ham10000/
 
 ## How to Reproduce
 
-1. **Clone the repository**:
+**Clone the repository**:
    ```bash
    git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
    cd skin-lesion-classification-ensemble-ham10000
    ```
-   
 ---
 
-## Install dependencies:
+## Install Dependencies:
 pip install -r requirements.txt
 
 ---
 
-## Download dataset:
+## Download Dataset:
 Register and download HAM10000 from the ISIC Archive.
 Place images under ./data/HAM10000/.
 
@@ -133,10 +133,6 @@ You can open this notebook in [Google Colab](https://colab.research.google.com/g
 - Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
 - Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
 - Grad-CAM visualizations confirmed clinically relevant lesion focus.
-
-
-![Skin Lesion Classification Overview](results/figures/gradcam_grid.png)
-*Grad-CAM visualizations of ensemble models highlighting diagnostic regions for skin lesions.*
 
 ---
 
