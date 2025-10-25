@@ -8,6 +8,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 [![Star](https://img.shields.io/github/stars/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/stargazers)
 [![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
+![CI](https://github.com/<md-naim-hassan-saykat>/<https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000>/actions/workflows/ci.yml/badge.svg)
 
 > **Abstract:**  
 > This project presents a generalizable ensemble deep learning framework for multiclass skin lesion classification across HAM10000 and ISIC 2019 datasets.  
