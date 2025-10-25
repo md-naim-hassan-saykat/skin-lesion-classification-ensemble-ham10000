@@ -1,5 +1,9 @@
 # Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019
 
+> **Abstract:**  
+> This project presents a generalizable ensemble deep learning framework for multiclass skin lesion classification across HAM10000 and ISIC 2019 datasets.  
+> By combining seven deep architectures (CNN, ResNet50, DenseNet121, EfficientNetB3, ConvNeXt, MobileNetV3, and ViT), the ensemble achieves robust internal and external validation performance with improved reliability and interpretability (Grad-CAMs, calibration metrics, and confidence intervals).
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/release/python-390/)
