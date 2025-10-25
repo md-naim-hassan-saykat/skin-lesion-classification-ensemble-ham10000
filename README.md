@@ -89,9 +89,10 @@ skin-lesion-classification-ensemble-ham10000/
    ```
 ---
 
-## Install Dependencies:
+## Install Dependencies
+```bash
 pip install -r requirements.txt
-
+```
 ---
 
 ## Download Dataset:
