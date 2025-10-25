@@ -1,9 +1,5 @@
 # Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019
 
-> **Abstract:**  
-> This project presents a generalizable ensemble deep learning framework for multiclass skin lesion classification across HAM10000 and ISIC 2019 datasets.  
-> By combining seven deep architectures (CNN, ResNet50, DenseNet121, EfficientNetB3, ConvNeXt, MobileNetV3, and ViT), the ensemble achieves robust internal and external validation performance with improved reliability and interpretability (Grad-CAMs, calibration metrics, and confidence intervals).
-
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/release/python-390/)
@@ -13,8 +9,20 @@
 [![Star](https://img.shields.io/github/stars/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/stargazers)
 [![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
 
+> **Abstract:**  
+> This project presents a generalizable ensemble deep learning framework for multiclass skin lesion classification across HAM10000 and ISIC 2019 datasets.  
+> By combining seven deep architectures (CNN, ResNet50, DenseNet121, EfficientNetB3, ConvNeXt, MobileNetV3, and ViT), the ensemble achieves robust internal and external validation performance with improved reliability and interpretability (Grad-CAMs, calibration metrics, and confidence intervals).
+
 This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
 “Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
+
+## Key Features
+- **Unified Ensemble Framework:** integrates multiple deep models for robust lesion classification.  
+- **Cross-Dataset Validation:** evaluated on both **HAM10000** and **ISIC 2019** for generalizability.  
+- **Explainable AI (XAI):** Grad-CAM visualizations for lesion region interpretability.  
+- **Calibration Metrics:** includes ECE and reliability diagrams.  
+- **Reproducible Pipeline:** fully scripted for training, evaluation, and ensemble inference.  
+- **LaTeX Export:** auto-generates results and tables for research publication.
 
 ---
 
