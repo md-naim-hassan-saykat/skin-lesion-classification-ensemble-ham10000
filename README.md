@@ -151,6 +151,28 @@ You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-s
 
 ---
 
+## Performance Summary (HAM10000)
+
+| Model | Accuracy | F1 (Weighted) | ROC-AUC | Dataset Split |
+|:------|:----------:|:--------------:|:--------:|:--------------|
+| ResNet50 | 92.1% | 91.7% | 97.2% | Internal |
+| ViT-B16 | 91.8% | 91.3% | 96.8% | Internal |
+| Ensemble (7 models) | **94.5%** | **94.1%** | **98.3%** | Internal |
+| Ensemble (ISIC 2019) | 92.7% | 92.2% | 97.9% | External |
+
+---
+
+---
+
+## Environment & Hardware
+- **OS:** macOS / Linux / Windows  
+- **Python:** 3.9 or later  
+- **PyTorch:** 2.0+ with CUDA (optional)  
+- **Recommended GPU:** ≥8 GB VRAM (e.g., RTX 3060 or higher)  
+- **CPU mode** supported (for testing or feature extraction)
+
+---
+
 ## Citation
 
 If you use this work, please cite the Zenodo preprint:
@@ -186,12 +208,32 @@ See the LICENSE file for details.
 
  ---
 
- ## Author
+## Contributing
+Contributions, pull requests, and dataset integration (e.g., ISIC 2020) are welcome!  
+Please open an issue to discuss proposed changes before submitting a PR.
 
- **Md Naim Hassan Saykat**  
-*MSc in Artificial Intelligence, Université Paris-Saclay*  
+ ===
 
-[LinkedIn](https://www.linkedin.com/in/md-naim-hassan-saykat/)  
-[GitHub](https://github.com/md-naim-hassan-saykat)  
-[Academic Email](mailto:md-naim-hassan.saykat@universite-paris-saclay.fr)  
-[Personal Email](mailto:mdnaimhassansaykat@gmail.com)
+---
+
+## Contact
+For questions or collaboration inquiries:  
+[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
+
+---
+
+## Institutional Support
+This work was conducted as part of the **MSc in Artificial Intelligence** program at *Université Paris-Saclay*.  
+We acknowledge the use of publicly available data from the **ISIC Archive**.
+
+---
+
+## Demo Preview
+<img src="assets/demo.gif" width="800"/>
+
+---
+
+## Related Work
+- Tschandl et al., *HAM10000 Dataset: A Large Collection of Multi-Source Dermatoscopic Images*, Sci. Data 2018.  
+- Brinker et al., *Skin Cancer Classification Using Deep Ensembles*, JAMA Dermatology, 2020.  
+- Vaswani et al., *Attention Is All You Need*, NeurIPS 2017.
