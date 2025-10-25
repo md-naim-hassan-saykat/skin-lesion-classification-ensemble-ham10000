@@ -162,8 +162,6 @@ You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-s
 
 ---
 
----
-
 ## Environment & Hardware
 - **OS:** macOS / Linux / Windows  
 - **Python:** 3.9 or later  
@@ -211,8 +209,6 @@ See the LICENSE file for details.
 ## Contributing
 Contributions, pull requests, and dataset integration (e.g., ISIC 2020) are welcome!  
 Please open an issue to discuss proposed changes before submitting a PR.
-
- ===
 
 ---
 
