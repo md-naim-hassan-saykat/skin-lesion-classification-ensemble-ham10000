@@ -108,7 +108,7 @@ All training, evaluation, and ensemble logic are implemented in a single Jupyter
 
 `skin-lesion-classification-ensemble-ham10000.ipynb`
 
-You can open this notebook in [Google Colab](https://colab.research.google.com/github/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
+You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
 
 - Train individual models (ResNet50, DenseNet121, ViT, EfficientNetB3, ConvNeXt, etc.)
 - Perform ensemble evaluation
