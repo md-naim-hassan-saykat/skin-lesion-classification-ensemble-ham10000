@@ -1,0 +1,25 @@
+# Default hyperparameters & paths (edit as needed)
+seed: 42
+num_classes: 7
+image_size: 224
+
+data:
+  # Expected structure for ImageFolder:
+  # train/: class_subdirs..., val/: class_subdirs..., test/: class_subdirs...
+  root: ./data/HAM10000
+  train_dir: train
+  val_dir: val
+  test_dir: test
+
+train:
+  batch_size: 32
+  epochs: 30
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  early_stop_patience: 5
+
+model:
+  name: resnet50   # choices: resnet50, densenet121, efficientnet_b3, convnext_tiny, mobilenet_v3_small, vit_b_16
+
+output:
+  dir: ./outputs
