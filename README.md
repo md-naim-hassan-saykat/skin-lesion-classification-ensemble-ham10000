@@ -224,11 +224,6 @@ We acknowledge the use of publicly available data from the **ISIC Archive**.
 
 ---
 
-## Demo Preview
-<img src="assets/demo.gif" width="800"/>
-
----
-
 ## Related Work
 - Tschandl et al., *HAM10000 Dataset: A Large Collection of Multi-Source Dermatoscopic Images*, Sci. Data 2018.  
 - Brinker et al., *Skin Cancer Classification Using Deep Ensembles*, JAMA Dermatology, 2020.  
