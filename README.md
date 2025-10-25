@@ -36,7 +36,7 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 - [Citation](#citation)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [Author](#author)
+- [Contact](#contact)
 
 ---
 
