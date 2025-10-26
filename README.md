@@ -170,8 +170,8 @@ See the LICENSE file for details.
 ---
 
 ## Acknowledgements
-	•	ISIC Archive for providing the HAM10000 dataset.
-	•	Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
+- ISIC Archive for providing the HAM10000 dataset.
+- Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
 
 ---
 
