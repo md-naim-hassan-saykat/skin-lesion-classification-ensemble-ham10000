@@ -1,9 +1,25 @@
-# safer pattern (any depth)
-output/**/model.safetensors
-output/**/*.pt
-output/**/*.pth
-output/**/*.onnx
+cat >> .gitignore <<'IGN'
+# data & outputs
+data/
+outputs/
+results/
 
-# optional extra
-**/.ipynb_checkpoints/
+# python build/cache
+__pycache__/
+*.pyc
+*.pyo
+
+# virtual env
+.venv/
+
+# large/accidental artifacts
+*.pth
+*.pt
+*.ckpt
+*.csv
+*.xlsx
+*.png
+
+# macOS
 .DS_Store
+IGN
