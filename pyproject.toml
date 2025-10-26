@@ -1,13 +1,12 @@
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "skin-lesion-ensemble"
 version = "1.0.0"
 description = "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
-authors = [
-  { name = "Md Naim Hassan Saykat", email = "mdnaimhassansaykat@gmail.com" }
-]
+authors = [{ name = "Md Naim Hassan Saykat", email = "mdnaimhassansaykat@gmail.com" }]
 license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.9"
@@ -20,13 +19,39 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 
+[project.urls]
+Homepage = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
+Repository = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
+Issues = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues"
+Documentation = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000#readme"
+
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ["py39"]
 
 [tool.ruff]
 line-length = 88
+target-version = "py39"
+extend-exclude = [
+  ".venv",
+  "data",
+  "outputs",
+  "results",
+  "build",
+  "dist",
+  "__pycache__",
+]
+
+# New-style config lives under [tool.ruff.lint]
+[tool.ruff.lint]
+# Keep long lines allowed since you already ignore E501
 ignore = ["E501"]
+# A sensible minimal selection (add more if you want)
+select = ["E", "F", "I", "UP"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+lines-after-imports = 2
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
