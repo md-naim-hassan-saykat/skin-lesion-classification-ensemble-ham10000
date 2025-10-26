@@ -204,7 +204,7 @@ Reproduced from `scripts/eval_all.sh`.
 
 ---
 
-### Known Issues
+## Known Issues
 - **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
 - **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
 
@@ -230,4 +230,42 @@ pip install -r requirements.txt
 pip install -r requirements-ci.txt   # linters/tests
 pre-commit install
 pytest -q
+```
+## Development & Contribution Setup
+
+If you’d like to contribute or test locally, the project supports multiple development workflows.
+
+**Local Setup**
+# Clone and enter the project
+```bash
+git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
+cd skin-lesion-classification-ensemble-ham10000
+```
+
+# Create and activate a virtual environment
+```bash
+python -m venv .venv && source .venv/bin/activate
+```
+
+# Install dependencies
+```bash
+pip install -r requirements.txt -r requirements-ci.txt
+```
+
+# Run linters and tests
+```bash
+make lint
+make test
+```
+
+## Run via Docker
+
+# Build container
+```bash
+docker build -t skin-lesion-ensemble .
+```
+
+# Run tests inside container
+```bash
+docker run --rm skin-lesion-ensemble
 ```
