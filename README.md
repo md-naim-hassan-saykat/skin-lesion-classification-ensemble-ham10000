@@ -119,9 +119,12 @@ pip install -r requirements.txt
 ```
 ---
 
-## Download Dataset:
-Register and download HAM10000 from the ISIC Archive.
-Then place the images: 
+## Download Dataset
+
+Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).  
+The dataset is provided in **two parts** — `HAM10000_images_part_1.zip` and `HAM10000_images_part_2.zip`.  
+After extracting both, merge all images into a single directory:
+
 ```bash
 mkdir -p data/HAM10000
 cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
