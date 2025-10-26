@@ -9,6 +9,8 @@
 [![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 
+> A reproducible PyTorch implementation and ensemble pipeline for robust skin lesion classification across HAM10000 and ISIC 2019 datasets. Includes trained weights, evaluation scripts, and Grad-CAM visualizations.
+
 This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
 “Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
 
