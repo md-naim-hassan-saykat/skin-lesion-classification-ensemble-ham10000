@@ -1,14 +1,14 @@
 ## Summary
-What does this change?
+Briefly describe the purpose of this PR.
 
 ## Changes
-- [ ] Code
-- [ ] Docs
+- [ ] Code improvements
+- [ ] Documentation
 - [ ] Tests
+- [ ] CI / config
 
-## How was it tested?
-`pytest -q` output:
-
-## Checklist
-- [ ] CI passes
-- [ ] Updated docs/README if needed
+## Testing
+How was it tested?
+```bash
+pytest -q
+```
