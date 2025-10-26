@@ -220,20 +220,9 @@ bash scripts/eval_all.sh
 
 ---
 
-## Contributing
-
-Thanks for helping! To develop locally:
-
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-pip install -r requirements-ci.txt   # linters/tests
-pre-commit install
-pytest -q
-```
 ## Development & Contribution Setup
 
-If you’d like to contribute or test locally, the project supports multiple development workflows.
+If you would like to contribute or test locally, the project supports multiple development workflows.
 
 **Local Setup**
 # Clone and enter the project
