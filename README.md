@@ -217,3 +217,17 @@ To reproduce validation metrics:
 ```bash
 bash scripts/eval_all.sh
 ```
+
+---
+
+## Contributing
+
+Thanks for helping! To develop locally:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-ci.txt   # linters/tests
+pre-commit install
+pytest -q
+```
