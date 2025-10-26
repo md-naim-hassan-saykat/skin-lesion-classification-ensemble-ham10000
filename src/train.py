@@ -12,111 +12,20 @@ import argparse
 import csv
 import os
 from pathlib import Path
-from typing import Tuple, List
+from typing import List, Tuple
 
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torchvision import datasets, transforms, models
+from torchvision import datasets, models, transforms
 
-from utils import compute_metrics, seed_everything, load_yaml, save_json
-
-
-def get_model(name: str, num_classes: int) -> torch.nn.Module:
-    name = name.lower()
-    if name == "resnet50":
-        m = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V2)
-        m.fc = nn.Linear(m.fc.in_features, num_classes)
-    elif name == "densenet121":
-        m = models.densenet121(weights=models.DenseNet121_Weights.IMAGENET1K_V1)
-        m.classifier = nn.Linear(m.classifier.in_features, num_classes)
-    elif name == "efficientnet_b3":
-        m = models.efficientnet_b3(weights=models.EfficientNet_B3_Weights.IMAGENET1K_V1)
-        m.classifier[1] = nn.Linear(m.classifier[1].in_features, num_classes)
-    elif name == "convnext_tiny":
-        m = models.convnext_tiny(weights=models.ConvNeXt_Tiny_Weights.IMAGENET1K_V1)
-        m.classifier[2] = nn.Linear(m.classifier[2].in_features, num_classes)
-    elif name == "mobilenet_v3_small":
-        m = models.mobilenet_v3_small(weights=models.MobileNet_V3_Small_Weights.IMAGENET1K_V1)
-        m.classifier[3] = nn.Linear(m.classifier[3].in_features, num_classes)
-    elif name == "vit_b_16":
-        m = models.vit_b_16(weights=models.ViT_B_16_Weights.IMAGENET1K_V1)
-        m.heads.head = nn.Linear(m.heads.head.in_features, num_classes)
-    else:
-        raise ValueError(f"Unknown model name: {name}")
-    return m
-
-
-def build_loaders(root: str, image_size: int, batch_size: int) -> Tuple[DataLoader, DataLoader, List[str]]:
-    train_dir = os.path.join(root, "train")
-    val_dir = os.path.join(root, "val")
-
-    mean = [0.485, 0.456, 0.406]
-    std = [0.229, 0.224, 0.225]
-
-    train_tfms = transforms.Compose([
-        transforms.Resize((image_size, image_size)),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ColorJitter(0.2,0.2,0.2,0.1),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std),
-    ])
-    val_tfms = transforms.Compose([
-        transforms.Resize((image_size, image_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean, std),
-    ])
-
-    train_ds = datasets.ImageFolder(train_dir, transform=train_tfms)
-    val_ds = datasets.ImageFolder(val_dir, transform=val_tfms)
-
-    classes = train_ds.classes
-
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
-    val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
-    return train_loader, val_loader, classes
-
-
-def compute_class_weights(dataset: datasets.ImageFolder, num_classes: int) -> torch.Tensor:
-    counts = np.zeros(num_classes, dtype=np.int64)
-    for _, label in dataset.samples:
-        counts[label] += 1
-    weights = 1.0 / np.clip(counts, 1, None)
-    weights = weights * (num_classes / weights.sum())
-    return torch.tensor(weights, dtype=torch.float32)
-
-
-def validate(model, loader, device, num_classes: int):
-    model.eval()
-    y_true, y_pred = [], []
-    all_probs = []
-
-    with torch.no_grad():
-        for images, targets in loader:
-            images = images.to(device)
-            targets = targets.to(device)
-            logits = model(images)
-            probs = torch.softmax(logits, dim=1)
-            preds = probs.argmax(1)
-
-            y_true.extend(targets.cpu().numpy().tolist())
-            y_pred.extend(preds.cpu().numpy().tolist())
-            all_probs.append(probs.cpu().numpy())
-
-    y_prob = np.concatenate(all_probs, axis=0) if all_probs else None
-    metrics = compute_metrics(np.array(y_true), np.array(y_pred), y_prob=y_prob)
-    return metrics, y_true, y_pred, y_prob
-
+from src.utils import compute_metrics, load_yaml, save_json, seed_everything
 
 def main():
     parser = argparse.ArgumentParser(description="Train a classifier on HAM10000-like ImageFolder data.")
-    parser.add_argument("--config", default="config.yaml", type=str)
-    parser.add_argument("--model", default=None, type=str, help="Override model name from config.yaml")
-    parser.add_argument("--data_root", default=None, type=str, help="Override data root directory")
-    parser.add_argument("--out_dir", default=None, type=str, help="Where to save outputs (folder will be created)")
+    # ... args as you have them ...
     args = parser.parse_args()
 
     cfg = load_yaml(args.config)
@@ -127,7 +36,13 @@ def main():
     out_dir = Path(args.out_dir or os.path.join(cfg["output"]["dir"], model_name))
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Device selection (CUDA -> MPS -> CPU)
+    device = (
+        torch.device("cuda")
+        if torch.cuda.is_available()
+        else torch.device("mps") if torch.backends.mps.is_available() else torch.device("cpu")
+    )
+
     num_classes = cfg.get("num_classes", 7)
     image_size = cfg.get("image_size", 224)
     batch_size = cfg["train"]["batch_size"]
@@ -140,7 +55,7 @@ def main():
 
     model = get_model(model_name, num_classes).to(device)
 
-    # Weighted CrossEntropy for class imbalance (weights computed from training set)
+    # Weighted CrossEntropy for class imbalance
     train_ds = train_loader.dataset
     class_weights = compute_class_weights(train_ds, num_classes).to(device)
     criterion = nn.CrossEntropyLoss(weight=class_weights)
@@ -166,7 +81,6 @@ def main():
 
         scheduler.step()
 
-        # Validate
         val_metrics, y_true, y_pred, y_prob = validate(model, val_loader, device, num_classes)
         avg_loss = running_loss / len(train_loader.dataset)
 
@@ -176,22 +90,17 @@ def main():
             f"val_acc={val_metrics['accuracy']:.4f} | "
             f"val_f1={val_metrics['f1']:.4f} | "
             f"val_auc={val_metrics['auc']}"
-       )
+        )
 
-        # Early stopping on F1
         if val_metrics["f1"] > best_f1:
             best_f1 = val_metrics["f1"]
             patience_left = patience
 
-            # Save checkpoint
             ckpt_path = out_dir / f"{model_name}_best.pth"
             torch.save({"model": model.state_dict(), "classes": classes}, ckpt_path)
 
-            # Save metrics
             save_json({"epoch": epoch, **val_metrics}, out_dir / "metrics.json")
 
-
-            # Save predictions CSV for ensembling later
             pred_csv = out_dir / "val_predictions.csv"
             with open(pred_csv, "w", newline="") as f:
                 writer = csv.writer(f)
