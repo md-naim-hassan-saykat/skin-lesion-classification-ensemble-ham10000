@@ -50,6 +50,7 @@ venv/
 
 # OS-Specific Files
 .DS_Store
+<<<<<<< HEAD
 Thumbs.db
 
 # Temporary or Backup Files 
@@ -57,4 +58,11 @@ Thumbs.db
 *.tmp
 
 # Local Project Copies 
+=======
+data/
+outputs/
+results/
+.ipynb_checkpoints/
+__pycache__/
+>>>>>>> ebe7e92 (Add .gitignore for data/outputs/checkpoints and nested folder)
 skin-lesion-classification-ensemble-ham10000/
