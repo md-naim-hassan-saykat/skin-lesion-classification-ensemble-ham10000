@@ -5,11 +5,11 @@
 - load_yaml / save_json: simple IO helpers
 """
 from __future__ import annotations
-import os
+
 import json
 import random
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict
 
 import numpy as np
 import torch
@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 
 def compute_metrics(y_true, y_pred, y_prob=None) -> Dict[str, float]:
+    """Compute accuracy, weighted F1, and optional multi-class ROC-AUC."""
     acc = accuracy_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred, average="weighted")
     auc = None
@@ -29,24 +30,26 @@ def compute_metrics(y_true, y_pred, y_prob=None) -> Dict[str, float]:
 
 
 def seed_everything(seed: int = 42) -> None:
-    import numpy as _np
-    import torch as _torch
-
+    """Ensure reproducibility across Python, NumPy, and PyTorch."""
     random.seed(seed)
-    _np.random.seed(seed)
-    _torch.manual_seed(seed)
-    _torch.cuda.manual_seed_all(seed)
-    _torch.backends.cudnn.deterministic = True
-    _torch.backends.cudnn.benchmark = False
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
 
 
-def save_json(d: Dict, path: os.PathLike) -> None:
+def save_json(d: Dict, path: str | Path) -> None:
+    """Save dictionary as pretty-printed JSON."""
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
         json.dump(d, f, indent=2)
 
 
-def load_yaml(path: os.PathLike) -> Dict:
+def load_yaml(path: str | Path) -> Dict:
+    """Load a YAML file into a Python dictionary."""
     import yaml
+
     with open(path, "r") as f:
         return yaml.safe_load(f)
