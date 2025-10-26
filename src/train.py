@@ -170,7 +170,13 @@ def main():
         val_metrics, y_true, y_pred, y_prob = validate(model, val_loader, device, num_classes)
         avg_loss = running_loss / len(train_loader.dataset)
 
-        print(f"Epoch {epoch:03d}: loss={avg_loss:.4f} | val_acc={val_metrics['accuracy']:.4f} | val_f1={val_metrics['f1']:.4f} | val_auc={val_metrics['auc']}")
+        print(
+            f"Epoch {epoch:03d}: "
+            f"loss={avg_loss:.4f} | "
+            f"val_acc={val_metrics['accuracy']:.4f} | "
+            f"val_f1={val_metrics['f1']:.4f} | "
+            f"val_auc={val_metrics['auc']}"
+       )
 
         # Early stopping on F1
         if val_metrics["f1"] > best_f1:
