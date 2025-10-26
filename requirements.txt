@@ -1,12 +1,23 @@
-torch>=2.0
-torchvision>=0.15
-torchaudio>=2.0
-numpy>=1.23
-pandas>=1.5
-scikit-learn>=1.2
-matplotlib>=3.7
-seaborn>=0.12
-tqdm>=4.65
-Pillow>=9.5
-scipy>=1.10
+# Core Deep Learning Framework
+torch>=2.0,<2.3
+torchvision>=0.15,<0.18
+torchaudio>=2.0,<2.3
 einops>=0.7
+
+# Data Handling & Scientific Libraries
+numpy>=1.23,<2.0
+pandas>=1.5,<2.3
+scipy>=1.10,<2.5
+scikit-learn>=1.2,<1.6
+
+# Visualization
+matplotlib>=3.7,<3.10
+seaborn>=0.12,<0.14
+Pillow>=9.5,<11.0
+
+# Utilities
+tqdm>=4.65,<5.0
+
+# Optional (recommended for Grad-CAM and reproducibility)
+opencv-python>=4.8,<5.0
+grad-cam>=1.4.8  # For visualization of model attention maps
