@@ -1,0 +1,7 @@
+title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+datasets: ["HAM10000", "ISIC 2019"]
+framework: "PyTorch"
+backbones: ["ResNet50", "DenseNet121", "EfficientNetB3", "ConvNeXt-Tiny"]
+metrics: ["Accuracy", "F1-score", "ROC-AUC", "ECE"]
+license: "MIT"
+doi: "10.5281/zenodo.17390952"
