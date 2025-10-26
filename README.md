@@ -137,9 +137,10 @@ bash scripts/eval_all.sh
 
 ### (Optional) Train or Visualize Locally / in Colab
 
-Open the notebook:  
+Open the notebook:
+```bash
 [`notebooks/skin-lesion-ensemble-classification.ipynb`](notebooks/skin-lesion-ensemble-classification.ipynb)
-
+```
 ---
 
 ## Results
