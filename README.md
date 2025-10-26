@@ -1,4 +1,8 @@
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019
+# Generalizable Ensemble Deep Learning for Skin Lesion Classification:  
+### *Internal and External Validation on HAM10000 and ISIC 2019*
+
+This repository provides a reproducible **PyTorch-based ensemble framework** for robust skin lesion classification across **HAM10000** and **ISIC 2019** datasets.  
+It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt, etc.), ensemble fusion for improved generalization, and Grad-CAM visualizations for interpretability.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
 
@@ -12,10 +16,18 @@
 ![Tests](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 
-> A reproducible PyTorch implementation and ensemble pipeline for robust skin lesion classification across HAM10000 and ISIC 2019 datasets. Includes trained weights, evaluation scripts, and Grad-CAM visualizations.
+> A reproducible implementation and ensemble pipeline for high-performing skin lesion classification. Includes trained weights, evaluation scripts, and Grad-CAM visualization tools.
 
-This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
-“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
+---
+
+## Highlights
+
+- **7 architectures:** CNN, ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt  
+- **Ensemble fusion** improves generalization and AUC across datasets  
+- **Grad-CAM** visualizations for interpretable lesion focus  
+- **Pretrained weights, metrics, and outputs** hosted on Zenodo  
+- **Reproducible pipeline** via `bash`, `Makefile`, or Docker  
+
 
 ---
 
@@ -24,12 +36,11 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 - [Data & Weights](#data--weights)
 - [Paper (Preprint)](#paper-preprint)
 - [Repository Structure](#repository-structure)
-- [How to Reproduce](#how-to-reproduce)
-- [Example Outputs](#example-outputs)
+- [Reproduce or Train the Ensemble](#reproduce-or-train-the-ensemble)
 - [Results](#results)
-  - [Validation Metrics (HAM10000 Split)](#validation-metrics-ham10000-split)
-  - [Known Issues](#known-issues)
-  - [Reproducibility](#reproducibility)
+- [Visual Examples](#visual-examples)
+- [Known Issues](#known-issues)
+- [Development & Contribution Setup](#development--contribution-setup)
 - [Citation](#citation)
 - [Keywords](#keywords)
 - [License](#license)
@@ -40,25 +51,24 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 ## Data & Weights
 
-- **Dataset**  
-  HAM10000 (ISIC Archive): https://www.isic-archive.com/
+- **Dataset:** [HAM10000 (ISIC Archive)](https://www.isic-archive.com/)  
+- **External Validation:** ISIC 2019  
 
-- **Trained Weights & Artifacts**  
-  Due to GitHub's file size limits, all reproducibility assets are hosted externally via Zenodo, including:  
-  - Trained model weights (CNN, ResNet50, ViT, etc.)  
-  - Evaluation metrics (Accuracy, ROC-AUC, etc.)  
-  - Grad-CAM visualizations  
-  - LaTeX tables and figures
-  
-  **Zenodo DOI**: [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+Due to GitHub storage limits, reproducibility assets are hosted on Zenodo:  
+- Trained model weights  
+- Evaluation metrics (Accuracy, F1, ROC-AUC)  
+- Grad-CAM visualizations  
+- LaTeX tables and figures  
+
+**Zenodo DOI:** [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
 ## Paper (Preprint)
 
-- **Title**: *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
-- **DOI**: [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
-- **Status**: Preprint on Zenodo (not peer-reviewed or journal-published yet)
+- **Title:** *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
+- **DOI:** [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
+- **Status:** Preprint (Zenodo, 2025)
 
 ---
 
@@ -66,79 +76,140 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 
 skin-lesion-classification-ensemble-ham10000/
 │
-├── main.tex                         # LaTeX source of the paper
-├── references.bib                   # References for ESWA submission
-├── README.md                        # Project documentation
-├── .gitignore                       # Ignore large model files
+├── src/                          # Core training and evaluation modules
+│   ├── train.py
+│   ├── evaluate.py
+│   ├── ensemble.py
+│   ├── utils.py
+│   └── config.yaml
+│
+├── scripts/                      # Automation and evaluation scripts
+│   └── eval_all.sh
+│
+├── results/                      # Evaluation outputs, tables, and figures
+│   ├── figures/
+│   └── tables/
 │
 ├── notebooks/
-│   └── skin-lesion-classification-ensemble-ham10000.ipynb   # End-to-end pipeline
+│   └── skin-lesion-ensemble-classification.ipynb
 │
-├── results/
-│   ├── figures/                     # Plots and visualizations
-│   │   ├── confusion_matrix.png
-│   │   ├── roc_curves_ensemble.png
-│   │   ├── gradcam_grid.png
-│   │   └── …
-│   ├── tables/                      # LaTeX-ready tables
-│   │   ├── master_results_with_95CI.tex
-│   │   ├── delta_ensemble_vs_models.tex
-│   │   └── mcnemar_ensemble_vs_models.tex
-│   └── metrics_with_95CI.csv
+├── tests/
+│   └── test_smoke.py
 │
-└── paper/
-└── skin_lesion_classification_ensemble_ham10000.pdf     # Compiled paper
+├── requirements.txt
+├── requirements-ci.txt
+├── Dockerfile
+├── Makefile
+└── README.md
 
 ---
 
-## How to Reproduce
+*For developer contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).*
 
-**Clone the repository**:
-   ```bash
-   git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-   cd skin-lesion-classification-ensemble-ham10000
-   ```
 ---
 
-## Install Dependencies
+## Reproduce or Train the Ensemble
+
+### Clone and set up environment
 ```bash
+git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
+cd skin-lesion-classification-ensemble-ham10000
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ---
 
 ## Download Dataset:
 Register and download HAM10000 from the ISIC Archive.
-Place images under ./data/HAM10000/.
+Then place the images: 
+```bash
+mkdir -p data/HAM10000 && mv /path/to/images/* data/HAM10000/
+```
 
 ---
 
-## Train Models & Run Ensemble Evaluation
+## Reproducibility: Evaluate pretrained models
+Run all model evaluations using:
+```bash
+bash scripts/eval_all.sh
+```
+---
 
-All training, evaluation, and ensemble logic are implemented in a single Jupyter notebook:
+### **(Optional) Train or Visualize Locally / in Colab**
 
-`skin-lesion-classification-ensemble-ham10000.ipynb`
-
-You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb) or run it locally to:
-
-- Train individual models (ResNet50, DenseNet121, ViT, EfficientNetB3, ConvNeXt, etc.)
-- Perform ensemble evaluation
-- Generate plots (e.g., confusion matrix, ROC-AUC)
-- Visualize Grad-CAMs
-- Export LaTeX tables for paper
-
-> All experiments were performed using 7 backbone models: CNN, ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, and ConvNeXt.
+Open the notebook:  
+[`notebooks/skin-lesion-ensemble-classification.ipynb`](notebooks/skin-lesion-ensemble-classification.ipynb)
 
 ---
 
+## Results
+
+The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.  
+Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
+
+### Validation Metrics (HAM10000 Split)
+
+Reproduced from `scripts/eval_all.sh`.
+
+| Model                  | Accuracy | F1     | AUC    |
+|------------------------|---------:|-------:|-------:|
+| EfficientNet-B3        | 0.638    | 0.625  | 0.671  |
+| DenseNet-121           | 0.809    | 0.791  | 0.968  |
+| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998  |
+| **Ensemble (above 3)** | **0.883**| **0.868**| **0.992** |
+
+> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
+
 ---
 
-## Example Outputs
+## Visual Examples
 
 | ROC Curve | Confusion Matrix | Grad-CAM |
 |-----------|------------------|----------|
 | <img src="results/figures/roc_curves_ensemble.png" width="300"/> | <img src="results/figures/confusion_matrix_ensemble_full.png" width="300"/> | <img src="results/figures/gradcam_grid.png" width="300"/> |
 
 > These outputs are automatically generated by the notebook.
+
+---
+
+## Known Issues
+- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
+- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+
+---
+
+
+## Development & Contribution Setup
+
+If you wish to contribute or test locally:
+
+### Local Setup
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt -r requirements-ci.txt
+make lint
+make test
+```
+
+---
+
+## Run via Docker
+```bash
+docker build -t skin-lesion-ensemble .
+docker run --rm skin-lesion-ensemble
+```
+
+---
+
+## Environment Summary
+
+| **Component** | **Version** |
+|----------------|-------------|
+| Python | 3.9+ |
+| PyTorch | 2.0–2.9 |
+| Torchvision | 0.24 |
+| OS | macOS / Linux |
+| Hardware | MPS / CUDA GPU |
 
 ---
 
@@ -183,59 +254,3 @@ If you have any questions, encounter issues, or wish to collaborate, please feel
 [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 ---
-
-## Results
-
-The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.  
-Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
-
-### Validation Metrics (HAM10000 Split)
-
-Reproduced from `scripts/eval_all.sh`.
-
-| Model                  | Accuracy | F1     | AUC    |
-|------------------------|---------:|-------:|-------:|
-| EfficientNet-B3        | 0.638    | 0.625  | 0.671  |
-| DenseNet-121           | 0.809    | 0.791  | 0.968  |
-| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998  |
-| **Ensemble (above 3)** | **0.883**| **0.868**| **0.992** |
-
-> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
-
----
-
-## Known Issues
-- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
-- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
-
----
-
-### Reproducibility
-
-To reproduce validation metrics:
-
-```bash
-bash scripts/eval_all.sh
-```
-
----
-
-## Development & Contribution Setup
-
-If you would like to contribute or test locally, the project supports multiple development workflows.
-
-### Local Setup
-```bash
-git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-cd skin-lesion-classification-ensemble-ham10000
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt -r requirements-ci.txt
-make lint
-make test
-```
-
-## Run via Docker
-```bash
-docker build -t skin-lesion-ensemble .
-docker run --rm skin-lesion-ensemble
-```
