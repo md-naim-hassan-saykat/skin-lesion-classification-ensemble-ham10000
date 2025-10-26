@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+authors:
+  - family-names: Saykat
+    given-names: Md Naim Hassan
+contact: mdnaimhassansaykat@gmail.com
+doi: 10.5281/zenodo.17390952
+date-released: 2025-10-19
+license: MIT
+repository-code: https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000
+preferred-citation:
+  type: misc
+  title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+  authors:
+    - family-names: Saykat
+      given-names: Md Naim Hassan
+  year: 2025
+  doi: 10.5281/zenodo.17390952
