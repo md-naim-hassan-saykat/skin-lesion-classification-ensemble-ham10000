@@ -7,8 +7,8 @@ We welcome pull requests for bug fixes, documentation improvements, and research
 
 ## Local Development Setup
 
+**Clone the repository**:
 ```bash
-# Clone the repo
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
 ```
