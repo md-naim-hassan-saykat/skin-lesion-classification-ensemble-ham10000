@@ -213,5 +213,3 @@ To reproduce validation metrics:
 ```bash
 bash scripts/eval_all.sh
 ```
-
----
