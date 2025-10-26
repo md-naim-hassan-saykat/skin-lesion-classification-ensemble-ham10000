@@ -1,7 +1,10 @@
 """Evaluate a saved checkpoint on an ImageFolder split.
 
 Usage:
-  python src/evaluate.py --checkpoint ./outputs/resnet50/resnet50_best.pth --data_dir ./data/HAM10000/test --out ./outputs/resnet50/test_metrics.json
+  python src/evaluate.py \
+      --checkpoint ./outputs/resnet50/resnet50_best.pth \
+      --data_dir ./data/HAM10000/test \
+      --out ./outputs/resnet50/test_metrics.json
 """
 from __future__ import annotations
 
