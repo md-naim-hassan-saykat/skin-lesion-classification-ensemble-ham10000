@@ -32,6 +32,7 @@ target-version = ["py39"]
 [tool.ruff]
 line-length = 88
 target-version = "py39"
+# Do not lint virtualenv, artifacts, and notebooks
 extend-exclude = [
   ".venv",
   "data",
@@ -40,13 +41,14 @@ extend-exclude = [
   "build",
   "dist",
   "__pycache__",
+  "*.ipynb",
+  "notebooks",     # belt-and-suspenders: skip the whole folder
 ]
 
-# New-style config lives under [tool.ruff.lint]
 [tool.ruff.lint]
-# Keep long lines allowed since you already ignore E501
+# keep long lines allowed
 ignore = ["E501"]
-# A sensible minimal selection (add more if you want)
+# basic rule set
 select = ["E", "F", "I", "UP"]
 
 [tool.ruff.lint.isort]
