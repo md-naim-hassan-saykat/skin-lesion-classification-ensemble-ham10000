@@ -175,17 +175,12 @@ See the LICENSE file for details.
 	•	ISIC Archive for providing the HAM10000 dataset.
 	•	Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
 
- ---
+---
 
- ## Author
+## Contact
 
- **Md Naim Hassan Saykat**  
-*MSc in Artificial Intelligence, Université Paris-Saclay*  
-
-[LinkedIn](https://www.linkedin.com/in/md-naim-hassan-saykat/)  
-[GitHub](https://github.com/md-naim-hassan-saykat)  
-[Academic Email](mailto:md-naim-hassan.saykat@universite-paris-saclay.fr)  
-[Personal Email](mailto:mdnaimhassansaykat@gmail.com)
+If you have any questions, encounter issues, or wish to collaborate, please feel free to contact me:  
+[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 ---
 
