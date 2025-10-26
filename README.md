@@ -5,25 +5,12 @@
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/release/python-390/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 [![Star](https://img.shields.io/github/stars/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/stargazers)
 [![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
-![CI](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
-
-> **Abstract:**  
-> This project presents a generalizable ensemble deep learning framework for multiclass skin lesion classification across HAM10000 and ISIC 2019 datasets.  
-> By combining seven deep architectures (CNN, ResNet50, DenseNet121, EfficientNetB3, ConvNeXt, MobileNetV3, and ViT), the ensemble achieves robust internal and external validation performance with improved reliability and interpretability (Grad-CAMs, calibration metrics, and confidence intervals).
 
 This repository contains code, trained model checkpoints, evaluation outputs, and the preprint paper for our study:
 “Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”
-
-## Key Features
-- **Unified Ensemble Framework:** integrates multiple deep models for robust lesion classification.  
-- **Cross-Dataset Validation:** evaluated on both **HAM10000** and **ISIC 2019** for generalizability.  
-- **Explainable AI (XAI):** Grad-CAM visualizations for lesion region interpretability.  
-- **Calibration Metrics:** includes ECE and reliability diagrams.  
-- **Reproducible Pipeline:** fully scripted for training, evaluation, and ensemble inference.  
-- **LaTeX Export:** auto-generates results and tables for research publication.
 
 ---
 
@@ -37,7 +24,7 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 - [Citation](#citation)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [Contact](#contact)
+- [Author](#author)
 
 ---
 
@@ -152,26 +139,6 @@ You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-s
 
 ---
 
-## Performance Summary (HAM10000)
-
-| Model | Accuracy | F1 (Weighted) | ROC-AUC | Dataset Split |
-|:------|:----------:|:--------------:|:--------:|:--------------|
-| ResNet50 | 92.1% | 91.7% | 97.2% | Internal |
-| ViT-B16 | 91.8% | 91.3% | 96.8% | Internal |
-| Ensemble (7 models) | **94.5%** | **94.1%** | **98.3%** | Internal |
-| Ensemble (ISIC 2019) | 92.7% | 92.2% | 97.9% | External |
-
----
-
-## Environment & Hardware
-- **OS:** macOS / Linux / Windows  
-- **Python:** 3.9 or later  
-- **PyTorch:** 2.0+ with CUDA (optional)  
-- **Recommended GPU:** ≥8 GB VRAM (e.g., RTX 3060 or higher)  
-- **CPU mode** supported (for testing or feature extraction)
-
----
-
 ## Citation
 
 If you use this work, please cite the Zenodo preprint:
@@ -207,25 +174,53 @@ See the LICENSE file for details.
 
  ---
 
-## Contributing
-Contributions, pull requests, and dataset integration (e.g., ISIC 2020) are welcome!  
-Please open an issue to discuss proposed changes before submitting a PR.
+ ## Author
 
----
+ **Md Naim Hassan Saykat**  
+*MSc in Artificial Intelligence, Université Paris-Saclay*  
 
-## Contact
-For questions or collaboration inquiries:  
-[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
+[LinkedIn](https://www.linkedin.com/in/md-naim-hassan-saykat/)  
+[GitHub](https://github.com/md-naim-hassan-saykat)  
+[Academic Email](mailto:md-naim-hassan.saykat@universite-paris-saclay.fr)  
+[Personal Email](mailto:mdnaimhassansaykat@gmail.com)
 
----
+## Results (Validation)
+Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
 
-## Institutional Support
-This work was conducted as part of the **MSc in Artificial Intelligence** program at *Université Paris-Saclay*.  
-We acknowledge the use of publicly available data from the **ISIC Archive**.
+| Model                  | Accuracy | F1     | AUC    |
+|------------------------|---------:|-------:|-------:|
+| EfficientNet-B3        | 0.638    | 0.625  | 0.671  |
+| DenseNet-121           | 0.809    | 0.791  | 0.968  |
+| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998  |
+| **Ensemble (above 3)** | **0.883**| **0.868**| **0.992** |
 
----
+> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
 
-## Related Work
-- Tschandl et al., *HAM10000 Dataset: A Large Collection of Multi-Source Dermatoscopic Images*, Sci. Data 2018.  
-- Brinker et al., *Skin Cancer Classification Using Deep Ensembles*, JAMA Dermatology, 2020.  
-- Vaswani et al., *Attention Is All You Need*, NeurIPS 2017.
+### Known Issues
+- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
+- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+
+### Reproducibility
+```bash
+bash scripts/eval_all.sh
+## Results (Validation)
+Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
+
+| Model                  | Accuracy |   F1   |  AUC  |
+|------------------------|---------:|-------:|------:|
+| EfficientNet-B3        | 0.638    | 0.625  | 0.671 |
+| DenseNet-121           | 0.809    | 0.791  | 0.968 |
+| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998 |
+| **Ensemble (above 3)** | **0.883**| **0.868** | **0.992** |
+
+> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
+
+### Known Issues
+- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
+- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+
+### Reproducibility
+```bash
+bash scripts/eval_all.sh
+- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
+- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
