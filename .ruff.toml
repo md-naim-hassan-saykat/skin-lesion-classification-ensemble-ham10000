@@ -1,0 +1,10 @@
+line-length = 120
+
+[lint]
+extend-select = ["E", "F"]
+ignore = ["E501"]  # ignore long line warnings
+
+exclude = [
+  "notebooks/*.ipynb",
+  "notebooks/**/*.ipynb",
+]
