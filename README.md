@@ -123,7 +123,9 @@ pip install -r requirements.txt
 Register and download HAM10000 from the ISIC Archive.
 Then place the images: 
 ```bash
-mkdir -p data/HAM10000 && mv /path/to/images/* data/HAM10000/
+mkdir -p data/HAM10000
+cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
+cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
 ```
 
 ---
