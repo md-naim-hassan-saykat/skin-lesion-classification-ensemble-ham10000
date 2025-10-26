@@ -9,21 +9,19 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import csv
 from pathlib import Path
 
 import numpy as np
 import torch
 from torchvision import datasets, transforms, models
 
-from utils import compute_metrics, save_json
+from src.utils import compute_metrics, save_json
 
 
 def infer_model_name_from_ckpt(path: str) -> str:
-    # Heuristic: extract parent folder name or file prefix
+    """Infer model name from checkpoint filename or folder."""
     p = Path(path)
-    name = p.stem.replace("_best", "")
-    return name
+    return p.stem.replace("_best", "")
 
 
 def get_model(name: str, num_classes: int):
@@ -65,7 +63,7 @@ def main():
     tfms = transforms.Compose([
         transforms.Resize((224, 224)),
         transforms.ToTensor(),
-        transforms.Normalize([0.485,0.456,0.406], [0.229,0.224,0.225]),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ])
     ds = datasets.ImageFolder(args.data_dir, transform=tfms)
     loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=4, pin_memory=True)
@@ -76,16 +74,13 @@ def main():
     model.load_state_dict(ckpt["model"], strict=False)
     model.to(device).eval()
 
-    y_true, y_pred = [], []
-    all_probs = []
-
+    y_true, y_pred, all_probs = [], [], []
     with torch.no_grad():
         for images, targets in loader:
             images = images.to(device)
             logits = model(images)
             probs = torch.softmax(logits, dim=1).cpu().numpy()
             preds = probs.argmax(1)
-
             y_true.extend(targets.numpy().tolist())
             y_pred.extend(preds.tolist())
             all_probs.append(probs)
