@@ -224,37 +224,18 @@ bash scripts/eval_all.sh
 
 If you would like to contribute or test locally, the project supports multiple development workflows.
 
-**Local Setup**
-# Clone and enter the project
+### Local Setup
 ```bash
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
-```
-
-# Create and activate a virtual environment
-```bash
 python -m venv .venv && source .venv/bin/activate
-```
-
-# Install dependencies
-```bash
 pip install -r requirements.txt -r requirements-ci.txt
-```
-
-# Run linters and tests
-```bash
 make lint
 make test
 ```
 
 ## Run via Docker
-
-# Build container
 ```bash
 docker build -t skin-lesion-ensemble .
-```
-
-# Run tests inside container
-```bash
 docker run --rm skin-lesion-ensemble
 ```
