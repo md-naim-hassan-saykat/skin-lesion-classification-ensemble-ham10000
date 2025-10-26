@@ -23,11 +23,16 @@ This repository contains code, trained model checkpoints, evaluation outputs, an
 - [Paper (Preprint)](#paper-preprint)
 - [Repository Structure](#repository-structure)
 - [How to Reproduce](#how-to-reproduce)
+- [Example Outputs](#example-outputs)
 - [Results](#results)
+  - [Validation Metrics (HAM10000 Split)](#validation-metrics-ham10000-split)
+  - [Known Issues](#known-issues)
+  - [Reproducibility](#reproducibility)
 - [Citation](#citation)
+- [Keywords](#keywords)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
-- [Author](#author)
+- [Contact](#contact)
 
 ---
 
