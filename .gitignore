@@ -23,3 +23,5 @@ __pycache__/
 # macOS
 .DS_Store
 IGN
+skin-lesion-classification-ensemble-ham10000/
+*.bak
