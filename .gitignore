@@ -1,28 +1,60 @@
-cat >> .gitignore <<'IGN'
-# data & outputs
+# General .gitignore for Deep Learning Projects
+
+# Data & Outputs 
 data/
+datasets/
 outputs/
 results/
+logs/
+checkpoints/
 
-# python build/cache
+# Python Build/Cache
 __pycache__/
 *.pyc
 *.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
 
-# virtual env
+# Virtual Environments 
 .venv/
+env/
+venv/
 
-# large/accidental artifacts
+# Large or Accidental Artifacts 
 *.pth
 *.pt
 *.ckpt
+*.onnx
 *.csv
 *.xlsx
-*.png
+*.npy
+*.npz
+*.zip
+*.tar
+*.tar.gz
+*.h5
 
-# macOS
+# Image and Visualization Artifacts 
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# IDE / Editor Settings 
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS-Specific Files
 .DS_Store
-IGN
-skin-lesion-classification-ensemble-ham10000/
+Thumbs.db
+
+# Temporary or Backup Files 
 *.bak
+*.tmp
+
+# Local Project Copies 
 skin-lesion-classification-ensemble-ham10000/
