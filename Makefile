@@ -1,16 +1,23 @@
-.PHONY: setup format lint test eval
+.PHONY: setup format lint test eval clean
+
+VENV = .venv
+ACTIVATE = . $(VENV)/bin/activate
 
 setup:
-	python -m venv .venv && . .venv/bin/activate && pip install -r requirements.txt -r requirements-ci.txt
+	python -m venv $(VENV)
+	$(ACTIVATE) && pip install -r requirements.txt -r requirements-ci.txt
 
 format:
-	black .
+	$(ACTIVATE) && black .
 
 lint:
-	ruff check .
+	$(ACTIVATE) && ruff check src scripts tests
 
 test:
-	pytest -q
+	$(ACTIVATE) && pytest -q
 
 eval:
-	bash scripts/eval_all.sh
+	$(ACTIVATE) && bash scripts/eval_all.sh
+
+clean:
+	rm -rf __pycache__ */__pycache__ .pytest_cache .ruff_cache .coverage .mypy_cache
