@@ -135,13 +135,6 @@ You can open this notebook in [Google Colab](https://github.com/md-naim-hassan-s
 
 ---
 
-## Results
-- Ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC.
-- Calibration analysis using Expected Calibration Error (ECE) showed strong reliability.
-- Grad-CAM visualizations confirmed clinically relevant lesion focus.
-
----
-
 ## Citation
 
 If you use this work, please cite the Zenodo preprint:
@@ -184,8 +177,14 @@ If you have any questions, encounter issues, or wish to collaborate, please feel
 
 ---
 
-## Results (Validation)
-Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
+## Results
+
+The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.  
+Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
+
+### Validation Metrics (HAM10000 Split)
+
+Reproduced from `scripts/eval_all.sh`.
 
 | Model                  | Accuracy | F1     | AUC    |
 |------------------------|---------:|-------:|-------:|
