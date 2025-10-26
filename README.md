@@ -136,6 +136,9 @@ cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
 ## Reproducibility: Evaluate pretrained models
 Run all model evaluations using:
 ```bash
+cd skin-lesion-classification-ensemble-ham10000
+source ../.venv/bin/activate
+export PYTHONPATH="$PWD"
 bash scripts/eval_all.sh
 ```
 ---
