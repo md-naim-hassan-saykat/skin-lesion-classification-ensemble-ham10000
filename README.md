@@ -1,4 +1,4 @@
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification:  
+# Generalizable Ensemble Deep Learning for Skin Lesion Classification  
 ### *Internal and External Validation on HAM10000 and ISIC 2019*
 
 This repository provides a reproducible **PyTorch-based ensemble framework** for robust skin lesion classification across **HAM10000** and **ISIC 2019** datasets.  
