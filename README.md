@@ -184,6 +184,8 @@ See the LICENSE file for details.
 [Academic Email](mailto:md-naim-hassan.saykat@universite-paris-saclay.fr)  
 [Personal Email](mailto:mdnaimhassansaykat@gmail.com)
 
+---
+
 ## Results (Validation)
 Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
 
@@ -196,34 +198,20 @@ Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
 
 > Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
 
+---
+
 ### Known Issues
 - **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
 - **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+
+---
 
 ### Reproducibility
+
+To reproduce validation metrics:
+
 ```bash
 bash scripts/eval_all.sh
-## Results (Validation)
-Reproduced from `scripts/eval_all.sh` on the HAM10000 split.
+```
 
-| Model                  | Accuracy |   F1   |  AUC  |
-|------------------------|---------:|-------:|------:|
-| EfficientNet-B3        | 0.638    | 0.625  | 0.671 |
-| DenseNet-121           | 0.809    | 0.791  | 0.968 |
-| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998 |
-| **Ensemble (above 3)** | **0.883**| **0.868** | **0.992** |
-
-> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
-
-### Known Issues
-- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
-- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
-
-### Reproducibility
-```bash
-bash scripts/eval_all.sh
-- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
-- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
-### Known Issues
-- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
-- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+---
