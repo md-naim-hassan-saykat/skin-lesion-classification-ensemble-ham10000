@@ -6,9 +6,10 @@ from typing import Callable, Dict
 import torch.nn as nn
 from torchvision import models as tv
 
-# Small helper to replace the last Linear layer inside a classifier "head"
+
 def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
-    # Try common patterns (Sequential heads with the last item Linear)
+    """Replace the last nn.Linear inside a classifier/head with one of size out_features."""
+    # Try common Sequential pattern
     if isinstance(module, nn.Sequential) and len(module) > 0:
         for i in range(len(module) - 1, -1, -1):
             if isinstance(module[i], nn.Linear):
@@ -17,9 +18,8 @@ def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
                 return module
     # Single Linear head
     if isinstance(module, nn.Linear):
-        module = nn.Linear(module.in_features, out_features)
-        return module
-    # Fallback: search recursively for the last Linear
+        return nn.Linear(module.in_features, out_features)
+    # Fallback: search recursively for the last Linear by name
     last_linear_name = None
     for name, child in module.named_children():
         if isinstance(child, nn.Linear):
@@ -27,8 +27,7 @@ def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
     if last_linear_name is not None:
         old: nn.Linear = getattr(module, last_linear_name)  # type: ignore[assignment]
         setattr(module, last_linear_name, nn.Linear(old.in_features, out_features))
-        return module
-    return module  # if nothing matched, return unchanged
+    return module
 
 
 def get_model(name: str, num_classes: int) -> nn.Module:
@@ -48,9 +47,7 @@ def get_model(name: str, num_classes: int) -> nn.Module:
     }
 
     if n not in builders:
-        raise ValueError(
-            f"Unknown model '{name}'. Choose from: {', '.join(sorted(builders.keys()))}"
-        )
+        raise ValueError(f"Unknown model '{name}'. Choose from: {', '.join(sorted(builders.keys()))}")
 
     m = builders[n]()
 
@@ -64,12 +61,11 @@ def get_model(name: str, num_classes: int) -> nn.Module:
     elif n.startswith("convnext"):
         m.classifier = _replace_last_linear(m.classifier, num_classes)  # type: ignore[attr-defined]
     elif n.startswith("vit"):
-        # torchvision ViT head lives at m.heads.head
         m.heads.head = nn.Linear(m.heads.head.in_features, num_classes)  # type: ignore[attr-defined]
     elif n.startswith("mobilenet"):
         m.classifier = _replace_last_linear(m.classifier, num_classes)  # type: ignore[attr-defined]
     else:
-        # Fallback: try to replace the last linear in a generic "classifier" or "heads"
+        # Generic fallback
         if hasattr(m, "classifier"):
             m.classifier = _replace_last_linear(m.classifier, num_classes)  # type: ignore[attr-defined]
         elif hasattr(m, "heads"):
