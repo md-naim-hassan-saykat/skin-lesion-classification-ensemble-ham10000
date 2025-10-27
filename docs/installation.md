@@ -1,6 +1,6 @@
 # Installation Guide
 
-This document provides setup instructions for the **Skin Lesion Classification Ensemble (HAM10000 & ISIC 2019)** project.
+This document provides setup instructions for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
 
 ---
 
