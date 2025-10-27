@@ -197,7 +197,7 @@ If you wish to contribute or test locally:
 ### Local Setup
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/skin-lesion-classification-ensemble-ham10000.git
+git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
 
 # Create and activate a virtual environment
