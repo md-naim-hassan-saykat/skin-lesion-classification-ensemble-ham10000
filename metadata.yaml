@@ -1,7 +1,60 @@
+# =============================================================================
+# Project Metadata: Skin Lesion Ensemble Classification
+# =============================================================================
 title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
-datasets: ["HAM10000", "ISIC 2019"]
-framework: "PyTorch"
-backbones: ["ResNet50", "DenseNet121", "EfficientNetB3", "ConvNeXt-Tiny"]
-metrics: ["Accuracy", "F1-score", "ROC-AUC", "ECE"]
+
+description: >
+  A reproducible deep learning pipeline that integrates multiple CNN backbones
+  (ResNet50, DenseNet121, EfficientNet-B3, ConvNeXt-Tiny) into an ensemble model
+  for robust and generalizable skin lesion classification. The project evaluates
+  performance on both internal (HAM10000) and external (ISIC 2019) datasets,
+  focusing on accuracy, F1-score, ROC-AUC, and calibration.
+
+authors:
+  - name: "Md Naim Hassan Saykat"
+    affiliation: "Université Paris-Saclay, Department of Computer Science"
+    email: "mdnaimhassansaykat@gmail.com"
+    orcid: "https://orcid.org/0009-0007-5270-3970"
+
+version: "1.0.0"
+date-released: "2025-10-19"
 license: "MIT"
+repository: "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
 doi: "10.5281/zenodo.17390952"
+
+framework: "PyTorch 2.2"
+language: "Python 3.11"
+
+datasets:
+  - name: "HAM10000"
+    link: "https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000"
+    type: "Dermoscopic images"
+  - name: "ISIC 2019"
+    link: "https://challenge.isic-archive.com/data.html"
+    type: "External benchmark dataset"
+
+backbones:
+  - "ResNet50"
+  - "DenseNet121"
+  - "EfficientNet-B3"
+  - "ConvNeXt-Tiny"
+
+ensemble_method:
+  type: "Probability averaging"
+  fusion: "Simple mean or weighted by validation AUC"
+  implementation: "src/ensemble.py"
+
+metrics:
+  - "Accuracy"
+  - "Weighted F1-score"
+  - "ROC-AUC (OvR)"
+  - "Expected Calibration Error (ECE)"
+
+hardware:
+  gpu: "NVIDIA RTX 4090 / A100"
+  precision: "Mixed FP16"
+  batch_size: 32
+
+citations:
+  - text: "Saykat, M.N.H. (2025). Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019. Zenodo. https://doi.org/10.5281/zenodo.17390952"
+    doi: "10.5281/zenodo.17390952"
