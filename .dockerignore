@@ -1,9 +1,0 @@
-# .dockerignore
-.git
-.venv
-__pycache__/
-.ipynb_checkpoints/
-data/
-outputs/
-results/
-*.ipynb
