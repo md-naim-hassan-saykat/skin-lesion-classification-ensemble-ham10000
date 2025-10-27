@@ -81,6 +81,7 @@ skin-lesion-classification-ensemble-ham10000/
 │   ├── evaluate.py
 │   ├── ensemble.py
 │   ├── utils.py
+│   ├── data.py                  
 │   └── config.yaml
 │
 ├── scripts/                      # Automation and evaluation scripts
