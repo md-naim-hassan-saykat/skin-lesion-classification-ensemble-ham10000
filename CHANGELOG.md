@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] – 2025-10-26
+## [1.0.0] – 2025-10-27
 ### Added
 - End-to-end ensemble pipeline (DenseNet121, EfficientNet-B3, ConvNeXt-Tiny)
 - Validation script (`scripts/eval_all.sh`)
