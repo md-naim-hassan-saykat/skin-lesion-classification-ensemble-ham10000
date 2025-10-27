@@ -1,26 +1,32 @@
 # Installation Guide
 
-This document provides detailed setup instructions for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
-It covers environment setup, dataset preparation, dependency installation, and basic verification steps.
+This document explains how to set up the environment for running experiments on the **Skin Lesion Classification Ensemble** project.
 
----
+## Requirements
+- Python 3.9+
+- CUDA 11+ (for GPU training)
+- Git and Git LFS installed
 
-## 1. Prerequisites
-
-Before starting, ensure you have the following installed:
-
-| Requirement | Recommended Version |
-|--------------|---------------------|
-| Python       | ≥ 3.9               |
-| Git          | ≥ 2.30              |
-| pip          | ≥ 23.0              |
-| virtualenv   | (optional but recommended) |
-
----
-
-## 2. Clone the Repository
-
-From your terminal:
+## Setup Steps
 ```bash
+# Clone the repository
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
+```
+
+# Create virtual environment
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# .venv\Scripts\activate    # Windows
+```
+
+# Install dependencies
+```bash
+pip install -r requirements.txt -r requirements-ci.txt
+```
+
+# Enable Git LFS
+```bash
+git lfs install
+```
