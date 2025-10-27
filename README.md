@@ -26,7 +26,7 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 - **Ensemble fusion** improves generalization and AUC across datasets  
 - **Grad-CAM** visualizations for interpretable lesion focus  
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo  
-- **Reproducible pipeline** via `bash` or Docker  
+- **Reproducible pipeline** via Bash scripts or Makefile  
 
 
 ---
@@ -157,6 +157,7 @@ Open the notebook:
 
 The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.  
 Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
+The full benchmark and visualizations are available in results/ for transparency.
 
 ### Validation Metrics (HAM10000 Split)
 
