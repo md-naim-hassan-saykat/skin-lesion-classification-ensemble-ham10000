@@ -1,0 +1,14 @@
+.git
+.gitignore
+**/__pycache__/
+.venv/
+data/
+outputs/
+results/
+*.ipynb
+*.pth
+*.pt
+*.ckpt
+*.tar
+*.zip
+*.whl
