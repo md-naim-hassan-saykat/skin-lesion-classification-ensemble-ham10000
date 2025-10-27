@@ -13,7 +13,7 @@ data:
 
 train:
   batch_size: 32
-  epochs: 30
+  epochs: 50
   lr: 1.0e-4
   weight_decay: 1.0e-4
   early_stop_patience: 5
