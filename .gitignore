@@ -1,6 +1,6 @@
 # General .gitignore for Deep Learning Projects
 
-# Data & Outputs 
+# === Data & Outputs ===
 data/
 datasets/
 outputs/
@@ -8,7 +8,7 @@ results/
 logs/
 checkpoints/
 
-# Python Build/Cache
+# === Python Build / Cache ===
 __pycache__/
 *.pyc
 *.pyo
@@ -17,12 +17,12 @@ __pycache__/
 build/
 dist/
 
-# Virtual Environments 
+# === Virtual Environments ===
 .venv/
 env/
 venv/
 
-# Large or Accidental Artifacts 
+# === Large or Accidental Artifacts ===
 *.pth
 *.pt
 *.ckpt
@@ -36,33 +36,28 @@ venv/
 *.tar.gz
 *.h5
 
-# Image and Visualization Artifacts 
+# === Image and Visualization Artifacts ===
 *.png
 *.jpg
 *.jpeg
 *.pdf
 
-# IDE / Editor Settings 
+# === Jupyter Notebook Checkpoints ===
+.ipynb_checkpoints/
+
+# === IDE / Editor Settings ===
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS-Specific Files
+# === OS-Specific Files ===
 .DS_Store
-<<<<<<< HEAD
 Thumbs.db
 
-# Temporary or Backup Files 
+# === Temporary or Backup Files ===
 *.bak
 *.tmp
 
-# Local Project Copies 
-=======
-data/
-outputs/
-results/
-.ipynb_checkpoints/
-__pycache__/
->>>>>>> ebe7e92 (Add .gitignore for data/outputs/checkpoints and nested folder)
+# === Local Project Copies or Test Folders ===
 skin-lesion-classification-ensemble-ham10000/
