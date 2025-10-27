@@ -6,17 +6,39 @@ build-backend = "setuptools.build_meta"
 name = "skin-lesion-ensemble"
 version = "1.0.0"
 description = "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
-authors = [{ name = "Md Naim Hassan Saykat", email = "mdnaimhassansaykat@gmail.com" }]
-license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Md Naim Hassan Saykat", email = "mdnaimhassansaykat@gmail.com" }]
 keywords = ["skin lesion", "ensemble learning", "deep learning", "medical imaging", "PyTorch"]
 classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Intended Audience :: Science/Research",
-  "Programming Language :: Python :: 3",
   "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
   "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Operating System :: OS Independent",
+]
+
+# Optional runtime deps usually live in requirements.txt for research repos.
+# If we want pip-installable deps, you can uncomment and pin here.
+# dependencies = [
+#   "numpy>=1.23,<2.0",
+#   "pandas>=1.5,<2.3",
+#   "scikit-learn>=1.2,<1.6",
+#   "scipy>=1.10,<2.5",
+#   "matplotlib>=3.7,<3.10",
+#   "seaborn>=0.12,<0.14",
+#   "einops>=0.7",
+# ]
+
+[project.optional-dependencies]
+dev = [
+  "black>=24.0",
+  "ruff>=0.6",
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "pre-commit>=3.6",
 ]
 
 [project.urls]
@@ -25,14 +47,29 @@ Repository = "https://github.com/md-naim-hassan-saykat/skin-lesion-classificatio
 Issues = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues"
 Documentation = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000#readme"
 
+[project.scripts]
+slc-evaluate = "src.evaluate:main"
+slc-ensemble = "src.ensemble:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+# If we only expose a top-level "src" package, list it explicitly:
+# include = ["src*"]
+
+[tool.setuptools.package-data]
+# ship non-Python files like configs if needed
+"src" = ["*.yaml", "*.yml"]
+
 [tool.black]
-line-length = 88
+line-length = 120
 target-version = ["py39"]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 target-version = "py39"
-# Do not lint virtualenv, artifacts, and notebooks
 extend-exclude = [
   ".venv",
   "data",
@@ -42,13 +79,11 @@ extend-exclude = [
   "dist",
   "__pycache__",
   "*.ipynb",
-  "notebooks",     # belt-and-suspenders: skip the whole folder
+  "notebooks",
 ]
 
 [tool.ruff.lint]
-# keep long lines allowed
-ignore = ["E501"]
-# basic rule set
+ignore = ["E501"]  # long lines allowed (kept for consistency)
 select = ["E", "F", "I", "UP"]
 
 [tool.ruff.lint.isort]
