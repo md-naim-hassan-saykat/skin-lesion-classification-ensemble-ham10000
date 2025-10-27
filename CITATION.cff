@@ -1,18 +1,39 @@
 cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
 title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+
 authors:
-  - family-names: Saykat
-    given-names: Md Naim Hassan
-contact: mdnaimhassansaykat@gmail.com
-doi: 10.5281/zenodo.17390952
+  - family-names: "Saykat"
+    given-names: "Md Naim Hassan"
+    affiliation: "Department of Computer Science, Université Paris-Saclay"
+    email: "mdnaimhassansaykat@gmail.com"
+    orcid: "https://orcid.org/0009-0007-9876-XXXX"
+
+abstract: >
+  This repository accompanies the research project *“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”*. 
+  It implements a reproducible deep learning pipeline combining ResNet, EfficientNet, DenseNet, and ConvNeXt architectures, with ensemble averaging for robust multi-class skin lesion diagnosis.
+  The work emphasizes performance generalization, model interpretability, and standardized evaluation across internal (HAM10000) and external (ISIC 2019) datasets.
+
+repository-code: "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
+license: "MIT"
+doi: "10.5281/zenodo.17390952"
+version: "1.0.0"
 date-released: 2025-10-19
-license: MIT
-repository-code: https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000
+keywords:
+  - deep learning
+  - ensemble learning
+  - skin lesion classification
+  - medical imaging
+  - HAM10000
+  - ISIC 2019
+
 preferred-citation:
-  type: misc
+  type: article
   title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
   authors:
-    - family-names: Saykat
-      given-names: Md Naim Hassan
+    - family-names: "Saykat"
+      given-names: "Md Naim Hassan"
   year: 2025
-  doi: 10.5281/zenodo.17390952
+  doi: "10.5281/zenodo.17390952"
+  journal: "Zenodo"
+  url: "https://zenodo.org/doi/10.5281/zenodo.17390952"
