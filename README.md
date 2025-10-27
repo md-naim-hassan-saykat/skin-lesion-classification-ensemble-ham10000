@@ -196,10 +196,25 @@ If you wish to contribute or test locally:
 
 ### Local Setup
 ```bash
-python -m venv .venv && source .venv/bin/activate
+# Clone the repository
+git clone https://github.com/<your-username>/skin-lesion-classification-ensemble-ham10000.git
+cd skin-lesion-classification-ensemble-ham10000
+
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate    # (Use `.venv\Scripts\activate` on Windows)
+
+# Install dependencies
 pip install --upgrade pip
 pip install -r requirements.txt -r requirements-ci.txt
-ruff check . --fix
+
+# Ensure src is a package and add project root to Python path
+[ -f src/__init__.py ] || touch src/__init__.py
+export PYTHONPATH="$PWD"
+
+# Run code quality and tests
+ruff clean
+ruff check src scripts tests --fix
 make lint
 make test
 ```
