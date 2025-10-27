@@ -1,38 +1,33 @@
+### **2. `training_pipeline.md`**
+**Goal:** Match new data loaders, utils, and CLI structure.
+
+**Proposed rewrite:**
+```markdown
 # Training Pipeline
 
-This document outlines the end-to-end **training pipeline** for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
-It describes dataset preparation, preprocessing, training configuration, and model checkpointing.
+This document describes the **training process** for the ensemble-based skin lesion classification models.
 
 ---
 
 ## 1. Overview
+The pipeline trains individual CNN architectures (**ResNet50**, **EfficientNet-B3**, **ConvNeXt-Tiny**, **DenseNet121**) on the **HAM10000** dataset using consistent splits and augmentation strategies.
 
-The training pipeline is designed to ensure **reproducibility, scalability, and flexibility**.  
-It supports multiple CNN backbones (e.g., ResNet, EfficientNet, ConvNeXt) and can be easily extended to new architectures or datasets.
-
-All training configurations, dataset paths, and hyperparameters are defined via YAML files located in the `config/` directory.
-
----
-
-## 2. Dataset Preparation
-
-### 2.1 Source Dataset
-We use the **HAM10000** dataset — a benchmark dataset for skin lesion analysis containing dermatoscopic images across **seven diagnostic categories**:
-1. Melanocytic nevi (NV)  
-2. Melanoma (MEL)  
-3. Benign keratosis-like lesions (BKL)  
-4. Basal cell carcinoma (BCC)  
-5. Actinic keratoses (AKIEC)  
-6. Vascular lesions (VASC)  
-7. Dermatofibroma (DF)
-
-Optional external datasets such as **ISIC 2019** can be added for cross-validation.
+Each model:
+- Loads data using `src/data.py`
+- Trains via `src/train.py`
+- Saves best-performing checkpoints (`.pth`) under `outputs/models/`
 
 ---
 
-### 2.2 Train/Validation Split
+## 2. Data Loading
+Defined in [`src/data.py`](../src/data.py).
 
-The dataset is split into training and validation subsets using the script:
+Key features:
+- Automatic split detection (`train/`, `val/`)
+- Configurable image resizing and augmentation
+- Support for reproducible `torch.utils.data.DataLoader` pipelines
 
-```bash
-python scripts/prepare_split.py
+```python
+from src.data import build_loaders
+train_loader, val_loader, classes = build_loaders("data/HAM10000_split")
+```
