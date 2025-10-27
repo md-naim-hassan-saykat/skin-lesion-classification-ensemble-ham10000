@@ -1,14 +1,28 @@
 ## Summary
-Briefly describe the purpose of this PR.
+Briefly describe the purpose and motivation of this Pull Request (PR).  
+Explain what problem it solves or what feature it adds.
 
-## Changes
-- [ ] Code improvements
-- [ ] Documentation
-- [ ] Tests
-- [ ] CI / config
+---
 
-## Testing
-How was it tested?
+## Changes Made
+Select all that apply:
+
+- [ ] Core logic / model updates  
+- [ ] Code improvements / refactoring  
+- [ ] Tests added or updated  
+- [ ] Documentation improvements  
+- [ ] CI / configuration changes  
+- [ ] Bug fixes  
+- [ ] New feature or enhancement  
+
+---
+
+## Testing Performed
+Describe how this PR was tested and verified.
+
+Example:
 ```bash
 pytest -q
+python src/evaluate.py --help
+bash scripts/eval_all.sh
 ```
