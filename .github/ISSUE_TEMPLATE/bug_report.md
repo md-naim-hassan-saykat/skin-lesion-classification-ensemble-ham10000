@@ -5,22 +5,36 @@ title: "[BUG] Short description"
 labels: bug
 ---
 
-### Describe the bug
-A clear and concise description of the issue.
+### Description
+A clear and concise description of the issue or unexpected behavior.
 
-### To Reproduce
-Steps to reproduce the behavior:
-1. Run `bash scripts/eval_all.sh`
-2. Observe error ...
+---
 
-### Expected behavior
-What you expected to happen.
+### Steps to Reproduce
+Please provide detailed steps so we can replicate the issue:
+
+1. Clone the repository
+2. Activate the environment: `source .venv/bin/activate`
+3. Run: `bash scripts/eval_all.sh`
+4. Observe the error: …
+
+---
+
+### Expected Behavior
+Describe what you expected to happen instead.
+
+---
 
 ### Environment
-- OS:
-- Python version:
-- PyTorch version:
-- Commit hash or tag:
+Please complete the following information:
 
-### Additional context
-Add any logs, screenshots, or details.
+- **OS:** (e.g., macOS 15.5, Ubuntu 22.04)
+- **Python version:** (e.g., 3.11.4)
+- **PyTorch version:** (e.g., 2.2.2)
+- **Commit hash or branch:** (e.g., `main` or `abcd123`)
+- **Hardware:** (optional, e.g., M2 Pro / RTX 4090)
+
+---
+
+### Logs or Screenshots
+If applicable, add terminal output, stack traces, or screenshots:
