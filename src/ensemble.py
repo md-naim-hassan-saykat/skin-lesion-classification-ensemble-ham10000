@@ -9,49 +9,52 @@ from __future__ import annotations
 
 import argparse
 import csv
+from typing import List, Tuple
+
 import numpy as np
-from utils import compute_metrics, save_json
+
+from src.utils import compute_metrics, save_json
 
 
-def read_csv(path: str):
-    probs = []
-    y_true = []
-    y_pred = []
-    with open(path, "r") as f:
+def load_probs(csv_path: str) -> Tuple[np.ndarray, np.ndarray]:
+    """Return (y_true, probs) from a prediction CSV."""
+    ys: List[int] = []
+    probs: List[List[float]] = []
+    with open(csv_path, "r") as f:
         reader = csv.reader(f)
         header = next(reader)
-        p_cols = [i for i, h in enumerate(header) if h.startswith("p_")]
+        prob_idx = [i for i, h in enumerate(header) if h.startswith("p_")]
+        true_idx = header.index("true") if "true" in header else 2
         for row in reader:
-            y_true.append(int(row[1]))
-            y_pred.append(int(row[2]))
-            probs.append([float(row[i]) for i in p_cols])
-    return np.array(y_true), np.array(y_pred), np.array(probs)
+            ys.append(int(row[true_idx]))
+            probs.append([float(row[i]) for i in prob_idx])
+    return np.array(ys), np.array(probs)
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--csvs", nargs="+", required=True, help="List of prediction CSVs to average") 
-    ap.add_argument("--out", required=True, type=str, help="Where to write ensemble metrics JSON")
+def main() -> None:
+    ap = argparse.ArgumentParser(description="Ensemble prediction CSVs by averaging probabilities.")
+    ap.add_argument("--csvs", nargs="+", required=True, help="List of prediction CSVs.")
+    ap.add_argument("--out", required=True, help="Where to save ensemble metrics JSON.")
     args = ap.parse_args()
 
-    y_trues, prob_list = [], []
-    for i, p in enumerate(args.csvs):
-        y_true, _, probs = read_csv(p)
-        prob_list.append(probs)
-        y_trues.append(y_true)
+    y0, p0 = load_probs(args.csvs[0])
+    probs_sum = p0.astype(np.float64)
+    y_true = y0
 
-    # Sanity check: all y_true identical
-    for i in range(1, len(y_trues)):
-        if not np.array_equal(y_trues[0], y_trues[i]):
-            raise ValueError("CSV ground-truth rows don't match. Ensure the same ordering.")
+    for path in args.csvs[1:]:
+        yi, pi = load_probs(path)
+        if yi.shape != y_true.shape or not np.array_equal(yi, y_true):
+            raise ValueError(f"True labels mismatch between {args.csvs[0]} and {path}.")
+        if pi.shape != probs_sum.shape:
+            raise ValueError(f"Probability shape mismatch: {probs_sum.shape} vs {pi.shape} for {path}")
+        probs_sum += pi
 
-    y_true = y_trues[0]
-    avg_probs = np.mean(np.stack(prob_list, axis=0), axis=0)
-    y_pred = avg_probs.argmax(1)
+    probs_avg = probs_sum / len(args.csvs)
+    y_pred = probs_avg.argmax(axis=1)
 
-    metrics = compute_metrics(y_true, y_pred, y_prob=avg_probs)
+    metrics = compute_metrics(y_true, y_pred, y_prob=probs_avg)
     save_json(metrics, args.out)
-    print("Ensemble metrics:", metrics, "-> saved to", args.out)
+    print("Ensemble metrics saved to:", args.out, metrics)
 
 
 if __name__ == "__main__":
