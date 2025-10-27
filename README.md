@@ -112,9 +112,11 @@ skin-lesion-classification-ensemble-ham10000/
 
 ### Clone and set up environment
 ```bash
-git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-cd skin-lesion-classification-ensemble-ham10000
-python -m venv .venv && source .venv/bin/activate
+brew install python@3.11
+cd ~/skin-lesion-classification-ensemble-ham10000
+/opt/homebrew/opt/python@3.11/bin/python3.11 -m venv .venv   
+source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt
 ```
 ---
