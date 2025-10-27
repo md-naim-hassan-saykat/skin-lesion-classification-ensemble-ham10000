@@ -32,3 +32,4 @@ The high-level workflow consists of the following stages:
 4. Train model with periodic validation
 5. Save best-performing checkpoints
 6. Evaluate final model performance
+```
