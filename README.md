@@ -113,12 +113,10 @@ skin-lesion-classification-ensemble-ham10000/
 
 ### Clone and set up environment
 ```bash
-brew install python@3.11
 cd ~/skin-lesion-classification-ensemble-ham10000
-/opt/homebrew/opt/python@3.11/bin/python3.11 -m venv .venv   
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
+chmod +x scripts/eval_all.sh
+export PYTHONPATH="$PWD"
+bash scripts/eval_all.sh
 ```
 ---
 
