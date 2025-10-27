@@ -1,14 +1,9 @@
+# .dockerignore
 .git
-.gitignore
-**/__pycache__/
-.venv/
+.venv
+__pycache__/
+.ipynb_checkpoints/
 data/
 outputs/
 results/
 *.ipynb
-*.pth
-*.pt
-*.ckpt
-*.tar
-*.zip
-*.whl
