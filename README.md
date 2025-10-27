@@ -221,14 +221,6 @@ make test
 
 ---
 
-## Run via Docker
-```bash
-docker build -t skin-lesion-ensemble .
-docker run --rm skin-lesion-ensemble
-```
-
----
-
 ## Environment Summary
 
 | **Component** | **Version** |
