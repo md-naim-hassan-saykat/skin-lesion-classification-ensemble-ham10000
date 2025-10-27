@@ -1,6 +1,6 @@
 # Training Pipeline
 
-This document outlines the end-to-end **training pipeline** for the *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019* project.  
+This document outlines the end-to-end **training pipeline** for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
 It describes dataset preparation, preprocessing, training configuration, and model checkpointing.
 
 ---
