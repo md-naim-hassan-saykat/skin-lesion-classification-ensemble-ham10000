@@ -196,7 +196,9 @@ If you wish to contribute or test locally:
 ### Local Setup
 ```bash
 python -m venv .venv && source .venv/bin/activate
+pip install --upgrade pip
 pip install -r requirements.txt -r requirements-ci.txt
+ruff check . --fix
 make lint
 make test
 ```
