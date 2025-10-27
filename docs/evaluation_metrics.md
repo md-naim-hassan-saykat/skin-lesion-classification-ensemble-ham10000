@@ -1,23 +1,27 @@
 # Evaluation Metrics
 
-This document describes the evaluation strategy and performance metrics used in the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
-The evaluation focuses on assessing **accuracy, robustness, and generalization** across both internal and external datasets.
+This document outlines the evaluation strategy and performance metrics used in the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
+The evaluation emphasizes **accuracy**, **robustness**, and **generalization** across internal (HAM10000) and external (ISIC 2019) datasets.
 
 ---
 
 ## 1. Overview
 
-The models (individual and ensemble) are evaluated on multiple criteria to ensure balanced performance across all lesion categories.  
-Metrics are computed using both **class-based** and **probability-based** approaches.
+Both **individual models** and **ensemble configurations** are evaluated using a unified set of quantitative metrics.  
+Each model outputs per-class probabilities, and predictions are compared with the true class labels to assess overall and class-wise performance.
 
-All evaluation scripts are located in `src/evaluate.py` and executed automatically after training or ensemble fusion.
+Evaluation logic is implemented in:
+- [`src/evaluate.py`](../src/evaluate.py) — for checkpoint-level evaluation  
+- [`src/utils.py`](../src/utils.py) — for metric computation and logging  
+
+All evaluation steps run automatically after training or when performing ensemble fusion via [`src/ensemble.py`](../src/ensemble.py).
 
 ---
 
 ## 2. Classification Metrics
 
 ### 2.1 Accuracy
-The simplest measure — the fraction of correctly predicted samples:
+Measures the overall proportion of correctly classified samples:
 \[
 \text{Accuracy} = \frac{\text{TP + TN}}{\text{Total Samples}}
 \]
