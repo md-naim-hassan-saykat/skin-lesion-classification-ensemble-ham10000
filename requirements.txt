@@ -1,23 +1,46 @@
+# =============================================================================
+# Project Requirements
+# Generalizable Ensemble Deep Learning for Skin Lesion Classification
+# Internal and External Validation on HAM10000 and ISIC 2019
+# =============================================================================
+
+# ---------------------------------------------------------------------------
 # Core Deep Learning Framework
+# ---------------------------------------------------------------------------
 torch>=2.0,<2.3
 torchvision>=0.15,<0.18
 torchaudio>=2.0,<2.3
-einops>=0.7
+einops>=0.7              # Tensor rearrangement utilities
 
+# ---------------------------------------------------------------------------
 # Data Handling & Scientific Libraries
+# ---------------------------------------------------------------------------
 numpy>=1.23,<2.0
 pandas>=1.5,<2.3
 scipy>=1.10,<2.5
 scikit-learn>=1.2,<1.6
 
-# Visualization
+# ---------------------------------------------------------------------------
+# Visualization & Plotting
+# ---------------------------------------------------------------------------
 matplotlib>=3.7,<3.10
 seaborn>=0.12,<0.14
 Pillow>=9.5,<11.0
 
-# Utilities
-tqdm>=4.65,<5.0
+# ---------------------------------------------------------------------------
+# Utilities & Progress Tracking
+# ---------------------------------------------------------------------------
+tqdm>=4.65,<5.0          # Progress bars for long-running tasks
 
-# Optional (recommended for Grad-CAM and reproducibility)
-opencv-python>=4.8,<5.0
-grad-cam>=1.4.8  # For visualization of model attention maps
+# ---------------------------------------------------------------------------
+# Optional (Recommended for Grad-CAM & Reproducibility)
+# ---------------------------------------------------------------------------
+opencv-python>=4.8,<5.0  # Image preprocessing and augmentation
+grad-cam>=1.4.8          # Visualization of model attention maps
+
+# ---------------------------------------------------------------------------
+# Notes
+# ---------------------------------------------------------------------------
+# - PyTorch versions are constrained for reproducibility (2.2.x optimal for ARM/Mac & CUDA).
+# - Grad-CAM and OpenCV are optional but enhance interpretability.
+# - For CI or dev tools, see requirements-ci.txt.
