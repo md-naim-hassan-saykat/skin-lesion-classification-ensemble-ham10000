@@ -1,42 +1,61 @@
 name: CI
-on: [push, pull_request, workflow_dispatch]
+
+on:
+  push:
+  pull_request:
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: "3.11" }
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/cache@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-v1-${{ hashFiles('requirements*.txt','pyproject.toml') }}
+          python-version: ${{ matrix.python-version }}
 
-      - name: Install torch (CPU wheels)
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      # System deps often needed by opencv-python wheels
+      - name: Install system libs (OpenCV)
         run: |
-          python -m pip install --upgrade pip
-          pip install --index-url https://download.pytorch.org/whl/cpu \
-            "torch==2.9.0" "torchvision==0.24.0" "torchaudio==2.9.0"
+          sudo apt-get update
+          sudo apt-get install -y libgl1 libglib2.0-0 libsm6 libxext6 libxrender1
+
+      # Make repo importable as "src/..." (tests rely on this)
+      - name: Export PYTHONPATH
+        run: echo "PYTHONPATH=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+
+      # Pin torch family first, then prevent resolver from changing them
+      - name: Install torch family
+        run: |
+          pip install "torch==2.9.0" "torchvision==0.24.0" "torchaudio==2.9.0"
 
       - name: Install project requirements (no deps)
         run: |
-          grep -viE '^(torch|torchvision|torchaudio)\b' requirements.txt > req-no-torch.txt
-          pip install -r req-no-torch.txt
-          pip install -r requirements-ci.txt
+          pip install -r requirements.txt --no-deps
+          if [ -f requirements-ci.txt ]; then
+            pip install -r requirements-ci.txt
+          else
+            pip install ruff pytest pytest-cov
+          fi
 
-      - name: Lint
+      - name: Show environment
         run: |
-          ruff check .
-          black --check .
+          python -V
+          which python
+          pip list | sed -n '1,120p'
 
-      - name: Smoke tests
-        env:
-          CUDA_VISIBLE_DEVICES: ""
-          PYTORCH_ENABLE_MPS_FALLBACK: "1"
-          MPLBACKEND: Agg
-          PYTHONPATH: ${{ github.workspace }}
-        run: |
-          pytest -q -k "smoke" -m "not slow"
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Run tests (pytest)
+        run: pytest -q
