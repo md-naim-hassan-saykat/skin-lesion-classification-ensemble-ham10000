@@ -1,11 +1,13 @@
 # Contributing Guidelines
 
+_For issues or feature discussions, please open an [Issue](../../issues)._  
+
 Thank you for your interest in contributing to **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019**!  
 We welcome pull requests for bug fixes, documentation improvements, and research extensions.
 
 ---
 
-# Local Development Setup
+## Local Development Setup
 
 ### Clone the repository
 ```bash
@@ -61,21 +63,21 @@ git push origin feature/your-feature-name
 	•	Ensure CI passes (GitHub Actions will check format, lint, and tests automatically).
 ```
 
-# Contribution Ideas
+## Contribution Ideas
 
 You can contribute by:
-	•	Adding new CNN or transformer backbones (e.g., ViT, Swin)
-	•	Improving ensemble fusion or weighting strategies
-	•	Enhancing documentation or examples
-	•	Extending dataset support (ISIC 2020, PAD-UFES)
-	•	Benchmarking cross-domain generalization
+- Adding new CNN or transformer backbones (e.g., ViT, Swin)
+- Improving ensemble fusion or weighting strategies
+- Enhancing documentation or examples
+- Extending dataset support (ISIC 2020, PAD-UFES)
+- Benchmarking cross-domain generalization
 
-# Code of Conduct
+## Code of Conduct
 
-Please maintain a respectful and inclusive environment for all contributors.
-All discussions, issues, and PRs should follow GitHub’s Community Guidelines.
+Please maintain a **respectful and inclusive** environment for all contributors.  
+All discussions, issues, and PRs must follow [GitHub’s Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines).
 
-# Attribution
+## Attribution
 
 All contributions will be acknowledged in the project’s contributor list and referenced in the release notes.
 Thank you for helping advance open, reproducible research in dermatological AI!
