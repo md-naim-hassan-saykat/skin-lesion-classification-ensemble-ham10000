@@ -1,31 +1,38 @@
 # Pre-commit configuration for Skin Lesion Ensemble Project
-
-# Ensures consistent formatting, linting, and file hygiene.
+# ---------------------------------------------------------
+# Enforces consistent formatting, linting, and basic file hygiene
+# across all commits to maintain code quality and reproducibility.
 
 repos:
-  # --- Code Formatter: Black ---
+  # ---------------------------------------------------------
+  # Code Formatter: Black
+  # ---------------------------------------------------------
   - repo: https://github.com/psf/black
-    rev: 24.10.0  # Use latest stable release
+    rev: 24.10.0  # Latest stable Black release
     hooks:
       - id: black
         args: [--line-length=100]
         language_version: python3
 
-  # --- Linter: Ruff (fast Python lint & fix) ---
+  # ---------------------------------------------------------
+  # Python Linter & Import Sorter: Ruff
+  # ---------------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.7.0  # Latest stable Ruff version
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix]  # Automatically apply safe fixes
 
-  # --- General Hygiene Hooks ---
+  # ---------------------------------------------------------
+  # General Hygiene Hooks
+  # ---------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
-      - id: end-of-file-fixer          # Ensure newline at EOF
-      - id: trailing-whitespace        # Remove stray spaces
-      - id: check-yaml                 # Validate YAML syntax
-      - id: check-json                 # Validate JSON syntax
-      - id: mixed-line-ending          # Normalize LF line endings
+      - id: end-of-file-fixer              # Ensure newline at EOF
+      - id: trailing-whitespace            # Remove stray spaces
+      - id: check-yaml                     # Validate YAML syntax
+      - id: check-json                     # Validate JSON syntax
+      - id: mixed-line-ending              # Normalize LF line endings
       - id: check-executables-have-shebangs  # Ensure scripts start with #!
-      - id: check-merge-conflict       # Detect leftover merge markers
+      - id: check-merge-conflict           # Detect leftover merge markers
