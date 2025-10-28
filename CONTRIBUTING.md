@@ -31,12 +31,9 @@ pre-commit install
 
 ### Code Style & Quality
 ```bash
-# This project follows PEP 8, enforced via black and ruff.
-# Before submitting your PR:
-make format   # auto-format with black
-make lint     # run ruff checks
-make test     # run pytest
-# You can also run all steps together:
+make format  
+make lint     
+make test     
 make all
 ```
 
