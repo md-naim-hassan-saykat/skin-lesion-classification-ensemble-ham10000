@@ -1,52 +1,24 @@
 # Ruff configuration for Skin Lesion Ensemble Project
-# ----------------------------------------------------
-# Provides linting, import sorting, and style enforcement for Python 3.11.
-
+target-version = "py311"
 line-length = 120
-target-version = "py311"  # Python 3.11 is the project default
 
-# ----------------------------------------------------
-# Linting Rules
-# ----------------------------------------------------
 [lint]
-# Enable core rule families: E (pycodestyle), F (pyflakes),
-# B (bugbear), I (import conventions), and C90 (complexity checks)
-extend-select = ["E", "F", "B", "I", "C90"]
-
-# Ignore rules that conflict with Black or project preferences
-ignore = [
-  "E501",  # Line too long (handled by Black)
-  "E203",  # Whitespace before ':', conflicts with Black
-]
-
-# Exclude generated files, environments, and notebooks
+# enable rule sets
+select = ["E", "F", "I", "B", "C90"]
+# ignore long lines (Black handles wrapping) and E203 (Black compat)
+ignore = ["E501", "E203"]
+# do not lint notebooks, venvs, artifacts
 exclude = [
-  ".venv",
-  "env",
-  "venv",
-  "__pycache__",
-  "build",
-  "dist",
-  "outputs",
-  "results",
-  "data",
-  "datasets",
-  "logs",
-  "notebooks",
-  "migrations",
+  ".venv", "env", "venv",
+  "__pycache__", "build", "dist",
+  "outputs", "data", "datasets",
+  "notebooks", "notebooks/**"
 ]
 
-# ----------------------------------------------------
-# Import Sorting
-# ----------------------------------------------------
 [lint.isort]
 combine-as-imports = true
 known-first-party = ["src"]
 lines-between-types = 1
-order-by-type = true
 
-# ----------------------------------------------------
-# Per-file Rule Exceptions
-# ----------------------------------------------------
-[per-file-ignores]
-"__init__.py" = ["F401"]  # Allow unused imports in package __init__ files
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]
