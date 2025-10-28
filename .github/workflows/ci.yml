@@ -37,7 +37,7 @@ jobs:
       # Pin torch family first, then prevent resolver from changing them
       - name: Install torch family
         run: |
-          pip install "torch==2.2.2" "torchvision==0.17.2" "torchaudio==2.2.2"
+          pip install "torch==2.9.0" "torchvision==0.24.0" "torchaudio==2.9.0"
 
       - name: Install project requirements (no deps)
         run: |
