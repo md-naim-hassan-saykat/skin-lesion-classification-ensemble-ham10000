@@ -2,8 +2,7 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
-from typing import Any, Dict
+from typing import Dict
 
 import numpy as np
 import torch
@@ -21,30 +20,40 @@ def _best_device() -> torch.device:
     return torch.device("cpu")
 
 
-def _make_val_loader(data_dir: str, image_size: int, batch_size: int, num_workers: int = 0):
-    tfms = transforms.Compose(
+def _val_tfms(image_size: int) -> transforms.Compose:
+    return transforms.Compose(
         [
             transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ]
     )
-    ds = datasets.ImageFolder(data_dir, transform=tfms)
-    loader = torch.utils.data.DataLoader(ds, batch_size=batch_size, shuffle=False, num_workers=num_workers)
-    return ds, loader
 
 
 @torch.no_grad()
-def _eval(model: torch.nn.Module, loader, device) -> Dict[str, float | None]:
+def evaluate_once(
+    checkpoint: str,
+    data_dir: str,
+    model_name: str,
+    num_classes: int,
+    image_size: int,
+) -> Dict[str, float | None]:
+    device = _best_device()
+    model = get_model(model_name, num_classes=num_classes).to(device)
+    state = torch.load(checkpoint, map_location=device)
+    model.load_state_dict(state["model"] if "model" in state else state)
     model.eval()
+
+    ds = datasets.ImageFolder(data_dir, transform=_val_tfms(image_size))
+    loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
+
     y_true, y_pred, probs = [], [], []
     for images, targets in loader:
-        images = images.to(device)
-        logits = model(images)
-        p = torch.softmax(logits, dim=1).cpu().numpy()
-        preds = p.argmax(1)
+        p = torch.softmax(model(images.to(device)), dim=1).cpu().numpy()
         probs.append(p)
-        y_pred.extend(preds.tolist())
+        y_pred.extend(p.argmax(1).tolist())
         y_true.extend(targets.numpy().tolist())
+
     y_true = np.array(y_true)
     y_pred = np.array(y_pred)
     y_prob = np.concatenate(probs, axis=0) if probs else None
@@ -52,38 +61,48 @@ def _eval(model: torch.nn.Module, loader, device) -> Dict[str, float | None]:
 
 
 def main() -> None:
-    ap = argparse.ArgumentParser()
+    ap = argparse.ArgumentParser(
+        description="Evaluate a single checkpoint on an ImageFolder validation set.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--data_dir", required=True)
-    ap.add_argument("--out", required=True)
-    ap.add_argument("--save_csv", default=None)
-    ap.add_argument("--model", default="resnet50")
+    ap.add_argument("--model", default="densenet121")
+    ap.add_argument("--num_classes", type=int, default=7)
     ap.add_argument("--image_size", type=int, default=224)
-    ap.add_argument("--batch_size", type=int, default=64)
+    ap.add_argument("--out", required=True)
+    ap.add_argument("--save_csv", default=None, help="Optional path to write per-sample probabilities.")
     args = ap.parse_args()
 
-    device = _best_device()
-    model = get_model(args.model).to(device)
-    state = torch.load(args.checkpoint, map_location="cpu")
-    model.load_state_dict(state["model"] if "model" in state else state)
-
-    ds, loader = _make_val_loader(args.data_dir, args.image_size, args.batch_size)
-    metrics = _eval(model, loader, device)
-
+    metrics = evaluate_once(
+        checkpoint=args.checkpoint,
+        data_dir=args.data_dir,
+        model_name=args.model,
+        num_classes=args.num_classes,
+        image_size=args.image_size,
+    )
     save_json(metrics, args.out)
 
     if args.save_csv:
-        # write y_true + per-class probs
-        import csv  # local to avoid top-level unused import
+        import csv
 
+        device = _best_device()
+        model = get_model(args.model, num_classes=args.num_classes).to(device)
+        state = torch.load(args.checkpoint, map_location=device)
+        model.load_state_dict(state["model"] if "model" in state else state)
         model.eval()
-        with open(args.save_csv, "w", newline="", encoding="utf-8") as f:
+
+        ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
+        loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
+
+        with open(args.save_csv, "w", newline="") as f:
             writer = csv.writer(f)
-            header = ["y_true"] + [f"p_{i}" for i in range(len(ds.classes))]
+            header = ["true"] + [f"p_{i}" for i in range(args.num_classes)]
             writer.writerow(header)
             for images, targets in loader:
-                p = torch.softmax(model(images.to(device)), dim=1).cpu().numpy()
-                for t, row in zip(targets.numpy().tolist(), p.tolist()):
+                p = torch.softmax(model(images.to(device)), dim=1).cpu().numpy().tolist()
+                # B905: be explicit
+                for t, row in zip(targets.numpy().tolist(), p, strict=False):
                     writer.writerow([t] + row)
 
 
