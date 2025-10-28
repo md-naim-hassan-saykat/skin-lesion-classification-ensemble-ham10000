@@ -5,9 +5,9 @@ We welcome pull requests for bug fixes, documentation improvements, and research
 
 ---
 
-## Local Development Setup
+# Local Development Setup
 
-### Clone the repository
+## Clone the repository
 ```bash
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
@@ -61,7 +61,7 @@ git push origin feature/your-feature-name
 	•	Ensure CI passes (GitHub Actions will check format, lint, and tests automatically).
 ```
 
-### Contribution Ideas
+# Contribution Ideas
 
 You can contribute by:
 	•	Adding new CNN or transformer backbones (e.g., ViT, Swin)
@@ -70,12 +70,12 @@ You can contribute by:
 	•	Extending dataset support (ISIC 2020, PAD-UFES)
 	•	Benchmarking cross-domain generalization
 
-### Code of Conduct
+# Code of Conduct
 
 Please maintain a respectful and inclusive environment for all contributors.
 All discussions, issues, and PRs should follow GitHub’s Community Guidelines.
 
-### Attribution
+# Attribution
 
 All contributions will be acknowledged in the project’s contributor list and referenced in the release notes.
 Thank you for helping advance open, reproducible research in dermatological AI!
