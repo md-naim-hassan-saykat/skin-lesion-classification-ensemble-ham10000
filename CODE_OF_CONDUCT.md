@@ -37,7 +37,7 @@ Serious or repeated violations may result in a temporary or permanent ban from t
 
 If you experience or witness unacceptable behavior, please report it by contacting:
 
-📧 **Email:** [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
+**Email:** [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 All reports will be reviewed and handled **confidentially** and in good faith.
 
