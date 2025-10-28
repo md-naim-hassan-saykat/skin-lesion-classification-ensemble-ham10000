@@ -1,7 +1,12 @@
+# ==============================================================
 # .editorconfig
+# Enforces consistent code style across editors and contributors
+# Project: Skin Lesion Ensemble (HAM10000 & ISIC 2019)
+# ==============================================================
 
 root = true
 
+# === Default Settings ===
 [*]
 indent_style = space
 indent_size = 4
@@ -10,26 +15,31 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-# Markdown files — preserve intentional trailing spaces (for line breaks)
+# === Markdown Files ===
+# Preserve intentional trailing spaces (used for manual line breaks)
 [*.md]
 trim_trailing_whitespace = false
 
-# YAML / JSON / TOML configs — 2 spaces for readability
+# === YAML / JSON / TOML Configs ===
+# Use 2 spaces for readability and alignment
 [*.{yml,yaml,json,toml}]
 indent_size = 2
 
-# Shell scripts — 4 spaces, LF endings
+# === Shell Scripts ===
+# Enforce 4-space indentation and LF endings
 [*.sh]
 indent_style = space
 indent_size = 4
 end_of_line = lf
 
-# Python files — standard 4 spaces, no tabs
+# === Python Files ===
+# Standard Python convention — 4 spaces, never tabs
 [*.py]
 indent_style = space
 indent_size = 4
 
-# Ignore notebooks and binary files
+# === Notebooks and Binary Files ===
+# Disable newline/trimming — handled by Jupyter
 [*.ipynb]
 insert_final_newline = false
 trim_trailing_whitespace = false
