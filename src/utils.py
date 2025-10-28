@@ -16,11 +16,9 @@ def compute_metrics(y_true, y_pred, y_prob=None) -> Dict[str, float | None]:
     """Compute accuracy, weighted F1, and optional multi-class ROC-AUC."""
     acc = accuracy_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred, average="weighted")
-    auc = None
+    auc: float | None = None
     if y_prob is not None and y_prob.ndim == 2 and y_prob.shape[1] > 1:
-        # multi-class OVR AUC
         try:
-            # sklearn expects shape (n_samples, n_classes)
             auc = float(roc_auc_score(y_true, y_prob, multi_class="ovr", average="weighted"))
         except Exception:
             auc = None
