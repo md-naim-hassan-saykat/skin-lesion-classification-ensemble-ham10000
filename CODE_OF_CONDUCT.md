@@ -7,7 +7,8 @@ Please follow these guidelines when interacting with others in issues, pull requ
 
 ---
 
-### Our Standards
+## Our Standards
+
 We expect all participants to:
 - Be respectful and considerate of differing viewpoints and experiences.
 - Give and gracefully accept constructive feedback.
@@ -16,7 +17,8 @@ We expect all participants to:
 
 ---
 
-### Unacceptable Behavior
+## Unacceptable Behavior
+
 The following actions are not tolerated:
 - Harassment, discrimination, or hate speech.
 - Trolling, spamming, or disruptive comments.
@@ -24,19 +26,21 @@ The following actions are not tolerated:
 
 ---
 
-### Enforcement
+## Enforcement
+
 Project maintainers may remove, edit, or reject contributions that violate this Code of Conduct.  
 Serious or repeated violations may result in a temporary or permanent ban from the repository.
 
 ---
 
-### Reporting
+## Reporting
+
 If you experience or witness unacceptable behavior, please report it by contacting:
 
-**Email:** [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
+📧 **Email:** [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
-All reports will be reviewed and handled confidentially.
+All reports will be reviewed and handled **confidentially** and in good faith.
 
 ---
 
-This Code of Conduct is adapted from the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/).
+_This Code of Conduct is adapted from the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/), a widely adopted standard for open-source communities._
