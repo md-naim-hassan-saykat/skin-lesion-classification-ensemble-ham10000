@@ -191,7 +191,6 @@ Reproduced from `scripts/eval_all.sh`.
 The ensemble achieved +7.4% F1 improvement over the best individual model (DenseNet-121) on HAM10000 and maintained AUC ≈ 0.99 on external ISIC 2019 validation.
 
 > Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
-> The ensemble achieved +7.4% F1 improvement over the best individual model (DenseNet-121) on HAM10000 and maintained AUC ≈ 0.99 on external ISIC 2019 validation.
 
 ---
 
