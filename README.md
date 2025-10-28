@@ -119,8 +119,16 @@ bash scripts/eval_all.sh
 ## Download Dataset
 
 Download HAM10000 from the ISIC Archive.
-Merge both image parts after extraction:
+Merge both image parts after extraction into a single data/HAM10000/ directory.
 
+Tip: If you want a single-step setup, just run:
+```bash
+bash scripts/download_ham10000.sh
+```
+
+(This automatically copies/unzips from ~/Downloads or ~/Desktop and checks that 10,015 images are available.)
+
+Otherwise, you can do it manually:
 ```bash
 # Create dataset folder
 mkdir -p data/HAM10000
