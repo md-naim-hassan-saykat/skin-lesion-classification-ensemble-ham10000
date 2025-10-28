@@ -1,5 +1,6 @@
 cff-version: 1.2.0
 message: "If you use this repository, please cite it as below."
+
 title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
 
 authors:
@@ -11,14 +12,15 @@ authors:
 
 abstract: >
   This repository accompanies the research project *“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”*. 
-  It implements a reproducible deep learning pipeline combining ResNet, EfficientNet, DenseNet, and ConvNeXt architectures, with ensemble averaging for robust multi-class skin lesion diagnosis.
-  The work emphasizes performance generalization, model interpretability, and standardized evaluation across internal (HAM10000) and external (ISIC 2019) datasets.
+  It provides a reproducible deep learning pipeline combining ResNet, EfficientNet, DenseNet, and ConvNeXt architectures with ensemble averaging for robust multi-class skin lesion diagnosis.
+  The project emphasizes generalization, interpretability, and standardized evaluation across internal (HAM10000) and external (ISIC 2019) datasets.
 
 repository-code: "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
 license: "MIT"
 doi: "10.5281/zenodo.17390952"
 version: "1.0.0"
 date-released: 2025-10-19
+
 keywords:
   - deep learning
   - ensemble learning
