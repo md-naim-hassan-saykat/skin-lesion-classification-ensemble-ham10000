@@ -25,7 +25,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
-pip install -r requirements-ci.txt  # optional: for linting and tests
+pip install -r requirements-ci.txt  
 pre-commit install
 ```
 
