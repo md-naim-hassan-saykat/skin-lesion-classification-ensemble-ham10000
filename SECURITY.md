@@ -24,8 +24,8 @@ We will acknowledge receipt within **72 hours** and aim to provide a verified fi
 
 | Version | Supported | Notes |
 |----------|------------|-------|
-| Latest main branch | ✅ | Receives active fixes and patches |
-| Older releases | ⚠️ | May not receive security updates |
+| Latest main branch | Yes | Receives active fixes and patches |
+| Older releases | Partial | May not receive security updates |
 
 Security updates apply only to the **latest stable release** unless stated otherwise.
 
