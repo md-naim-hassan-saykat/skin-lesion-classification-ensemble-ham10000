@@ -1,4 +1,7 @@
+# ==============================================================
 # General .gitignore for Deep Learning Projects
+# Project: Skin Lesion Ensemble (HAM10000 & ISIC 2019)
+# ==============================================================
 
 # === Data & Outputs ===
 data/
@@ -10,10 +13,10 @@ checkpoints/
 
 # === Python Build / Cache ===
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
 *.egg-info/
+*.pyc
+*.pyd
+*.pyo
 build/
 dist/
 
@@ -23,33 +26,33 @@ env/
 venv/
 
 # === Large or Accidental Artifacts ===
+*.ckpt
+*.csv
+*.h5
+*.npz
+*.npy
+*.onnx
 *.pth
 *.pt
-*.ckpt
-*.onnx
-*.csv
-*.xlsx
-*.npy
-*.npz
-*.zip
 *.tar
 *.tar.gz
-*.h5
+*.xlsx
+*.zip
 
 # === Image and Visualization Artifacts ===
-*.png
-*.jpg
 *.jpeg
+*.jpg
 *.pdf
+*.png
 
 # === Jupyter Notebook Checkpoints ===
 .ipynb_checkpoints/
 
 # === IDE / Editor Settings ===
-.vscode/
 .idea/
-*.swp
+.vscode/
 *.swo
+*.swp
 
 # === OS-Specific Files ===
 .DS_Store
