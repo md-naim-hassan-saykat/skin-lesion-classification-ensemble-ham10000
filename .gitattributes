@@ -1,22 +1,29 @@
-# Use Git LFS for large or binary files
-*.ipynb filter=lfs diff=lfs merge=lfs -text
+# ==============================================================
+# Git LFS Configuration for Skin Lesion Ensemble Project
+# --------------------------------------------------------------
+# Handles large/binary files efficiently and enforces consistent
+# line endings for code and documentation.
+# ==============================================================
+
+# === Use Git LFS for large or binary files ===
+*.ipynb  filter=lfs diff=lfs merge=lfs -text
 *.pth    filter=lfs diff=lfs merge=lfs -text
 *.pt     filter=lfs diff=lfs merge=lfs -text
 *.onnx   filter=lfs diff=lfs merge=lfs -text
 *.ckpt   filter=lfs diff=lfs merge=lfs -text
 
-# Dataset and output files
+# === Dataset and Output Files ===
 *.csv    filter=lfs diff=lfs merge=lfs -text
 *.json   filter=lfs diff=lfs merge=lfs -text
 *.npy    filter=lfs diff=lfs merge=lfs -text
 
-# Image and figure assets
+# === Image and Visualization Assets ===
 *.png    filter=lfs diff=lfs merge=lfs -text
 *.jpg    filter=lfs diff=lfs merge=lfs -text
 *.jpeg   filter=lfs diff=lfs merge=lfs -text
 *.svg    filter=lfs diff=lfs merge=lfs -text
 
-# Enforce LF line endings for code and text files
+# === Enforce LF Line Endings for Code and Text Files ===
 *.py     text eol=lf
 *.sh     text eol=lf
 *.yml    text eol=lf
@@ -25,7 +32,7 @@
 *.txt    text eol=lf
 *.json   text eol=lf
 
-# Exclude binary assets from automatic diffs
+# === Exclude Binary Archives from Automatic Diffs ===
 *.zip    binary
 *.tar    binary
 *.gz     binary
