@@ -123,7 +123,7 @@ Merge both image parts after extraction into a single data/HAM10000/ directory.
 
 Tip: If you want a single-step setup, just run:
 ```bash
-bash scripts/downloads_ham10000.sh
+bash scripts/download_ham10000.sh
 ```
 
 (This automatically copies/unzips from ~/Downloads or ~/Desktop and checks that 10,015 images are available.)
