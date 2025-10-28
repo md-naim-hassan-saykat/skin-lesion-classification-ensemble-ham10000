@@ -76,16 +76,10 @@ def main():
     outdir = Path(args.outdir or cfg["output"]["dir"]) / model_name
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Device
-    device = best_device()
-    pin_memory = device.type == "cuda"  # MPS/CPU -> False
-
     # Data
-    train_loader, val_loader, _ = build_loaders(
         data_root=data_cfg["root"],
         image_size=image_size,
         batch_size=int(train_cfg["batch_size"]),
-        num_workers=min(4, (torch.get_num_threads() or 1)),
     )
 
     # Model
