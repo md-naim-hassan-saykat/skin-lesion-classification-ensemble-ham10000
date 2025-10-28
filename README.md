@@ -123,6 +123,7 @@ Merge both image parts after extraction into a single data/HAM10000/ directory.
 
 Tip: If you want a single-step setup, just run:
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
 bash scripts/download_ham10000.sh
 ```
 
