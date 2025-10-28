@@ -62,14 +62,13 @@ git push origin feature/your-feature-name
 ```
 
 ### Contribution Ideas
-```bash
+
 You can contribute by:
 	•	Adding new CNN or transformer backbones (e.g., ViT, Swin)
 	•	Improving ensemble fusion or weighting strategies
 	•	Enhancing documentation or examples
 	•	Extending dataset support (ISIC 2020, PAD-UFES)
 	•	Benchmarking cross-domain generalization
-```
 
 ### Code of Conduct
 
