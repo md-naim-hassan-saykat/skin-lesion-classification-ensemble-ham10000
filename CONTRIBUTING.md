@@ -7,21 +7,76 @@ We welcome pull requests for bug fixes, documentation improvements, and research
 
 ## Local Development Setup
 
+### Clone the repository
 ```bash
-# Clone the repository
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
 ```
 
-# Create virtual environment
+### Create virtual environment
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-# Install dependencies
+### Install dependencies
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
 pip install -r requirements-ci.txt  # optional: for linting and tests
 pre-commit install
 ```
+
+### Code Style & Quality
+```bash
+# This project follows PEP 8, enforced via black and ruff.
+# Before submitting your PR:
+make format   # auto-format with black
+make lint     # run ruff checks
+make test     # run pytest
+# You can also run all steps together:
+make all
+```
+
+### Testing
+```bash
+# Unit and integration tests are located in the tests/ directory.
+# To verify functionality:
+pytest -q
+# To check code coverage:
+pytest --cov=src
+```
+
+### Pull Request Process
+```bash
+# Create a new branch:
+git checkout -b feature/your-feature-name
+# Commit changes with clear messages:
+git commit -m "Add: improved ensemble averaging logic"
+# Push your branch:
+git push origin feature/your-feature-name
+# Open a Pull Request (PR) on GitHub:
+	•	Describe your changes clearly.
+	•	Link related issues (e.g., Fixes #12).
+	•	Ensure CI passes (GitHub Actions will check format, lint, and tests automatically).
+```
+
+### Contribution Ideas
+```bash
+You can contribute by:
+	•	Adding new CNN or transformer backbones (e.g., ViT, Swin)
+	•	Improving ensemble fusion or weighting strategies
+	•	Enhancing documentation or examples
+	•	Extending dataset support (ISIC 2020, PAD-UFES)
+	•	Benchmarking cross-domain generalization
+```
+
+### Code of Conduct
+
+Please maintain a respectful and inclusive environment for all contributors.
+All discussions, issues, and PRs should follow GitHub’s Community Guidelines.
+
+### Attribution
+
+All contributions will be acknowledged in the project’s contributor list and referenced in the release notes.
+Thank you for helping advance open, reproducible research in dermatological AI!
