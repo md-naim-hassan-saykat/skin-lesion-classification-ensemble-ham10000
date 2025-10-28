@@ -122,9 +122,27 @@ Download HAM10000 from the ISIC Archive.
 Merge both image parts after extraction:
 
 ```bash
+# Create dataset folder
 mkdir -p data/HAM10000
-cp ~/Downloads/HAM10000_images_part_1/* data/HAM10000/
-cp ~/Downloads/HAM10000_images_part_2/* data/HAM10000/
+
+# Copy both parts (from Downloads or Desktop)
+cp -r ~/Downloads/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
+cp -r ~/Downloads/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
+cp -r ~/Desktop/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
+cp -r ~/Desktop/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
+
+# Optionally unzip if still compressed
+if [ -f ~/Downloads/HAM10000_images_part_1.zip ]; then
+  unzip -n ~/Downloads/HAM10000_images_part_1.zip -d ~/Downloads/HAM10000_images_part_1
+  cp -r ~/Downloads/HAM10000_images_part_1/* data/HAM10000/
+fi
+if [ -f ~/Downloads/HAM10000_images_part_2.zip ]; then
+  unzip -n ~/Downloads/HAM10000_images_part_2.zip -d ~/Downloads/HAM10000_images_part_2
+  cp -r ~/Downloads/HAM10000_images_part_2/* data/HAM10000/
+fi
+
+# Check total images (should print 10015)
+find data/HAM10000 -type f -name "*.jpg" | wc -l
 ```
 
 ---
