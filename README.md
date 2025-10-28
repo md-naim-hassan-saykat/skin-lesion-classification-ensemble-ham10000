@@ -201,6 +201,14 @@ make lint
 make test
 ```
 
+### Local Development
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt -r requirements-ci.txt
+pre-commit install
+pytest -q && ruff check .
+```
+
 ---
 
 ## Environment Summary
