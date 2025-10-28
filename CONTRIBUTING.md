@@ -36,6 +36,7 @@ pre-commit install
 make format   # auto-format with black
 make lint     # run ruff checks
 make test     # run pytest
+
 # You can also run all steps together:
 make all
 ```
@@ -45,6 +46,7 @@ make all
 # Unit and integration tests are located in the tests/ directory.
 # To verify functionality:
 pytest -q
+
 # To check code coverage:
 pytest --cov=src
 ```
