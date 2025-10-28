@@ -2,11 +2,13 @@
 from __future__ import annotations
 
 import argparse
+
 from pathlib import Path
 from typing import Any, Dict
 
 import numpy as np
 import torch
+
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
@@ -105,7 +107,11 @@ def main() -> None:
         val_metrics = evaluate(model, val_loader, device)
         scheduler.step(val_metrics.get("f1") or val_metrics["accuracy"])
 
-        row = {"epoch": float(epoch), "train_loss": float(train_loss), **{k: float(v) if v is not None else None for k, v in val_metrics.items()}}
+        row = {
+            "epoch": float(epoch),
+            "train_loss": float(train_loss),
+            **{k: float(v) if v is not None else None for k, v in val_metrics.items()},
+        }
         history.append(row)
         print(
             f"[{epoch:03d}/{max_epochs}] loss={train_loss:.4f} "

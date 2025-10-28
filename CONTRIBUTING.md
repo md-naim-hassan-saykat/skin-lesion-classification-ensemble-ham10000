@@ -1,8 +1,8 @@
 # Contributing Guidelines
 
-_For issues or feature discussions, please open an [Issue](../../issues)._  
+_For issues or feature discussions, please open an [Issue](../../issues)._
 
-Thank you for your interest in contributing to **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019**!  
+Thank you for your interest in contributing to **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019**!
 We welcome pull requests for bug fixes, documentation improvements, and research extensions.
 
 ---
@@ -74,7 +74,7 @@ You can contribute by:
 
 ## Code of Conduct
 
-Please maintain a **respectful and inclusive** environment for all contributors.  
+Please maintain a **respectful and inclusive** environment for all contributors.
 All discussions, issues, and PRs must follow [GitHub’s Community Guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines).
 
 ## Attribution

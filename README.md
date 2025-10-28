@@ -1,7 +1,7 @@
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification  
+# Generalizable Ensemble Deep Learning for Skin Lesion Classification
 ### *Internal and External Validation on HAM10000 and ISIC 2019*
 
-This repository provides a reproducible **PyTorch-based ensemble framework** for robust skin lesion classification across **HAM10000** and **ISIC 2019** datasets.  
+This repository provides a reproducible **PyTorch-based ensemble framework** for robust skin lesion classification across **HAM10000** and **ISIC 2019** datasets.
 It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt, etc.), ensemble fusion for improved generalization, and Grad-CAM visualizations for interpretability.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
@@ -21,11 +21,11 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 
 ## Highlights
 
-- **7 architectures:** ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt, and CNN baseline  
-- **Ensemble fusion** improves generalization and AUC across datasets  
-- **Grad-CAM** visualizations for interpretable lesion attention  
-- **Pretrained weights, metrics, and outputs** hosted on Zenodo  
-- **Reproducible workflow** via Bash scripts or Makefile  
+- **7 architectures:** ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt, and CNN baseline
+- **Ensemble fusion** improves generalization and AUC across datasets
+- **Grad-CAM** visualizations for interpretable lesion attention
+- **Pretrained weights, metrics, and outputs** hosted on Zenodo
+- **Reproducible workflow** via Bash scripts or Makefile
 
 ---
 
@@ -49,12 +49,12 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 
 ## Data & Weights
 
-- **Datasets:** [HAM10000 (ISIC Archive)](https://www.isic-archive.com/) and ISIC 2019 (external validation)  
-- **Assets hosted on Zenodo** due to GitHub storage limits:  
-  - Trained model weights  
-  - Evaluation metrics (Accuracy, F1, ROC-AUC)  
-  - Grad-CAM visualizations  
-  - LaTeX tables and figures  
+- **Datasets:** [HAM10000 (ISIC Archive)](https://www.isic-archive.com/) and ISIC 2019 (external validation)
+- **Assets hosted on Zenodo** due to GitHub storage limits:
+  - Trained model weights
+  - Evaluation metrics (Accuracy, F1, ROC-AUC)
+  - Grad-CAM visualizations
+  - LaTeX tables and figures
 
 🔗 **Zenodo DOI:** [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
@@ -62,8 +62,8 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 
 ## Paper (Preprint)
 
-**Title:** *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*  
-**DOI:** [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)  
+**Title:** *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*
+**DOI:** [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 **Status:** Preprint (Zenodo, 2025)
 
 ---

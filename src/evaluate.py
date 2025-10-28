@@ -2,10 +2,12 @@
 from __future__ import annotations
 
 import argparse
+
 from typing import Dict
 
 import numpy as np
 import torch
+
 from torchvision import datasets, transforms
 
 from src.models import get_model
@@ -71,7 +73,9 @@ def main() -> None:
     ap.add_argument("--num_classes", type=int, default=7)
     ap.add_argument("--image_size", type=int, default=224)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--save_csv", default=None, help="Optional path to write per-sample probabilities.")
+    ap.add_argument(
+        "--save_csv", default=None, help="Optional path to write per-sample probabilities."
+    )
     args = ap.parse_args()
 
     metrics = evaluate_once(

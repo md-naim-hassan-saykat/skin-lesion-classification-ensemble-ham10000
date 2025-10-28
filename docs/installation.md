@@ -1,6 +1,6 @@
 # Installation Guide
 
-This document provides setup and environment configuration instructions for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
+This document provides setup and environment configuration instructions for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
 The repository is built using **PyTorch**, **scikit-learn**, and **Grad-CAM**, with an emphasis on reproducibility and cross-platform compatibility (macOS, Linux, Colab).
 
 ---

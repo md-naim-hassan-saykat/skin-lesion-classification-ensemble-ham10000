@@ -1,13 +1,13 @@
 # Training Pipeline
 
-This document describes the training workflow used in the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
+This document describes the training workflow used in the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
 The pipeline is implemented using **PyTorch** and is designed for modularity, reproducibility, and scalability across multiple CNN architectures.
 
 ---
 
 ## 1. Overview
 
-The training pipeline handles all stages of model development — from data loading to checkpointing and evaluation.  
+The training pipeline handles all stages of model development — from data loading to checkpointing and evaluation.
 It supports multiple architectures such as:
 
 - **ResNet-50**

@@ -11,7 +11,7 @@ authors:
     orcid: "https://orcid.org/0009-0007-5270-3970"
 
 abstract: >
-  This repository accompanies the research project *“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”*. 
+  This repository accompanies the research project *“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”*.
   It provides a reproducible deep learning pipeline combining ResNet, EfficientNet, DenseNet, and ConvNeXt architectures with ensemble averaging for robust multi-class skin lesion diagnosis.
   The project emphasizes generalization, interpretability, and standardized evaluation across internal (HAM10000) and external (ISIC 2019) datasets.
 

@@ -5,6 +5,7 @@ from typing import Tuple
 
 import numpy as np
 import torch
+
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
@@ -45,7 +46,9 @@ def build_loaders(
     train_ds = datasets.ImageFolder(f"{data_root}/train", transform=train_tfms)
     val_ds = datasets.ImageFolder(f"{data_root}/val", transform=val_tfms)
 
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    train_loader = DataLoader(
+        train_ds, batch_size=batch_size, shuffle=True, num_workers=num_workers
+    )
     val_loader = DataLoader(val_ds, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     return train_loader, val_loader, train_ds.classes

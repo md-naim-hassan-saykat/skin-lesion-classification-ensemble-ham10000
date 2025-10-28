@@ -2,7 +2,7 @@
 
 Thank you for contributing to **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019**!
 
-We are committed to fostering a welcoming, respectful, and inclusive environment for everyone.  
+We are committed to fostering a welcoming, respectful, and inclusive environment for everyone.
 Please follow these guidelines when interacting with others in issues, pull requests, discussions, and commits.
 
 ---
@@ -28,7 +28,7 @@ The following actions are not tolerated:
 
 ## Enforcement
 
-Project maintainers may remove, edit, or reject contributions that violate this Code of Conduct.  
+Project maintainers may remove, edit, or reject contributions that violate this Code of Conduct.
 Serious or repeated violations may result in a temporary or permanent ban from the repository.
 
 ---

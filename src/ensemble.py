@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+
 from typing import List, Tuple
 
 import numpy as np
@@ -40,7 +41,9 @@ def main() -> None:
         if yi.shape != y_true.shape or not np.array_equal(yi, y_true):
             raise ValueError(f"True labels mismatch between {args.csvs[0]} and {path}.")
         if pi.shape != probs_sum.shape:
-            raise ValueError(f"Probability shape mismatch: {probs_sum.shape} vs {pi.shape} for {path}")
+            raise ValueError(
+                f"Probability shape mismatch: {probs_sum.shape} vs {pi.shape} for {path}"
+            )
         probs_sum += pi
 
     probs_avg = probs_sum / len(args.csvs)
