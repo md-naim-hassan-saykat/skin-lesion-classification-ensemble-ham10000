@@ -1,29 +1,48 @@
 # Security Policy
 
-We take security and privacy seriously in this project.  
-If you discover a vulnerability or security issue, please follow the instructions below.
+We take security, data integrity, and user privacy seriously in this project.  
+If you believe you’ve found a vulnerability, please **report it privately** as described below.
 
 ---
 
-### Reporting a Vulnerability
-If you find a security vulnerability:
-1. **Do not open a public GitHub issue.**
-2. Instead, email us directly at **[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)**.
-3. Include a clear description of the issue and, if possible, steps to reproduce it.
+## Reporting a Vulnerability
 
-We aim to respond to all reports within **72 hours** and provide a fix as soon as possible.
+If you discover a security or privacy issue, **do not create a public GitHub issue**.
+
+Instead, please:
+1. Email us directly at **[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)**.  
+2. Include:
+   - A detailed description of the issue.  
+   - Steps to reproduce the vulnerability.  
+   - (Optional) Suggested mitigation or patch ideas.
+
+We will acknowledge receipt within **72 hours** and aim to provide a verified fix or mitigation plan within **7 business days**, depending on complexity.
 
 ---
 
-### Supported Versions
-Security updates will be provided for the latest release of this repository only.  
-Older versions are considered unsupported unless otherwise stated.
+## Supported Versions
+
+| Version | Supported | Notes |
+|----------|------------|-------|
+| Latest main branch |  | Receives active fixes and patches |
+| Older releases |  | May not receive security updates |
+
+Security updates apply only to the **latest stable release** unless stated otherwise.
 
 ---
 
-### Responsible Disclosure
-We ask that you:
-- Give us reasonable time to address the issue before disclosing it publicly.
-- Avoid sharing exploit details until a patch is released.
+## Responsible Disclosure Guidelines
 
-Thank you for helping to keep our users and research community safe!
+We kindly ask that you:
+- Allow us **reasonable time** to investigate and resolve the issue before public disclosure.  
+- Avoid sharing technical details or exploits until a fix is released.  
+- Refrain from testing vulnerabilities in production systems or datasets.
+
+Following responsible disclosure helps protect users, researchers, and systems relying on this project.
+
+---
+
+## Thank You
+
+Your efforts to identify and report vulnerabilities help maintain the integrity and reliability of our research and tools.  
+We deeply appreciate contributions that make this project safer for everyone.
