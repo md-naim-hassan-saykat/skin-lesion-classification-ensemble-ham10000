@@ -127,7 +127,7 @@ cd ~/skin-lesion-classification-ensemble-ham10000
 bash scripts/download_ham10000.sh
 ```
 
-(This automatically copies/unzips from ~/Downloads or ~/Desktop and checks that 10,015 images are available.)
+(This script automatically copies or unzips from your ~/Downloads or ~/Desktop folder and verifies that 10,015 images are available.)
 
 Otherwise, you can do it manually:
 ```bash
@@ -188,7 +188,10 @@ Reproduced from `scripts/eval_all.sh`.
 | ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998  |
 | **Ensemble (above 3)** | **0.883**| **0.868**| **0.992** |
 
+The ensemble achieved +7.4% F1 improvement over the best individual model (DenseNet-121) on HAM10000 and maintained AUC ≈ 0.99 on external ISIC 2019 validation.
+
 > Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
+> The ensemble achieved +7.4% F1 improvement over the best individual model (DenseNet-121) on HAM10000 and maintained AUC ≈ 0.99 on external ISIC 2019 validation.
 
 ---
 
