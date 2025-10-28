@@ -78,7 +78,7 @@ lines-after-imports = 2
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+addopts = "-q --timeout=10"
 markers = [
   "timeout: marks tests with a timeout decorator",
 ]
