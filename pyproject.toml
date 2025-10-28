@@ -20,18 +20,6 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 
-# Optional runtime deps usually live in requirements.txt for research repos.
-# If we want pip-installable deps, you can uncomment and pin here.
-# dependencies = [
-#   "numpy>=1.23,<2.0",
-#   "pandas>=1.5,<2.3",
-#   "scikit-learn>=1.2,<1.6",
-#   "scipy>=1.10,<2.5",
-#   "matplotlib>=3.7,<3.10",
-#   "seaborn>=0.12,<0.14",
-#   "einops>=0.7",
-# ]
-
 [project.optional-dependencies]
 dev = [
   "black>=24.0",
@@ -56,20 +44,18 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
-# If we only expose a top-level "src" package, list it explicitly:
-# include = ["src*"]
 
 [tool.setuptools.package-data]
-# ship non-Python files like configs if needed
+# if you keep the package name as "src"
 "src" = ["*.yaml", "*.yml"]
 
 [tool.black]
 line-length = 120
-target-version = ["py39"]
+target-version = ["py311"]
 
 [tool.ruff]
 line-length = 120
-target-version = "py39"
+target-version = "py311"
 extend-exclude = [
   ".venv",
   "data",
@@ -83,7 +69,7 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-ignore = ["E501"]  # long lines allowed (kept for consistency)
+ignore = ["E501"]  # long lines allowed, Black wraps as needed
 select = ["E", "F", "I", "UP"]
 
 [tool.ruff.lint.isort]
