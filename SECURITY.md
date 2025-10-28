@@ -1,7 +1,7 @@
 # Security Policy
 
 We take security, data integrity, and user privacy seriously in this project.  
-If you believe you’ve found a vulnerability, please **report it privately** as described below.
+If you believe you have found a vulnerability, please **report it privately** as described below.
 
 ---
 
