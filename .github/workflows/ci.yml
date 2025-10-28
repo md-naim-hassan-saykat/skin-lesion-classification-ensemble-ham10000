@@ -1,54 +1,42 @@
 name: CI
-
-on:
-  push:
-  pull_request:
-  workflow_dispatch:
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Cache pip
-        uses: actions/cache@v4
+      - uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt', 'pyproject.toml') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          key: ${{ runner.os }}-pip-v1-${{ hashFiles('requirements*.txt','pyproject.toml') }}
 
-      # Pin torch family first (prevents resolver from downgrading them)
-      - name: Install torch family
+      - name: Install torch (CPU wheels)
         run: |
           python -m pip install --upgrade pip
-          pip install "torch==2.9.0" "torchvision==0.24.0" "torchaudio==2.9.0"
+          pip install --index-url https://download.pytorch.org/whl/cpu \
+            "torch==2.9.0" "torchvision==0.24.0" "torchaudio==2.9.0"
 
-      # Install the rest without touching torch deps
       - name: Install project requirements (no deps)
         run: |
-          pip install -r requirements.txt --no-deps
+          grep -viE '^(torch|torchvision|torchaudio)\b' requirements.txt > req-no-torch.txt
+          pip install -r req-no-torch.txt
           pip install -r requirements-ci.txt
 
-      - name: Lint (ruff + black --check)
+      - name: Lint
         run: |
           ruff check .
           black --check .
 
-      - name: Run smoke tests only
+      - name: Smoke tests
         env:
-          # Force CPU / headless friendly settings
           CUDA_VISIBLE_DEVICES: ""
+          PYTORCH_ENABLE_MPS_FALLBACK: "1"
           MPLBACKEND: Agg
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          # Run only smoke tests (they don't need the dataset)
           pytest -q -k "smoke" -m "not slow"
