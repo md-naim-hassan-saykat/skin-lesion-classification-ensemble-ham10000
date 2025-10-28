@@ -39,10 +39,7 @@ make all
 
 ### Testing
 ```bash
-# Unit and integration tests are located in the tests/ directory.
-# To verify functionality:
 pytest -q
-# To check code coverage:
 pytest --cov=src
 ```
 
