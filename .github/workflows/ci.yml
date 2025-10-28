@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11"]   # keep CI stable; expand later once needed
+        python-version: ["3.11"]
 
     env:
       PYTHONPATH: ${{ github.workspace }}
@@ -27,22 +27,29 @@ jobs:
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
 
-      # Install a compatible, lightweight PyTorch trio (matches requirements.txt)
+      # (Optional) Opencv sometimes needs this shared lib on ubuntu runners
+      - name: Install system deps for OpenCV
+        run: sudo apt-get update && sudo apt-get install -y libgl1
+
+      # Pin the torch trio first, then install the rest WITHOUT deps,
+      # so pip won't try to bump/downgrade torch/torchvision/torchaudio.
       - name: Install torch family
         run: |
           pip install "torch==2.2.2" "torchvision==0.17.2" "torchaudio==2.2.2"
 
-      - name: Install project requirements
+      - name: Install project requirements (no deps)
         run: |
-          pip install -r requirements.txt
+          pip install -r requirements.txt --no-deps
           if [ -f requirements-ci.txt ]; then
             pip install -r requirements-ci.txt
+          else
+            pip install ruff pytest pytest-cov
           fi
 
       - name: Show environment
         run: |
           python -V
-          pip list
+          pip list | sed -n '1,120p'  # trim output
 
       - name: Lint (ruff)
         run: ruff check .
