@@ -93,7 +93,12 @@ def main() -> None:
         device = _best_device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
         state = torch.load(args.checkpoint, map_location=device)
-        model.load_state_dict(state["model"] if "model" in state else state)
+        missing, unexpected = model.load_state_dict(
+            state["model"] if "model" in state else state,
+            strict=False
+        )
+        if missing or unexpected:
+           print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
         model.eval()
 
         ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
