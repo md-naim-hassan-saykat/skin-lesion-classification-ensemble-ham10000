@@ -39,6 +39,7 @@ make all
 
 ### Testing
 ```bash
+pip install -e .
 pytest -q
 pytest --cov=src
 ```
