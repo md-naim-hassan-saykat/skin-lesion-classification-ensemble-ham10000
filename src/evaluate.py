@@ -87,12 +87,13 @@ def main() -> None:
     )
     save_json(metrics, args.out)
 
-    if args.save_csv:
+        if args.save_csv:
         import csv
 
         device = _best_device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
         state = torch.load(args.checkpoint, map_location=device)
+
         # load backbone weights non-strictly (we dropped classifier heads)
         missing, unexpected = model.load_state_dict(
             state["model"] if isinstance(state, dict) and "model" in state else state,
@@ -107,20 +108,24 @@ def main() -> None:
 
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
-            # IMPORTANT: this header name and order must be exactly this
+            # IMPORTANT: header + order must match what the ensemble expects
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
 
             with torch.no_grad():
                 for images, targets in loader:
                     logits = model(images.to(device))
-                    # probs (B, C)
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy()
-                    # integer labels (B,)
-                    y = targets.detach().cpu().numpy().astype(int)
+                    probs = torch.softmax(logits, dim=1).detach().cpu().numpy()  # (B, C)
+                    labels = targets.detach().cpu().numpy().astype(int)         # (B,)
 
-                    # Write one row per sample: y_true then p_0..p_{C-1}
-                    for t, row in zip(y.tolist(), p.tolist()):
-                        w.writerow([t] + [f"{x:.8f}" for x in row])
+                    # sanity
+                    if probs.shape[0] != labels.shape[0] or probs.shape[1] != args.num_classes:
+                        print("[warn] skipping a batch with unexpected shapes:",
+                              probs.shape, labels.shape)
+                        continue
+
+                    for t, row in zip(labels.tolist(), probs.tolist()):
+                        row_fmt = [f"{float(x):.8f}" for x in row]
+                        w.writerow([int(t)] + row_fmt)
 
         print(f"[csv] wrote {args.save_csv} with integer y_true and {args.num_classes} probs")
 
