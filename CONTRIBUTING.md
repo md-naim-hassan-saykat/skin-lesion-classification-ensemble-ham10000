@@ -39,7 +39,8 @@ make all
 
 ### Testing
 ```bash
-pip install -e .
+export PYTHONPATH="$PWD"
+
 pytest -q
 pytest --cov=src
 ```
