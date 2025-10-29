@@ -45,16 +45,15 @@ pytest --cov=src
 
 ### Pull Request Process
 ```bash
-# Create a new branch:
+# Create a new feature branch
 git checkout -b feature/your-feature-name
-# Commit changes with clear messages:
+
+# Stage and commit your changes
+git add -A
 git commit -m "Add: improved ensemble averaging logic"
-# Push your branch:
-git push origin feature/your-feature-name
-# Open a Pull Request (PR) on GitHub:
-	•	Describe your changes clearly.
-	•	Link related issues (e.g., Fixes #12).
-	•	Ensure CI passes (GitHub Actions will check format, lint, and tests automatically).
+
+# Push your branch to GitHub
+git push --set-upstream origin feature/your-feature-name
 ```
 
 ## Contribution Ideas
