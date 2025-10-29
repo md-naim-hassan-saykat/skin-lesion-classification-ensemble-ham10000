@@ -99,10 +99,10 @@ import csv
 device = _best_device()
 model = get_model(args.model, num_classes=args.num_classes).to(device)
 state = torch.load(args.checkpoint, map_location=device)
-missing, unexpected = model.load_state_dict(
-    state["model"] if isinstance(state, dict) and "model" in state else state,
-    strict=False,
-)
+ckpt = state["model"] if isinstance(state, dict) and "model" in state else state
+msd = model.state_dict()
+ckpt = {k: v for k, v in ckpt.items() if k in msd and msd[k].shape == v.shape}
+missing, unexpected = model.load_state_dict(ckpt, strict=False)
 if missing or unexpected:
     print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
 model.eval()
