@@ -61,6 +61,10 @@ The ensemble script averages (or optionally weights) these predictions and compu
 
 Example usage:
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
+source .venv/bin/activate
+export PYTHONPATH="$PWD" # Ensure imports work
+# Run the ensemble script from here
 python src/ensemble.py \
   --csvs outputs/resnet_val_preds.csv \
          outputs/efficientnet_val_preds.csv \
