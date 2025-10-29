@@ -102,22 +102,20 @@ def main() -> None:
         model.eval()
 
         ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
-        # (Optional on macOS) num_workers=0 avoids spawn/teardown hiccups
         loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
 
         with open(args.save_csv, "w", newline="") as f:
             writer = csv.writer(f)
-            # Prefer a precise name:
-            header = ["y_true"] + [f"p_{i}" for i in range(args.num_classes)]
-            writer.writerow(header)
+            # write an explicit label header the ensemble recognizes
+            writer.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
 
             with torch.no_grad():
                 for images, targets in loader:
                     logits = model(images.to(device))
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy()  # shape [B, C]
-                    y = targets.numpy()                                      # shape [B]
+                    p = torch.softmax(logits, dim=1).detach().cpu().numpy()  # (B, C)
+                    y = targets.numpy().astype(int)                           # (B,)
                     for t, row in zip(y.tolist(), p.tolist()):
-                        writer.writerow([int(t)] + [float(x) for x in row])
+                        writer.writerow([t] + [f"{x:.8f}" for x in row])
 
 
 if __name__ == "__main__":
