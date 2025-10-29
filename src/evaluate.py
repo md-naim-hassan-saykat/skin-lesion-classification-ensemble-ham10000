@@ -98,21 +98,26 @@ def main() -> None:
             strict=False
         )
         if missing or unexpected:
-           print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
+            print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
         model.eval()
 
         ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
+        # (Optional on macOS) num_workers=0 avoids spawn/teardown hiccups
         loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
 
         with open(args.save_csv, "w", newline="") as f:
             writer = csv.writer(f)
-            header = ["true"] + [f"p_{i}" for i in range(args.num_classes)]
+            # Prefer a precise name:
+            header = ["y_true"] + [f"p_{i}" for i in range(args.num_classes)]
             writer.writerow(header)
-            for images, targets in loader:
-                p = torch.softmax(model(images.to(device)), dim=1).cpu().numpy().tolist()
-                # B905: be explicit
-                for t, row in zip(targets.numpy().tolist(), p, strict=False):
-                    writer.writerow([t] + row)
+
+            with torch.no_grad():
+                for images, targets in loader:
+                    logits = model(images.to(device))
+                    p = torch.softmax(logits, dim=1).detach().cpu().numpy()  # shape [B, C]
+                    y = targets.numpy()                                      # shape [B]
+                    for t, row in zip(y.tolist(), p.tolist()):
+                        writer.writerow([int(t)] + [float(x) for x in row])
 
 
 if __name__ == "__main__":
