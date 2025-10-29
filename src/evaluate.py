@@ -88,46 +88,46 @@ def main() -> None:
     save_json(metrics, args.out)
 
         if args.save_csv:
-        import csv
+import csv
 
-        device = _best_device()
-        model = get_model(args.model, num_classes=args.num_classes).to(device)
-        state = torch.load(args.checkpoint, map_location=device)
+device = _best_device()
+model = get_model(args.model, num_classes=args.num_classes).to(device)
+state = torch.load(args.checkpoint, map_location=device)
+missing, unexpected = model.load_state_dict(
+    state["model"] if isinstance(state, dict) and "model" in state else state,
+    strict=False,
+)
+if missing or unexpected:
+    print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
+model.eval()
 
-        # load backbone weights non-strictly (we dropped classifier heads)
-        missing, unexpected = model.load_state_dict(
-            state["model"] if isinstance(state, dict) and "model" in state else state,
-            strict=False,
-        )
-        if missing or unexpected:
-            print(f"[warn] load_state_dict non-strict. missing={missing}, unexpected={unexpected}")
-        model.eval()
+ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
+loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
 
-        ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
-        loader = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
+with open(args.save_csv, "w", newline="") as f:
+    w = csv.writer(f)
+    # Use y_true (exact name) so the ensemble can detect it
+    w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
 
-        with open(args.save_csv, "w", newline="") as f:
-            w = csv.writer(f)
-            # IMPORTANT: header + order must match what the ensemble expects
-            w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
+    sample_checks = 0
+    with torch.no_grad():
+        for images, targets in loader:
+            logits = model(images.to(device))
+            probs  = torch.softmax(logits, dim=1).detach().cpu().numpy()        # (B, C)
+            labels = targets.detach().cpu().numpy().astype(int).tolist()        # (B,)
 
-            with torch.no_grad():
-                for images, targets in loader:
-                    logits = model(images.to(device))
-                    probs = torch.softmax(logits, dim=1).detach().cpu().numpy()  # (B, C)
-                    labels = targets.detach().cpu().numpy().astype(int)         # (B,)
+            for t, row in zip(labels, probs.tolist()):
+                # hard guarantees
+                assert isinstance(t, int) and 0 <= t < args.num_classes
+                assert len(row) == args.num_classes
+                w.writerow([t] + [f"{float(x):.8f}" for x in row])
 
-                    # sanity
-                    if probs.shape[0] != labels.shape[0] or probs.shape[1] != args.num_classes:
-                        print("[warn] skipping a batch with unexpected shapes:",
-                              probs.shape, labels.shape)
-                        continue
+                # quick sanity print for first few rows
+                if sample_checks < 2:
+                    print("[csv row]", t, row[:3], "...")
+                    sample_checks += 1
 
-                    for t, row in zip(labels.tolist(), probs.tolist()):
-                        row_fmt = [f"{float(x):.8f}" for x in row]
-                        w.writerow([int(t)] + row_fmt)
-
-        print(f"[csv] wrote {args.save_csv} with integer y_true and {args.num_classes} probs")
+print(f"[csv] wrote {args.save_csv} with integer y_true and {args.num_classes} probs")
 
 
 if __name__ == "__main__":
