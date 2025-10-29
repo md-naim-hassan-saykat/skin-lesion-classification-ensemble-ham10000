@@ -25,22 +25,23 @@ def _val_tfms(image_size: int) -> transforms.Compose:
         [
             transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225]),
         ]
     )
 
 
-def load_ckpt_filtered(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> None:
-    """Load checkpoint but keep only keys that exist in the model AND match shape.
-    This safely drops 1000-class classifier heads, etc.
-    """
-    state = torch.load(ckpt_path, map_location=device)
-    src = state["model"] if isinstance(state, dict) and "model" in state else state
+def _safe_load(model: torch.nn.Module, checkpoint_path: str, device: torch.device) -> None:
+    """Load a checkpoint but drop any params that are missing or shape-mismatched."""
+    state = torch.load(checkpoint_path, map_location=device)
+    ckpt = state["model"] if isinstance(state, dict) and "model" in state else state
     msd = model.state_dict()
-    src = {k: v for k, v in src.items() if k in msd and msd[k].shape == v.shape}
-    missing, unexpected = model.load_state_dict(src, strict=False)
-    if missing or unexpected:
-        print(f"[warn] non-strict load: missing={missing} unexpected={unexpected}")
+    filtered = {k: v for k, v in ckpt.items() if k in msd and msd[k].shape == v.shape}
+    missing, unexpected = model.load_state_dict(filtered, strict=False)
+    dropped = sorted(set(ckpt.keys()) - set(filtered.keys()))
+    if dropped or missing or unexpected:
+        print(f"[warn] non-strict filtered load:"
+              f" dropped={len(dropped)} keys, missing={list(missing)}, unexpected={list(unexpected)}")
 
 
 @torch.no_grad()
@@ -53,7 +54,7 @@ def evaluate_once(
 ) -> Dict[str, float | None]:
     device = _best_device()
     model = get_model(model_name, num_classes=num_classes).to(device)
-    load_ckpt_filtered(model, checkpoint, device)
+    _safe_load(model, checkpoint, device)
     model.eval()
 
     ds = datasets.ImageFolder(data_dir, transform=_val_tfms(image_size))
@@ -62,7 +63,7 @@ def evaluate_once(
     y_true, y_pred, probs = [], [], []
     for images, targets in loader:
         logits = model(images.to(device))
-        p = torch.softmax(logits, dim=1).detach().cpu().numpy()
+        p = torch.softmax(logits, dim=1).cpu().numpy()  # (B, C)
         probs.append(p)
         y_pred.extend(p.argmax(1).tolist())
         y_true.extend(targets.numpy().tolist())
@@ -84,7 +85,8 @@ def main() -> None:
     ap.add_argument("--num_classes", type=int, default=7)
     ap.add_argument("--image_size", type=int, default=224)
     ap.add_argument("--out", required=True)
-    ap.add_argument("--save_csv", default=None, help="Optional path to write per-sample probabilities.")
+    ap.add_argument("--save_csv", default=None,
+                    help="Optional path to write per-sample probabilities.")
     args = ap.parse_args()
 
     metrics = evaluate_once(
@@ -101,7 +103,7 @@ def main() -> None:
 
         device = _best_device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
-        load_ckpt_filtered(model, args.checkpoint, device)
+        _safe_load(model, args.checkpoint, device)
         model.eval()
 
         ds = datasets.ImageFolder(args.data_dir, transform=_val_tfms(args.image_size))
@@ -109,13 +111,13 @@ def main() -> None:
 
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
-            # header: y_true then p_0..p_{C-1}
+            # exact header: integer y_true then p_0..p_{C-1}
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
 
             with torch.no_grad():
                 for images, targets in loader:
                     logits = model(images.to(device))
-                    probs = torch.softmax(logits, dim=1).detach().cpu().numpy()   # (B, C)
+                    probs = torch.softmax(logits, dim=1).detach().cpu().numpy()  # (B, C)
                     labels = targets.detach().cpu().numpy().astype(int).tolist() # (B,)
                     for t, row in zip(labels, probs.tolist()):
                         w.writerow([int(t)] + [f"{float(x):.8f}" for x in row])
