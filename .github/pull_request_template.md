@@ -48,6 +48,7 @@ Attach relevant output, figures, or Grad-CAM visualizations if this PR affects e
 
 ## Checklist
 Before submitting, confirm that:
+
 	•	Code follows the repository’s style guidelines (Black, Ruff)
 	•	All tests pass locally
 	•	Documentation is up to date
