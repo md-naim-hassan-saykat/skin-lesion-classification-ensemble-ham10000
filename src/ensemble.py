@@ -28,9 +28,9 @@ def _is_int_like(x: str, num_classes: int) -> bool:
 
 
 def _parse_label(x: str) -> int:
-    """Parse a label previously validated by _is_int_like."""
+    """Parse a label previously validated by _is_int_like (standard 0.5 rounds up)."""
     v = float(x)
-    return int(round(v))
+    return int(math.floor(v + 0.5))
 
 
 def _find_prob_indices(header: List[str], num_classes: int) -> List[int]:
@@ -52,7 +52,10 @@ def _find_prob_indices(header: List[str], num_classes: int) -> List[int]:
     return []
 
 
-def read_probs_and_labels(path: str, num_classes: int) -> Tuple[Optional[np.ndarray], np.ndarray]:  # noqa: C901
+def read_probs_and_labels(
+    path: str, num_classes: int
+) -> Tuple[Optional[np.ndarray], np.ndarray]:  # noqa: C901
+    
     """
     Read a CSV of per-sample probabilities (and an optional integer label column).
     - Prob columns: prefer named p_0..p_{C-1}; else the last C columns.
