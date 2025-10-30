@@ -38,8 +38,8 @@ pre-commit install
 ```
 You can now run:
 ```bash
-make lint   # or: ruff check . && black .
-make test   # or: pytest -q
+make lint   
+make test   
 ```
 
 ---
