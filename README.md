@@ -259,6 +259,4 @@ For questions, feedback, or collaboration opportunities, please reach out to:
 If you encounter issues or wish to suggest improvements, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
 or contact the maintainer directly at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
 
----
-
 
