@@ -25,7 +25,52 @@ Results are visualized in the notebook using ROC curves, confusion matrices, and
 \[
 \text{Accuracy} = \frac{\text{TP + TN}}{\text{Total Samples}}
 \]
+
 ```python
 from sklearn.metrics import accuracy_score
 accuracy_score(y_true, y_pred)
 ```
+
+### 2.2 F1 Score (Weighted)
+Balances precision and recall, robust for class imbalance.
+
+```python
+from sklearn.metrics import f1_score
+f1_score(y_true, y_pred, average="weighted")
+```
+
+### 2.3 ROC-AUC
+Evaluates the area under the Receiver Operating Characteristic curve — capturing ranking quality for multi-class predictions.
+
+```python
+from sklearn.metrics import roc_auc_score
+roc_auc_score(y_true, y_prob, multi_class="ovr")
+```
+
+---
+
+## 3. Calibration Metrics
+Expected Calibration Error (ECE)
+
+Quantifies how well predicted probabilities reflect true correctness likelihoods:
+[
+\text{ECE} = \sum_{m=1}^{M} \frac{|B_m|}{n} , \left| \text{acc}(B_m) - \text{conf}(B_m) \right|
+]
+
+Implemented in src/utils.py and plotted in the notebook as reliability diagrams.
+
+---
+
+## 4. Visual Diagnostics
+Generated automatically in the notebook:
+	•	ROC Curves — per class and averaged
+	•	Confusion Matrices — normalized
+	•	Grad-CAM Visualizations — lesion focus interpretability
+	•	Calibration Plots — ECE reliability curves
+
+---
+
+## 5. Summary
+All metrics are logged in results/metrics/*.json and summarized in LaTeX-ready tables within the notebook for reproducibility.
+
+---
