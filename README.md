@@ -27,7 +27,7 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 - **Ensemble fusion** improves generalization and AUC across datasets
 - **Grad-CAM** visualizations for interpretable lesion focus
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo
-- **Reproducible pipeline** via `bash`, `Makefile`, or Docker
+- **Reproducible pipeline** via bash or Docker
 
 
 ---
@@ -198,14 +198,6 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-ci.txt
 make lint
 make test
-```
-
----
-
-## Run via Docker
-```bash
-docker build -t skin-lesion-ensemble .
-docker run --rm skin-lesion-ensemble
 ```
 
 ---
