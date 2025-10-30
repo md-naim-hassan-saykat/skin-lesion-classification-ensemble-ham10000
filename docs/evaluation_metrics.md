@@ -1,6 +1,3 @@
-**Enhancements:** explicitly include calibration, per-class recall/F1, and reference to notebook visualizations.
-
-```markdown
 # Evaluation Metrics
 
 This document details the evaluation metrics used in the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
@@ -31,3 +28,4 @@ Results are visualized in the notebook using ROC curves, confusion matrices, and
 ```python
 from sklearn.metrics import accuracy_score
 accuracy_score(y_true, y_pred)
+```
