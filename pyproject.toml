@@ -1,18 +1,12 @@
 [tool.ruff]
 line-length = 120
 target-version = "py311"
-extend-exclude = [
-  ".venv","data","outputs","results","build","dist","__pycache__","*.ipynb","notebooks",
-]
+extend-exclude = [".venv","data","outputs","results","build","dist","__pycache__","*.ipynb","notebooks"]
 
 [tool.ruff.lint]
-ignore = ["E501"]
 select = ["E","F","I","UP"]
+ignore = ["E501"]
 per-file-ignores = { "src/ensemble.py" = ["C901"] }
-
-# Keep per-file ignores here (table form)
-[tool.ruff.lint.per-file-ignores]
-"src/ensemble.py" = ["C901"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
