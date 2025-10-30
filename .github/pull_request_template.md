@@ -22,6 +22,9 @@ Describe how this PR was tested and verified.
 
 Example:
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
+source .venv/bin/activate
+export PYTHONPATH="$PWD"
 pytest -q
 python src/evaluate.py --help
 bash scripts/eval_all.sh
