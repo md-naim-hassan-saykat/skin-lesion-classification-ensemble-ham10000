@@ -1,4 +1,0 @@
-# Ignore notebooks and cache folders
-*.ipynb
-.venv/
-.ruff_cache/
