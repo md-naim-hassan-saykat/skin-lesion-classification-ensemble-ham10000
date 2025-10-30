@@ -1,6 +1,3 @@
----
-
-### 2. `docs/evaluation_metrics.md` (Refined)
 **Enhancements:** explicitly include calibration, per-class recall/F1, and reference to notebook visualizations.
 
 ```markdown
