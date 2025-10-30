@@ -50,6 +50,4 @@ Please complete the following information:
 
   ## Logs / Screenshots
   If applicable, include relevant terminal output, stack traces, or screenshots for better context.
-
-  ---
   
