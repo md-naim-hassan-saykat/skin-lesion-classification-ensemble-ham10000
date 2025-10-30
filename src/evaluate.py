@@ -1,6 +1,9 @@
 # src/evaluate.py
 from __future__ import annotations
-import argparse, numpy as np, torch
+
+import argparse
+import numpy as np
+import torch
 from torchvision import datasets, transforms
 from src.models import get_model
 from src.utils import compute_metrics, save_json
@@ -87,7 +90,7 @@ def main():
             for imgs, labels in dl:
                 logits = model(imgs.to(device))
                 p = torch.softmax(logits, dim=1).cpu().numpy().tolist()
-                for t, row in zip(labels.numpy().astype(int).tolist(), p):
+                for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
                     w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
 
