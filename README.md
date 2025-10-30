@@ -25,7 +25,7 @@ _A reproducible ensemble deep learning framework for skin lesion classification 
 - **Ensemble fusion** improves generalization and AUC across datasets
 - **Grad-CAM** visualizations for interpretable lesion focus
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo
-- **Reproducible pipeline** via bash or Docker
+- **Reproducible pipeline** via bash or Colab
 
 ---
 
