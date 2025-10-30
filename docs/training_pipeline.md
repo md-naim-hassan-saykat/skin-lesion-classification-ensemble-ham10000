@@ -48,7 +48,8 @@ Each uses identical preprocessing and augmentation for fair comparison.
 ## 4. Execution
 Local run
 ```bash
-Local run
+source .venv/bin/activate
+export PYTHONPATH="$PWD"
 python src/train.py --config src/config.yaml
 python src/evaluate.py --weights checkpoints/model_best.pt
 ```
