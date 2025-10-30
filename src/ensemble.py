@@ -52,7 +52,7 @@ def _find_prob_indices(header: List[str], num_classes: int) -> List[int]:
     return []
 
 
-def read_probs_and_labels(path: str, num_classes: int) -> Tuple[Optional[np.ndarray], np.ndarray]:
+def read_probs_and_labels(path: str, num_classes: int) -> Tuple[Optional[np.ndarray], np.ndarray]:  # noqa: C901
     """
     Read a CSV of per-sample probabilities (and an optional integer label column).
     - Prob columns: prefer named p_0..p_{C-1}; else the last C columns.
