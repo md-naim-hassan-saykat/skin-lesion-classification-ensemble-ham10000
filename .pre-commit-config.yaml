@@ -18,11 +18,10 @@ repos:
   # Python Linter & Import Sorter: Ruff
   # ---------------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.0  # Latest stable Ruff version
+    rev: v0.14.2  # Current stable Ruff version
     hooks:
       - id: ruff
-        args: [--fix]  # Automatically apply safe fixes
-
+        args: [--fix, --config=pyproject.toml]
   # ---------------------------------------------------------
   # General Hygiene Hooks
   # ---------------------------------------------------------
