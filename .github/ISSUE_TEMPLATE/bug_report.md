@@ -5,7 +5,7 @@ title: "[BUG] Short description"
 labels: bug
 ---
 
-# Description
+## Description
 A clear and concise description of the issue or unexpected behavior.
 
 ---
@@ -37,7 +37,7 @@ Describe what you expected to happen instead of the observed behavior.
 
 ---
 
-# Environment Details
+## Environment Details
 
 Please complete the following information:
 	•	OS: (e.g., macOS 15.5 / Ubuntu 22.04)
@@ -48,7 +48,7 @@ Please complete the following information:
 
   ---
 
-  # Logs / Screenshots
+  ## Logs / Screenshots
   If applicable, include relevant terminal output, stack traces, or screenshots for better context.
 
   ---
