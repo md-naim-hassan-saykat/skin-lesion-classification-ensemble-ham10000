@@ -73,6 +73,9 @@ extend-exclude = [
 ignore = ["E501"]  # long lines allowed, Black wraps as needed
 select = ["E", "F", "I", "UP"]
 
+# Only ignore C901 (complexity) inside ensemble.py
+per-file-ignores = { "src/ensemble.py" = ["C901"] }
+
 # Only ignore complexity in one file (safe & explicit)
 [tool.ruff.lint.per-file-ignores]
 "src/ensemble.py" = ["C901"]
