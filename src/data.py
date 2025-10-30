@@ -1,11 +1,8 @@
 # src/data.py
 from __future__ import annotations
 
-from typing import Tuple
-
 import numpy as np
 import torch
-
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
@@ -39,7 +36,7 @@ def build_loaders(
     image_size: int = 224,
     batch_size: int = 32,
     num_workers: int = 4,
-) -> Tuple[DataLoader, DataLoader, list[str]]:
+) -> tuple[DataLoader, DataLoader, list[str]]:
     train_tfms = _make_tfms(image_size)
     val_tfms = _make_val_tfms(image_size)
 

@@ -5,6 +5,7 @@ This repository provides a reproducible **PyTorch-based ensemble framework** for
 It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt, etc.), ensemble fusion for improved generalization, and Grad-CAM visualizations for interpretability.
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
+
 [![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/downloads/release/python-390/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -12,21 +13,21 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 [![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![Linter: Ruff](https://img.shields.io/badge/linter-ruff-informational)
-![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)
-![CI](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)
+![Tests](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 
-> A reproducible ensemble pipeline for high-performing skin lesion classification, including pretrained weights, evaluation scripts, and Grad-CAM interpretability tools.
+> A reproducible implementation and ensemble pipeline for high-performing skin lesion classification. Includes trained weights, evaluation scripts, and Grad-CAM visualization tools.
 
 ---
 
 ## Highlights
 
-- **7 architectures:** ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt, and CNN baseline
+- **7 architectures:** CNN, ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt
 - **Ensemble fusion** improves generalization and AUC across datasets
-- **Grad-CAM** visualizations for interpretable lesion attention
+- **Grad-CAM** visualizations for interpretable lesion focus
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo
-- **Reproducible workflow** via Bash scripts or Makefile
+- **Reproducible pipeline** via `bash`, `Makefile`, or Docker
+
 
 ---
 
@@ -50,34 +51,36 @@ It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt,
 
 ## Data & Weights
 
-- **Datasets:** [HAM10000 (ISIC Archive)](https://www.isic-archive.com/) and ISIC 2019 (external validation)
-- **Assets hosted on Zenodo** due to GitHub storage limits:
-  - Trained model weights
-  - Evaluation metrics (Accuracy, F1, ROC-AUC)
-  - Grad-CAM visualizations
-  - LaTeX tables and figures
+- **Dataset:** [HAM10000 (ISIC Archive)](https://www.isic-archive.com/)
+- **External Validation:** ISIC 2019
 
-🔗 **Zenodo DOI:** [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+Due to GitHub storage limits, reproducibility assets are hosted on Zenodo:
+- Trained model weights
+- Evaluation metrics (Accuracy, F1, ROC-AUC)
+- Grad-CAM visualizations
+- LaTeX tables and figures
+
+**Zenodo DOI:** [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
 ## Paper (Preprint)
 
-**Title:** *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*
-**DOI:** [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
-**Status:** Preprint (Zenodo, 2025)
+- **Title:** *Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019*
+- **DOI:** [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+- **Status:** Preprint (Zenodo, 2025)
 
 ---
 
 ## Repository Structure
 
 skin-lesion-classification-ensemble-ham10000/
+│
 ├── src/                          # Core training and evaluation modules
 │   ├── train.py
 │   ├── evaluate.py
 │   ├── ensemble.py
 │   ├── utils.py
-│   ├── data.py
 │   └── config.yaml
 │
 ├── scripts/                      # Automation and evaluation scripts
@@ -101,66 +104,40 @@ skin-lesion-classification-ensemble-ham10000/
 
 ---
 
-> For developer contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).
+*For developer contribution guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md).*
 
 ---
 
 ## Reproduce or Train the Ensemble
 
-### Setup and run all evaluations
+### Clone and set up environment
 ```bash
-cd ~/skin-lesion-classification-ensemble-ham10000
-chmod +x scripts/eval_all.sh
-export PYTHONPATH="$PWD"
-bash scripts/eval_all.sh
+git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
+cd skin-lesion-classification-ensemble-ham10000
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
 ```
-
 ---
 
 ## Download Dataset
 
-Download HAM10000 from the ISIC Archive.
-Merge both image parts after extraction into a single data/HAM10000/ directory.
+Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).
+The dataset is provided in **two parts** — `HAM10000_images_part_1.zip` and `HAM10000_images_part_2.zip`.
+After extracting both, merge all images into a single directory:
 
-Tip: If you want a single-step setup, just run:
 ```bash
-cd ~/skin-lesion-classification-ensemble-ham10000
-bash scripts/download_ham10000.sh
-```
-
-(This script automatically copies or unzips from your ~/Downloads or ~/Desktop folder and verifies that 10,015 images are available.)
-
-Otherwise, you can do it manually:
-```bash
-# Create dataset folder
 mkdir -p data/HAM10000
-
-# Copy both parts (from Downloads or Desktop)
-cp -r ~/Downloads/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
-cp -r ~/Downloads/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
-cp -r ~/Desktop/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
-cp -r ~/Desktop/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
-
-# Optionally unzip if still compressed
-if [ -f ~/Downloads/HAM10000_images_part_1.zip ]; then
-  unzip -n ~/Downloads/HAM10000_images_part_1.zip -d ~/Downloads/HAM10000_images_part_1
-  cp -r ~/Downloads/HAM10000_images_part_1/* data/HAM10000/
-fi
-if [ -f ~/Downloads/HAM10000_images_part_2.zip ]; then
-  unzip -n ~/Downloads/HAM10000_images_part_2.zip -d ~/Downloads/HAM10000_images_part_2
-  cp -r ~/Downloads/HAM10000_images_part_2/* data/HAM10000/
-fi
-
-# Check total images (should print 10015)
-find data/HAM10000 -type f -name "*.jpg" | wc -l
+cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
+cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
 ```
 
 ---
 
-## Reproducibility: Evaluate Pretrained Models
+## Reproducibility: Evaluate pretrained models
+Run all model evaluations using:
 ```bash
 cd skin-lesion-classification-ensemble-ham10000
-source .venv/bin/activate
+source ../.venv/bin/activate
 export PYTHONPATH="$PWD"
 bash scripts/eval_all.sh
 ```
@@ -176,7 +153,7 @@ Open the notebook:
 ## Results
 
 The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.
-Calibration via Expected Calibration Error (ECE) showed high reliability, and Grad-CAM confirmed clinically relevant lesion focus.
+Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
 
 ### Validation Metrics (HAM10000 Split)
 
@@ -191,8 +168,6 @@ Reproduced from `scripts/eval_all.sh`.
 
 > Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
 
-The ensemble achieved +7.4% F1 improvement over the best individual model (DenseNet-121) on HAM10000 and maintained AUC ≈ 0.99 on external ISIC 2019 validation.
-
 ---
 
 ## Visual Examples
@@ -206,37 +181,30 @@ The ensemble achieved +7.4% F1 improvement over the best individual model (Dense
 ---
 
 ## Known Issues
-	•	MobileNetV3 checkpoint: Shape mismatches (under retraining).
-	•	ResNet50 / ViT models: Load but underperform on this split — excluded from default ensemble.
+- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
+- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
 
 ---
 
 
 ## Development & Contribution Setup
+
+If you wish to contribute or test locally:
+
+### Local Setup
 ```bash
-git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-cd skin-lesion-classification-ensemble-ham10000
-
-python -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-ci.txt
-
-[ -f src/__init__.py ] || touch src/__init__.py
-export PYTHONPATH="$PWD"
-
-ruff clean
-ruff check src scripts tests --fix
 make lint
 make test
 ```
 
-### Local Development
+---
+
+## Run via Docker
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt -r requirements-ci.txt
-pre-commit install
-pytest -q && ruff check .
+docker build -t skin-lesion-ensemble .
+docker run --rm skin-lesion-ensemble
 ```
 
 ---
@@ -277,19 +245,20 @@ Skin Lesion Classification · HAM10000 · Ensemble Deep Learning · Grad-CAM · 
 ---
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is released under the MIT License.
+See the LICENSE file for details.
 
 ---
 
 ## Acknowledgements
-	•	ISIC Archive for the HAM10000 dataset
-	•	PyTorch, scikit-learn, Matplotlib — core open-source tools used throughout
+- ISIC Archive for providing the HAM10000 dataset.
+- Open-source deep learning libraries: PyTorch, scikit-learn, and Matplotlib.
 
 ---
 
 ## Contact
 
-For questions, collaborations, or bug reports:
-mdnaimhassansaykat@gmail.com
+If you have any questions, encounter issues, or wish to collaborate, please feel free to contact me:
+[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 ---

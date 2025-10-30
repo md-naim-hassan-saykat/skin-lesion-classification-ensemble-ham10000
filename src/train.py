@@ -2,13 +2,11 @@
 from __future__ import annotations
 
 import argparse
-
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 import torch
-
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
@@ -26,7 +24,7 @@ def best_device() -> torch.device:
 
 
 @torch.no_grad()
-def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> Dict[str, float | None]:
+def evaluate(model: nn.Module, loader: DataLoader, device: torch.device) -> dict[str, float | None]:
     model.eval()
     y_true, y_pred, probs = [], [], []
     for images, targets in loader:
@@ -64,7 +62,7 @@ def main() -> None:
     ap.add_argument("--outdir", default=None, type=str, help="Override output dir in config.")
     args = ap.parse_args()
 
-    cfg: Dict[str, Any] = load_yaml(args.config)
+    cfg: dict[str, Any] = load_yaml(args.config)
     seed_everything(cfg.get("seed", 42))
 
     data_cfg = cfg["data"]

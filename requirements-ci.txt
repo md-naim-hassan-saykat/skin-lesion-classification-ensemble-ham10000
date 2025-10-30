@@ -1,14 +1,2 @@
-# CI Requirements
-# Used for linting, formatting, and testing in GitHub Actions and local dev
-
-
-# Code quality & linting
-ruff==0.6.9           # Fast Python linter and formatter (matches .pre-commit-config.yaml)
-black>=24.8,<26.0     # Optional: consistent code formatting (used in Makefile and pre-commit)
-
-# Testing & coverage
-pytest>=8.0,<9.0      # Core test runner
-pytest-cov>=5.0,<8.0  # Coverage reporting plugin for pytest
-
-# Pre-commit framework (optional for contributors and CI hooks)
-pre-commit>=3.6,<5.0  # Runs ruff/black hooks before commit
+ruff>=0.6.9
+pytest>=8.3

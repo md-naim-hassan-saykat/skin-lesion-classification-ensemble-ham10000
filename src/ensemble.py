@@ -5,7 +5,6 @@ import json
 import math
 import re
 from pathlib import Path
-from typing import Optional, Tuple, List
 
 import numpy as np
 
@@ -33,7 +32,7 @@ def _parse_label(x: str) -> int:
     return int(math.floor(v + 0.5))
 
 
-def _find_prob_indices(header: List[str], num_classes: int) -> List[int]:
+def _find_prob_indices(header: list[str], num_classes: int) -> list[int]:
     """Prefer named p_0..p_{C-1}; otherwise, fall back to the last C columns."""
     lower = [h.strip().lower() for h in header]
     p_idx = []
@@ -51,10 +50,11 @@ def _find_prob_indices(header: List[str], num_classes: int) -> List[int]:
         return list(range(len(header) - num_classes, len(header)))
     return []
 
+
 # fmt: off
-def read_probs_and_labels(path: str, num_classes: int) -> Tuple[Optional[np.ndarray], np.ndarray]:  # noqa: C901
+def read_probs_and_labels(path: str, num_classes: int) -> tuple[np.ndarray | None, np.ndarray]:  # noqa: C901
 # fmt: on
-    
+
     """
     Read a CSV of per-sample probabilities (and an optional integer label column).
     - Prob columns: prefer named p_0..p_{C-1}; else the last C columns.
@@ -63,8 +63,8 @@ def read_probs_and_labels(path: str, num_classes: int) -> Tuple[Optional[np.ndar
     Returns:
       (Y, P) where Y is np.ndarray[int] of shape (N,) or None, and P is np.ndarray[float] of shape (N, C).
     """
-    Y: List[int] = []
-    P: List[List[float]] = []
+    Y: list[int] = []
+    P: list[list[float]] = []
 
     with open(path, newline="") as f:
         r = csv.reader(f)
@@ -185,10 +185,10 @@ def main():
         try:
             from sklearn.metrics import (
                 classification_report,
+                confusion_matrix,
                 f1_score,
                 precision_score,
                 recall_score,
-                confusion_matrix,
             )
             out_json["macro_f1"] = float(f1_score(Y, y_pred, average="macro", zero_division=0))
             out_json["micro_f1"] = float(f1_score(Y, y_pred, average="micro", zero_division=0))

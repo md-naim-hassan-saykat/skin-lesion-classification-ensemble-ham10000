@@ -1,10 +1,9 @@
 # src/models.py
 from __future__ import annotations
 
-from typing import Callable, Dict
+from collections.abc import Callable
 
 import torch.nn as nn
-
 from torchvision import models as tv
 
 
@@ -36,7 +35,7 @@ def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
 
 def get_model(name: str, num_classes: int) -> nn.Module:
     n = (name or "resnet50").lower()
-    builders: Dict[str, Callable[[], nn.Module]] = {
+    builders: dict[str, Callable[[], nn.Module]] = {
         "resnet50": lambda: tv.resnet50(weights=tv.ResNet50_Weights.IMAGENET1K_V2),
         "densenet121": lambda: tv.densenet121(weights=tv.DenseNet121_Weights.IMAGENET1K_V1),
         "efficientnet_b3": lambda: tv.efficientnet_b3(

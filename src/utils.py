@@ -3,18 +3,16 @@ from __future__ import annotations
 
 import json
 import random
-
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import numpy as np
 import torch
 import yaml
-
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 
-def compute_metrics(y_true, y_pred, y_prob=None) -> Dict[str, float | None]:
+def compute_metrics(y_true, y_pred, y_prob=None) -> dict[str, float | None]:
     """Compute accuracy, weighted F1, and optional multi-class ROC-AUC."""
     acc = accuracy_score(y_true, y_pred)
     f1 = f1_score(y_true, y_pred, average="weighted")
@@ -27,8 +25,8 @@ def compute_metrics(y_true, y_pred, y_prob=None) -> Dict[str, float | None]:
     return {"accuracy": float(acc), "f1": float(f1), "auc": auc}
 
 
-def load_yaml(path: str | Path) -> Dict[str, Any]:
-    with open(path, "r", encoding="utf-8") as f:
+def load_yaml(path: str | Path) -> dict[str, Any]:
+    with open(path, encoding="utf-8") as f:
         return yaml.safe_load(f)
 
 

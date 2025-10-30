@@ -1,9 +1,6 @@
-# ==============================================================
 # General .gitignore for Deep Learning Projects
-# Project: Skin Lesion Ensemble (HAM10000 & ISIC 2019)
-# ==============================================================
 
-# === Data & Outputs ===
+# Data & Outputs
 data/
 datasets/
 outputs/
@@ -11,56 +8,55 @@ results/
 logs/
 checkpoints/
 
-# === Python Build / Cache ===
+# Python Build/Cache
 __pycache__/
-*.egg-info/
 *.pyc
-*.pyd
 *.pyo
+*.pyd
+*.egg-info/
 build/
 dist/
 
-# === Virtual Environments ===
+# Virtual Environments
 .venv/
 env/
 venv/
 
-# === Large or Accidental Artifacts ===
-*.ckpt
-*.csv
-*.h5
-*.npz
-*.npy
-*.onnx
+# Large or Accidental Artifacts
 *.pth
 *.pt
+*.ckpt
+*.onnx
+*.csv
+*.xlsx
+*.npy
+*.npz
+*.zip
 *.tar
 *.tar.gz
-*.xlsx
-*.zip
+*.h5
 
-# === Image and Visualization Artifacts ===
-*.jpeg
-*.jpg
-*.pdf
+# Image and Visualization Artifacts
 *.png
+*.jpg
+*.jpeg
+*.pdf
 
-# === Jupyter Notebook Checkpoints ===
-.ipynb_checkpoints/
-
-# === IDE / Editor Settings ===
-.idea/
+# IDE / Editor Settings
 .vscode/
-*.swo
+.idea/
 *.swp
+*.swo
 
-# === OS-Specific Files ===
+# OS-Specific Files
 .DS_Store
 Thumbs.db
 
-# === Temporary or Backup Files ===
+# Temporary or Backup Files
 *.bak
 *.tmp
 
-# === Local Project Copies or Test Folders ===
+# Local Project Copies
 skin-lesion-classification-ensemble-ham10000/
+pytest.local.ini
+pytest.local.ini

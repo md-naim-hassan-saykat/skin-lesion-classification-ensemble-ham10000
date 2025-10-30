@@ -2,11 +2,14 @@
 from __future__ import annotations
 
 import argparse
+
 import numpy as np
 import torch
 from torchvision import datasets, transforms
+
 from src.models import get_model
 from src.utils import compute_metrics, save_json
+
 
 def _device():
     if torch.cuda.is_available():
@@ -15,13 +18,16 @@ def _device():
         return torch.device("mps")
     return torch.device("cpu")
 
+
 def _tfms(img_size: int):
-    return transforms.Compose([
-        transforms.Resize((img_size, img_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                             std=[0.229, 0.224, 0.225]),
-    ])
+    return transforms.Compose(
+        [
+            transforms.Resize((img_size, img_size)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
+
 
 def _safe_load(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> None:
     """Load only weights that exist in model AND match shape (drops 1000-class heads)."""
@@ -31,12 +37,16 @@ def _safe_load(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> 
     filt = {k: v for k, v in raw.items() if k in msd and msd[k].shape == v.shape}
     missing, unexpected = model.load_state_dict(filt, strict=False)
     if missing or unexpected or len(filt) != len(raw):
-        print(f"[safe_load] kept={len(filt)} dropped={len(raw)-len(filt)} "
-              f"missing={len(missing)} unexpected={len(unexpected)}")
+        print(
+            f"[safe_load] kept={len(filt)} dropped={len(raw)-len(filt)} "
+            f"missing={len(missing)} unexpected={len(unexpected)}"
+        )
+
 
 @torch.no_grad()
-def evaluate_once(checkpoint: str, data_dir: str, model_name: str,
-                  num_classes: int, image_size: int):
+def evaluate_once(
+    checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int
+):
     device = _device()
     model = get_model(model_name, num_classes=num_classes).to(device)
     _safe_load(model, checkpoint, device)
@@ -57,6 +67,7 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str,
     y_prob = np.concatenate(probs, axis=0)
     return compute_metrics(y_true, y_pred, y_prob=y_prob)
 
+
 def main():
     ap = argparse.ArgumentParser(
         description="Evaluate a single checkpoint on an ImageFolder validation set."
@@ -70,12 +81,14 @@ def main():
     ap.add_argument("--save_csv", default=None)
     args = ap.parse_args()
 
-    metrics = evaluate_once(args.checkpoint, args.data_dir, args.model,
-                            args.num_classes, args.image_size)
+    metrics = evaluate_once(
+        args.checkpoint, args.data_dir, args.model, args.num_classes, args.image_size
+    )
     save_json(metrics, args.out)
 
     if args.save_csv:
         import csv
+
         device = _device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
         _safe_load(model, args.checkpoint, device)
@@ -93,6 +106,7 @@ def main():
                 for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
                     w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
+
 
 if __name__ == "__main__":
     main()
