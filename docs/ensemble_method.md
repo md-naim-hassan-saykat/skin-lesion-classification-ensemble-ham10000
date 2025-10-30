@@ -70,7 +70,7 @@ export PYTHONPATH="$PWD"
 
 python src/ensemble.py \
   --csvs outputs/resnet_val_preds.csv \
-         outputs/densenet_val_preds.csv \
          outputs/convnext_val_preds.csv \
+         outputs/efficientnet_val_preds.csv \
   --out outputs/ensemble_metrics.json
 ```
