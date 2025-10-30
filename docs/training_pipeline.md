@@ -46,6 +46,7 @@ Each uses identical preprocessing and augmentation for fair comparison.
 ---
 
 ## 4. Execution
+Local run
 ```bash
 Local run
 python src/train.py --config src/config.yaml
