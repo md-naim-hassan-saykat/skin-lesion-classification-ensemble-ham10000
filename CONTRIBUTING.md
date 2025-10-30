@@ -67,7 +67,7 @@ git pull --rebase origin main
 
 ---
 
-## 💬 Need Help?
+## Need Help?
 
 If you encounter any setup or contribution issues, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
 or contact the maintainer at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
