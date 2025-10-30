@@ -62,6 +62,7 @@ bash scripts/eval_all.sh
 
 ## 5. Outputs
 Results include:
+
 	•	Model checkpoints in checkpoints/
 	•	Metrics JSONs in results/
 	•	Figures (ROC, Confusion Matrix, Grad-CAM) in results/figures/
@@ -70,8 +71,8 @@ Results include:
 ---
 
 ## 6. Reproducibility Notes
+
 	•	Random seeds fixed in config.yaml
 	•	Deterministic PyTorch backend
 	•	Evaluation identical across models and datasets
 
----
