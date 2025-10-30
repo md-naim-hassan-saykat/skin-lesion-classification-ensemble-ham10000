@@ -69,8 +69,12 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-ignore = ["E501", "C901"]  # long lines allowed, Black wraps as needed
+ignore = ["E501"]  # long lines allowed, Black wraps as needed
 select = ["E", "F", "I", "UP"]
+
+# Only ignore complexity in one file (safe & explicit)
+[tool.ruff.lint.per-file-ignores]
+"src/ensemble.py" = ["C901"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
