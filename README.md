@@ -27,7 +27,6 @@ _A reproducible ensemble deep learning framework for skin lesion classification 
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo
 - **Reproducible pipeline** via bash or Docker
 
-
 ---
 
 ## Table of Contents
@@ -116,6 +115,7 @@ cd skin-lesion-classification-ensemble-ham10000
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
 ---
 
 ## Download Dataset
@@ -140,6 +140,7 @@ source ../.venv/bin/activate
 export PYTHONPATH="$PWD"
 bash scripts/eval_all.sh
 ```
+
 ---
 
 ### (Optional) Train or Visualize Locally / in Colab
@@ -184,7 +185,6 @@ Reproduced from `scripts/eval_all.sh`.
 - **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
 
 ---
-
 
 ## Development & Contribution Setup
 
@@ -258,5 +258,3 @@ For questions, feedback, or collaboration opportunities, please reach out to:
 
 If you encounter issues or wish to suggest improvements, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
 or contact the maintainer directly at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
-
-
