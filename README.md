@@ -1,22 +1,19 @@
 # Generalizable Ensemble Deep Learning for Skin Lesion Classification
 ### *Internal and External Validation on HAM10000 and ISIC 2019*
 
-This repository provides a reproducible **PyTorch-based ensemble framework** for robust skin lesion classification across **HAM10000** and **ISIC 2019** datasets.
-It integrates multiple deep learning backbones (ResNet, DenseNet, ViT, ConvNeXt, etc.), ensemble fusion for improved generalization, and Grad-CAM visualizations for interpretability.
-
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
-
+[![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Star](https://img.shields.io/github/stars/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/stargazers)
-[![Watch](https://img.shields.io/github/watchers/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000?style=social)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/watchers)
 ![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
 ![Linter: Ruff](https://img.shields.io/badge/linter-ruff-informational)
-[![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 
-> A reproducible implementation and ensemble pipeline for high-performing skin lesion classification. Includes trained weights, evaluation scripts, and Grad-CAM visualization tools.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/blob/main/notebooks/skin-lesion-ensemble-classification.ipynb)
+
+---
+
+_A reproducible ensemble deep learning framework for skin lesion classification with internal and external validation on HAM10000 and ISIC 2019._
 
 ---
 
