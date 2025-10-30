@@ -69,7 +69,7 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
-ignore = ["E501"]  # long lines allowed, Black wraps as needed
+ignore = ["E501", "C901"]  # long lines allowed, Black wraps as needed
 select = ["E", "F", "I", "UP"]
 
 [tool.ruff.lint.isort]
