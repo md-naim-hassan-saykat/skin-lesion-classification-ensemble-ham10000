@@ -1,92 +1,18 @@
-[build-system]
-requires = ["setuptools>=61", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "skin-lesion-ensemble"
-version = "1.0.0"
-description = "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
-readme = "README.md"
-requires-python = ">=3.9"
-license = { text = "MIT" }
-authors = [{ name = "Md Naim Hassan Saykat", email = "mdnaimhassansaykat@gmail.com" }]
-keywords = ["skin lesion", "ensemble learning", "deep learning", "medical imaging", "PyTorch"]
-classifiers = [
-  "Development Status :: 5 - Production/Stable",
-  "Intended Audience :: Science/Research",
-  "License :: OSI Approved :: MIT License",
-  "Programming Language :: Python :: 3",
-  "Topic :: Scientific/Engineering :: Artificial Intelligence",
-  "Operating System :: OS Independent",
-]
-
-[project.optional-dependencies]
-dev = [
-  "black>=24.0",
-  "ruff>=0.6",
-  "pytest>=8.0",
-  "pytest-cov>=5.0",
-  "pre-commit>=3.6",
-  "pytest-timeout>=2.3",
-]
-
-[project.urls]
-Homepage = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
-Repository = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
-Issues = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues"
-Documentation = "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000#readme"
-
-[project.scripts]
-slc-evaluate = "src.evaluate:main"
-slc-ensemble = "src.ensemble:main"
-
-[tool.setuptools]
-package-dir = { "" = "src" }
-
-[tool.setuptools.packages.find]
-where = ["src"]
-
-[tool.setuptools.package-data]
-# if you keep the package name as "src"
-"src" = ["*.yaml", "*.yml"]
-
-[tool.black]
-line-length = 120
-target-version = ["py311"]
-
 [tool.ruff]
 line-length = 120
 target-version = "py311"
 extend-exclude = [
-  ".venv",
-  "data",
-  "outputs",
-  "results",
-  "build",
-  "dist",
-  "__pycache__",
-  "*.ipynb",
-  "notebooks",
+  ".venv","data","outputs","results","build","dist","__pycache__","*.ipynb","notebooks",
 ]
 
 [tool.ruff.lint]
-ignore = ["E501"]  # long lines allowed, Black wraps as needed
-select = ["E", "F", "I", "UP"]
+select = ["E","F","I","UP"]
+ignore = ["E501"]
 
-# Only ignore C901 (complexity) inside ensemble.py
-per-file-ignores = { "src/ensemble.py" = ["C901"] }
-
-# Only ignore complexity in one file (safe & explicit)
+# Keep per-file ignores here (table form)
 [tool.ruff.lint.per-file-ignores]
 "src/ensemble.py" = ["C901"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
 lines-after-imports = 2
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = "-q --timeout=10"
-markers = [
-  "timeout: marks tests with a timeout decorator",
-]
