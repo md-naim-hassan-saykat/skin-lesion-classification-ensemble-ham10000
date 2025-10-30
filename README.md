@@ -256,5 +256,7 @@ For questions, feedback, or collaboration opportunities, please reach out to:
 
 ## Need Help?
 
-If you encounter issues or wish to suggest improvements, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
-or contact the maintainer directly at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
+If you encounter any setup or contribution issues, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
+or contact the maintainer at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).  
+
+Thank you for helping make this project **robust, reproducible, and impactful** for the **medical AI research community**!
