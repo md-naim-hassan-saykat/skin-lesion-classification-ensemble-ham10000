@@ -1,6 +1,6 @@
 # Training Pipeline
 
-This document describes the modular training workflow for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification** project.  
+This document describes the modular training workflow for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
 The implementation emphasizes reproducibility, transferability, and cross-architecture comparison.
 
 ---
