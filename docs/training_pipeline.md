@@ -43,7 +43,7 @@ Each uses identical preprocessing and augmentation for fair comparison.
 7. Store metrics in results/
 ```
 
---
+---
 
 ## 4. Execution
 ```bash
