@@ -1,5 +1,5 @@
 # Generalizable Ensemble Deep Learning for Skin Lesion Classification
-### *Internal and External Validation on HAM10000 and ISIC 2019*
+**_Internal and External Validation on HAM10000 and ISIC 2019_**
 
 [![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
@@ -21,7 +21,7 @@ _A reproducible ensemble deep learning framework for skin lesion classification 
 
 ## Highlights
 
-- **7 architectures:** CNN, ResNet50, DenseNet121, ViT, EfficientNetB3, MobileNetV3, ConvNeXt
+- **Seven architectures evaluated:** ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large, Vision Transformer (ViT-B/16), and a baseline CNN.
 - **Ensemble fusion** improves generalization and AUC across datasets
 - **Grad-CAM** visualizations for interpretable lesion focus
 - **Pretrained weights, metrics, and outputs** hosted on Zenodo
@@ -249,7 +249,18 @@ See the LICENSE file for details.
 
 ## Contact
 
-If you have any questions, encounter issues, or wish to collaborate, please feel free to contact me:
+For questions, feedback, or collaboration opportunities, please reach out to:  
 [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 ---
+
+## ---
+
+## Need Help?
+
+If you encounter issues or wish to suggest improvements, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
+or contact the maintainer directly at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
+
+---
+
+
