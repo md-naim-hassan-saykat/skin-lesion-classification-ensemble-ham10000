@@ -70,6 +70,5 @@ git pull --rebase origin main
 ## Need Help?
 If you encounter any setup or contribution issues, please open an issue
 or contact the maintainer at mdnaimhassansaykat@gmail.com.
-
->Thank you for helping make this project robust, reproducible, and impactful for the medical AI research community!
+Thank you for helping make this project robust, reproducible, and impactful for the medical AI research community!
 
