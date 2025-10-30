@@ -48,6 +48,6 @@ Following these guidelines helps protect users, researchers, and collaborators w
 ## Contact
 
 For any security-related questions or responsible disclosure reports:  
-📧 **[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)**
+**[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)**
 
 Thank you for helping to keep this project — and the wider research community — safe and trustworthy.
