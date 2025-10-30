@@ -73,4 +73,3 @@ Generated automatically in the notebook:
 ## 5. Summary
 All metrics are logged in results/metrics/*.json and summarized in LaTeX-ready tables within the notebook for reproducibility.
 
----
