@@ -49,7 +49,8 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str,
         probs.append(p)
         y_true.extend(labels.numpy())
         y_pred.extend(p.argmax(1))
-    y_true = np.array(y_true); y_pred = np.array(y_pred)
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
     y_prob = np.concatenate(probs, axis=0)
     return compute_metrics(y_true, y_pred, y_prob=y_prob)
 
