@@ -100,10 +100,10 @@ def main():
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
-            with torch.no_grad():  # <- ensure tensors don't track gradients
+            with torch.no_grad():  # Disable gradient tracking
                 for imgs, labels in dl:
                     logits = model(imgs.to(device))
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
+                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist() 
                     for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
                         w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
