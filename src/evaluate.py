@@ -1,20 +1,9 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
-# --- path
-# stdlib
-import argparse
+# --- path shim so `python src/xyz.py` can import `src.*` ---
 import sys
 from pathlib import Path as _P
-
-# third-party
-import numpy as np
-import torch
-from torchvision import datasets, transforms
-
-# local
-from src.models import get_model
-from src.utils import compute_metrics, save_json
 
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
@@ -22,24 +11,17 @@ if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 # -----------------------------------------------------------
 
-# ruff: noqa: E402
-import sys
-from pathlib import Path as _P
 
+# src/evaluate.py
 
-_PROJECT_ROOT = _P(__file__).resolve().parents[1]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
+import argparse
 
-import sys
-from pathlib import Path as _P
+import numpy as np
+import torch
+from torchvision import datasets, transforms
 
-
-_PROJECT_ROOT = _P(__file__).resolve().parents[1]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
-
-# normal imports below
+from src.models import get_model
+from src.utils import compute_metrics, save_json
 
 
 def _device():
