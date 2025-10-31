@@ -51,8 +51,6 @@ Each uses identical preprocessing and augmentation for fair comparison.
 
 ```bash
 cd ~/skin-lesion-classification-ensemble-ham10000
-
-# Activate virtual environment
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
 
@@ -100,6 +98,7 @@ bash scripts/eval_all.sh
 
 ### (Optional) Retrain locally
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
 
