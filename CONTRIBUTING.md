@@ -25,6 +25,8 @@ Your input helps improve the reproducibility, quality, and research impact of th
 
 ## Local Development Setup
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
+
 # Create and activate a virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
