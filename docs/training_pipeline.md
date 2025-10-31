@@ -106,38 +106,43 @@ export PYTHONPATH="$PWD"
 # Train from scratch or fine-tune using default config
 python src/train.py --config src/config.yaml
 ```
-### Notes
+### Directory Structure
 
-	•	Dataset structure
-    data/HAM10000/split/
-    akiec/
-    bcc/
-    bkl/
-    df/
-    mel/
-    nv/
-    vasc/
+data/
+└── HAM10000/
+    └── split/
+        ├── akiec/
+        ├── bcc/
+        ├── bkl/
+        ├── df/
+        ├── mel/
+        ├── nv/
+        └── vasc/
 
-    	•	Checkpoints must be placed in checkpoints/
-    (convnext_tiny_ham10000.pt, densenet121_ham10000.pt, resnet50_ham10000.pt)
-	    •	Results and prediction CSVs are saved automatically in outputs/
-    (eval_*.json, *_val_preds.csv, ensemble_metrics.json)
+checkpoints/
+├── convnext_tiny_ham10000.pt
+├── densenet121_ham10000.pt
+└── resnet50_ham10000.pt
+
+outputs/
+├── eval_*.json
+├── *_val_preds.csv
+└── ensemble_metrics.json
 
 ---
 
 ## 5. Outputs
-Results include:
 
-	•	Model checkpoints in checkpoints/
-	•	Metrics JSONs in results/
-	•	Figures (ROC, Confusion Matrix, Grad-CAM) in results/figures/
-	•	Summary tables (LaTeX-ready) in results/tables/
+	    •	Model checkpoints: checkpoints/
+    	•	Metrics JSONs: outputs/
+    	•	Figures: outputs/figures/ (ROC, confusion matrix, Grad-CAM)
+    	•	Summary tables: outputs/tables/ (LaTeX-ready)
 
 ---
 
 ## 6. Reproducibility Notes
 
-	•	Random seeds fixed in config.yaml
-	•	Deterministic PyTorch backend
-	•	Evaluation identical across models and datasets
+		•	Random seeds fixed in config.yaml
+	    •	Deterministic PyTorch backend
+	    •	Identical evaluation pipeline across all architectures and datasets
 
