@@ -131,22 +131,18 @@ After extracting both archives, merge all images and metadata into a single dire
 ### Setup commands
 
 ```bash
-# Create a dataset folder
+# Create the target dataset folder
 mkdir -p data/HAM10000
 
-# Copy extracted images from both parts (update paths if needed)
-cp ~/Downloads/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
-cp ~/Downloads/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
+# Copy extracted image files from both parts (located on Desktop)
+cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
+cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
 
-# (Alternatively, if your images are on Desktop)
-# cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
-# cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
+# Copy metadata CSV file
+cp ~/Desktop/HAM10000_metadata.csv data/HAM10000/
 
-# Copy metadata CSV
-cp ~/Downloads/HAM10000_metadata.csv data/HAM10000/ 2>/dev/null || true
-
-# Verify
-ls -1 data/HAM10000 | head
+# Verify that all images were copied correctly
+find data/HAM10000 -type f -name "*.jpg" | wc -l
 ```
 
 ---
