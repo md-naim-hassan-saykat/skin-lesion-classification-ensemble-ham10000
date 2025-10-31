@@ -50,6 +50,7 @@ Each uses identical preprocessing and augmentation for fair comparison.
 ### Local evaluation
 
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
 # Activate virtual environment
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
