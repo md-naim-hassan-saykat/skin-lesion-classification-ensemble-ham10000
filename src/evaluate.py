@@ -1,14 +1,43 @@
-# src/evaluate.py
 from __future__ import annotations
 
-import argparse
+# ruff: noqa: E402
+# --- path shim (lets `python src/xyz.py` import `src.*`) ---
+import sys
+from pathlib import Path as _P
 
-import numpy as np
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+# -----------------------------------------------------------
+
+# ruff: noqa: E402
+import sys
+from pathlib import Path as _P
+
 import torch
 from torchvision import datasets, transforms
 
 from src.models import get_model
 from src.utils import compute_metrics, save_json
+
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
+import sys
+from pathlib import Path as _P
+
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+
+# normal imports below
+import argparse
+
+import numpy as np
 
 
 def _device():
@@ -100,11 +129,12 @@ def main():
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
-            for imgs, labels in dl:
-                logits = model(imgs.to(device))
-                p = torch.softmax(logits, dim=1).cpu().numpy().tolist()
-                for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
-                    w.writerow([t] + [f"{float(x):.8f}" for x in row])
+            with torch.no_grad():  # Disable gradient tracking
+                for imgs, labels in dl:
+                    logits = model(imgs.to(device))
+                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
+                    for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
+                        w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
 
 
