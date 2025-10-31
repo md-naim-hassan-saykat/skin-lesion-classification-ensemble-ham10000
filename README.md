@@ -120,14 +120,35 @@ pip install -r requirements.txt
 
 ## Download Dataset
 
-Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).
-The dataset is provided in **two parts** — `HAM10000_images_part_1.zip` and `HAM10000_images_part_2.zip`.
-After extracting both, merge all images into a single directory:
+## Download Dataset
+
+Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).  
+The dataset is provided in **two parts**:
+
+- `HAM10000_images_part_1.zip`  
+- `HAM10000_images_part_2.zip`
+
+After extracting both archives, merge all images and metadata into a single directory for training and evaluation.
+
+### Setup commands
 
 ```bash
+# Create a dataset folder
 mkdir -p data/HAM10000
-cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
-cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
+
+# Copy extracted images from both parts (update paths if needed)
+cp ~/Downloads/HAM10000_images_part_1/* data/HAM10000/ 2>/dev/null || true
+cp ~/Downloads/HAM10000_images_part_2/* data/HAM10000/ 2>/dev/null || true
+
+# (Alternatively, if your images are on Desktop)
+# cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
+# cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
+
+# Copy metadata CSV
+cp ~/Downloads/HAM10000_metadata.csv data/HAM10000/ 2>/dev/null || true
+
+# Verify
+ls -1 data/HAM10000 | head
 ```
 
 ---
