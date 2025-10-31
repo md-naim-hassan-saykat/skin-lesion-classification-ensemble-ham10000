@@ -83,6 +83,7 @@ PYTHONPATH="$PWD" python src/evaluate.py \
 ```
 ### Ensemble Evaluation
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
 PYTHONPATH="$PWD" python src/ensemble.py \
   --csvs outputs/convnext_val_preds.csv \
          outputs/densenet_val_preds.csv \
@@ -92,6 +93,7 @@ PYTHONPATH="$PWD" python src/ensemble.py \
 
 ### Batch evaluation
 ```bash
+cd ~/skin-lesion-classification-ensemble-ham10000
 # Run all evaluations and the ensemble in one go
 bash scripts/eval_all.sh
 ```
