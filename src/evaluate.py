@@ -1,9 +1,20 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
-# --- path shim (lets `python src/xyz.py` import `src.*`) ---
+# --- path
+# stdlib
+import argparse
 import sys
 from pathlib import Path as _P
+
+# third-party
+import numpy as np
+import torch
+from torchvision import datasets, transforms
+
+# local
+from src.models import get_model
+from src.utils import compute_metrics, save_json
 
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
@@ -14,12 +25,6 @@ if str(_PROJECT_ROOT) not in sys.path:
 # ruff: noqa: E402
 import sys
 from pathlib import Path as _P
-
-import torch
-from torchvision import datasets, transforms
-
-from src.models import get_model
-from src.utils import compute_metrics, save_json
 
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
@@ -35,9 +40,6 @@ if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 
 # normal imports below
-import argparse
-
-import numpy as np
 
 
 def _device():
