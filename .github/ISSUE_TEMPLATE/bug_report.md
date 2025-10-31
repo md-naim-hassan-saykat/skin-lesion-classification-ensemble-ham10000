@@ -40,6 +40,7 @@ Describe what you expected to happen instead of the observed behavior.
 ## Environment Details
 
 Please complete the following information:
+
 	•	OS: (e.g., macOS 15.5 / Ubuntu 22.04)
 	•	Python version: (e.g., 3.11.4)
 	•	PyTorch version: (e.g., 2.2.2)
