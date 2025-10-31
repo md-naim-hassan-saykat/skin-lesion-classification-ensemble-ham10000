@@ -60,9 +60,10 @@ git pull --rebase origin main
 ```
 2.	Push your branch and open a Pull Request.
 3.	Clearly describe:
-	•	The motivation for your change
-	•	A summary of modifications
-	•	Tests performed (if applicable)
+   
+	    •	The motivation for your change
+	    •	A summary of modifications
+	    •	Tests performed (if applicable)
 4.	The CI pipeline will run automatically — all tests must pass before merging.
 
 ---
