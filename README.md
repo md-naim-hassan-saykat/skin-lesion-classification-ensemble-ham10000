@@ -120,8 +120,6 @@ pip install -r requirements.txt
 
 ## Download Dataset
 
-## Download Dataset
-
 Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).  
 The dataset is provided in **two parts**:
 
