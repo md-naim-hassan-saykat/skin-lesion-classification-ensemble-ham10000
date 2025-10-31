@@ -131,6 +131,9 @@ After extracting both archives, merge all images and metadata into a single dire
 ### Setup commands
 
 ```bash
+# Navigate to the project root
+cd skin-lesion-classification-ensemble-ham10000
+
 # Create the target dataset folder
 mkdir -p data/HAM10000
 
