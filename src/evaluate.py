@@ -1,18 +1,5 @@
-from __future__ import annotations
-
-# ruff: noqa: E402
-# --- path shim so `python src/xyz.py` can import `src.*` ---
-import sys
-from pathlib import Path as _P
-
-
-_PROJECT_ROOT = _P(__file__).resolve().parents[1]
-if str(_PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(_PROJECT_ROOT))
-# -----------------------------------------------------------
-
-
 # src/evaluate.py
+from __future__ import annotations
 
 import argparse
 
@@ -113,12 +100,11 @@ def main():
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
-            with torch.no_grad():  # Disable gradient tracking
-                for imgs, labels in dl:
-                    logits = model(imgs.to(device))
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
-                    for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
-                        w.writerow([t] + [f"{float(x):.8f}" for x in row])
+            for imgs, labels in dl:
+                logits = model(imgs.to(device))
+                p = torch.softmax(logits, dim=1).cpu().numpy().tolist()
+                for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
+                    w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
 
 

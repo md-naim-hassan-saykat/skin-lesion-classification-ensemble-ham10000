@@ -83,10 +83,9 @@ def _find_prob_indices(header: list[str], num_classes: int) -> list[int]:
     return []
 
 
-# fmt: off
-def read_probs_and_labels(path: str, num_classes: int) -> tuple[np.ndarray | None, np.ndarray]:  # noqa: C901
-# fmt: on
-
+def read_probs_and_labels(
+    path: str, num_classes: int
+) -> tuple[np.ndarray | None, np.ndarray]:  # noqa: C901
     """
     Read a CSV of per-sample probabilities (and an optional integer label column).
     - Prob columns: prefer named p_0..p_{C-1}; else the last C columns.
@@ -162,7 +161,7 @@ def main():
     args = ap.parse_args()
 
     outputs = [read_probs_and_labels(p, args.num_classes) for p in args.csvs]
-    Ys, Ps = zip(*outputs)
+    Ys, Ps = zip(*outputs, strict=False)
 
     # Align by truncating to the smallest N
     n = min((P.shape[0] for P in Ps), default=0)
@@ -222,6 +221,7 @@ def main():
                 precision_score,
                 recall_score,
             )
+
             out_json["macro_f1"] = float(f1_score(Y, y_pred, average="macro", zero_division=0))
             out_json["micro_f1"] = float(f1_score(Y, y_pred, average="micro", zero_division=0))
             out_json["macro_precision"] = float(
