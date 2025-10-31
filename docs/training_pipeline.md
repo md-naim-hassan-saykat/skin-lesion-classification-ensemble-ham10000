@@ -46,18 +46,73 @@ Each uses identical preprocessing and augmentation for fair comparison.
 ---
 
 ## 4. Execution
-Local run
+
+### Local evaluation
+
+```bash
+# Activate virtual environment
+source .venv/bin/activate
+export PYTHONPATH="$PWD"
+
+# Evaluate pretrained models on HAM10000 split
+# (Ensure your dataset is in: data/HAM10000/split/{akiec,bcc,bkl,df,mel,nv,vasc})
+
+# ConvNeXt-Tiny
+PYTHONPATH="$PWD" python src/evaluate.py \
+  --model convnext_tiny \
+  --checkpoint checkpoints/convnext_tiny_ham10000.pt \
+  --data_dir data/HAM10000/split \
+  --out outputs/eval_convnext_tiny.json \
+  --save_csv outputs/convnext_val_preds.csv
+
+# DenseNet-121
+PYTHONPATH="$PWD" python src/evaluate.py \
+  --model densenet121 \
+  --checkpoint checkpoints/densenet121_ham10000.pt \
+  --data_dir data/HAM10000/split \
+  --out outputs/eval_densenet121.json \
+  --save_csv outputs/densenet_val_preds.csv
+
+# ResNet-50
+PYTHONPATH="$PWD" python src/evaluate.py \
+  --model resnet50 \
+  --checkpoint checkpoints/resnet50_ham10000.pt \
+  --data_dir data/HAM10000/split \
+  --out outputs/eval_resnet50.json \
+  --save_csv outputs/resnet_val_preds.csv
+```
+Ensemble Evaluation
+```bash
+PYTHONPATH="$PWD" python src/ensemble.py \
+  --csvs outputs/convnext_val_preds.csv \
+         outputs/densenet_val_preds.csv \
+         outputs/resnet_val_preds.csv \
+  --out outputs/ensemble_metrics.json
+```
+(Optional) Retrain locally
 ```bash
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
-python src/train.py --config src/config.yaml
-python src/evaluate.py --weights checkpoints/model_best.pt
-```
 
-Batch evaluation
-```bash
-bash scripts/eval_all.sh
+# Train from scratch or fine-tune using default config
+python src/train.py --config src/config.yaml
 ```
+Notes
+
+	•	Dataset structure
+    data/HAM10000/split/
+    akiec/
+    bcc/
+    bkl/
+    df/
+    mel/
+    nv/
+    vasc/
+
+    	•	Checkpoints must be placed in checkpoints/
+(convnext_tiny_ham10000.pt, densenet121_ham10000.pt, resnet50_ham10000.pt)
+	•	Results and prediction CSVs are saved automatically in outputs/
+(eval_*.json, *_val_preds.csv, ensemble_metrics.json)
 
 ---
 
