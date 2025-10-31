@@ -55,7 +55,7 @@ source .venv/bin/activate
 export PYTHONPATH="$PWD"
 
 # Evaluate pretrained models on HAM10000 split
-# (Ensure your dataset is in: data/HAM10000/split/{akiec,bcc,bkl,df,mel,nv,vasc})
+# (Ensure the dataset is in: data/HAM10000/split/{akiec,bcc,bkl,df,mel,nv,vasc})
 
 # ConvNeXt-Tiny
 PYTHONPATH="$PWD" python src/evaluate.py \
