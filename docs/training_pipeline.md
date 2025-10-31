@@ -89,6 +89,13 @@ PYTHONPATH="$PWD" python src/ensemble.py \
          outputs/resnet_val_preds.csv \
   --out outputs/ensemble_metrics.json
 ```
+
+Batch evaluation
+```bash
+# Run all evaluations and the ensemble in one go
+bash scripts/eval_all.sh
+```
+
 (Optional) Retrain locally
 ```bash
 source .venv/bin/activate
@@ -110,9 +117,9 @@ Notes
     vasc/
 
     	•	Checkpoints must be placed in checkpoints/
-(convnext_tiny_ham10000.pt, densenet121_ham10000.pt, resnet50_ham10000.pt)
-	•	Results and prediction CSVs are saved automatically in outputs/
-(eval_*.json, *_val_preds.csv, ensemble_metrics.json)
+    (convnext_tiny_ham10000.pt, densenet121_ham10000.pt, resnet50_ham10000.pt)
+	    •	Results and prediction CSVs are saved automatically in outputs/
+    (eval_*.json, *_val_preds.csv, ensemble_metrics.json)
 
 ---
 
