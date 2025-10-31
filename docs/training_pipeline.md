@@ -81,7 +81,7 @@ PYTHONPATH="$PWD" python src/evaluate.py \
   --out outputs/eval_resnet50.json \
   --save_csv outputs/resnet_val_preds.csv
 ```
-Ensemble Evaluation
+### Ensemble Evaluation
 ```bash
 PYTHONPATH="$PWD" python src/ensemble.py \
   --csvs outputs/convnext_val_preds.csv \
@@ -90,13 +90,13 @@ PYTHONPATH="$PWD" python src/ensemble.py \
   --out outputs/ensemble_metrics.json
 ```
 
-Batch evaluation
+### Batch evaluation
 ```bash
 # Run all evaluations and the ensemble in one go
 bash scripts/eval_all.sh
 ```
 
-(Optional) Retrain locally
+### (Optional) Retrain locally
 ```bash
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
@@ -104,7 +104,7 @@ export PYTHONPATH="$PWD"
 # Train from scratch or fine-tune using default config
 python src/train.py --config src/config.yaml
 ```
-Notes
+### Notes
 
 	•	Dataset structure
     data/HAM10000/split/
