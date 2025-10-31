@@ -1,6 +1,6 @@
 # Training Pipeline
 
-This document describes the modular training workflow for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.  
+This document describes the modular training workflow for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
 The implementation emphasizes reproducibility, transferability, and cross-architecture comparison.
 
 ---
@@ -8,11 +8,11 @@ The implementation emphasizes reproducibility, transferability, and cross-archit
 ## 1. Overview
 
 The pipeline automates:
-1. Data loading and augmentation  
-2. Model initialization  
-3. Training with validation checkpoints  
-4. Metric evaluation  
-5. Result storage and logging  
+1. Data loading and augmentation
+2. Model initialization
+3. Training with validation checkpoints
+4. Metric evaluation
+5. Result storage and logging
 
 All components are implemented in `src/train.py` and `src/evaluate.py`.
 
@@ -20,11 +20,11 @@ All components are implemented in `src/train.py` and `src/evaluate.py`.
 
 ## 2. Supported Architectures
 
-- ResNet-50  
-- DenseNet-121  
-- EfficientNet-B3  
-- ConvNeXt-Tiny  
-- MobileNetV3-Large  
+- ResNet-50
+- DenseNet-121
+- EfficientNet-B3
+- ConvNeXt-Tiny
+- MobileNetV3-Large
 - Vision Transformer (ViT-B/16)
 
 Each uses identical preprocessing and augmentation for fair comparison.
@@ -146,4 +146,3 @@ outputs/
 		•	Random seeds fixed in config.yaml
 	    •	Deterministic PyTorch backend
 	    •	Identical evaluation pipeline across all architectures and datasets
-

@@ -7,13 +7,13 @@ The evaluation emphasizes **accuracy**, **class balance**, **calibration**, and 
 
 ## 1. Overview
 
-All trained models and ensemble results are evaluated using a unified metric suite.  
+All trained models and ensemble results are evaluated using a unified metric suite.
 Predictions are compared with ground truth labels to measure performance consistency.
 
 Implementation:
-- [`src/evaluate.py`](../src/evaluate.py) — checkpoint evaluation and report generation  
-- [`src/utils.py`](../src/utils.py) — metric computation and logging  
-- [`src/ensemble.py`](../src/ensemble.py) — post-fusion metric aggregation  
+- [`src/evaluate.py`](../src/evaluate.py) — checkpoint evaluation and report generation
+- [`src/utils.py`](../src/utils.py) — metric computation and logging
+- [`src/ensemble.py`](../src/ensemble.py) — post-fusion metric aggregation
 
 Results are visualized in the notebook using ROC curves, confusion matrices, and Grad-CAM overlays.
 
@@ -72,4 +72,3 @@ Generated automatically in the notebook:
 
 ## 5. Summary
 All metrics are logged in results/metrics/*.json and summarized in LaTeX-ready tables within the notebook for reproducibility.
-

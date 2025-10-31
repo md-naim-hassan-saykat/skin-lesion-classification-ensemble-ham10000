@@ -120,10 +120,10 @@ pip install -r requirements.txt
 
 ## Download Dataset
 
-Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).  
+Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).
 The dataset is provided in **two parts**:
 
-- `HAM10000_images_part_1.zip`  
+- `HAM10000_images_part_1.zip`
 - `HAM10000_images_part_2.zip`
 
 After extracting both archives, merge all images and metadata into a single directory for training and evaluation.
@@ -268,14 +268,14 @@ See the LICENSE file for details.
 
 ## Contact
 
-For questions, feedback, or collaboration opportunities, please reach out to:  
+For questions, feedback, or collaboration opportunities, please reach out to:
 [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
 
 ---
 
 ## Need Help?
 
-If you encounter any setup or contribution issues, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)  
-or contact the maintainer at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).  
+If you encounter any setup or contribution issues, please [open an issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)
+or contact the maintainer at [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com).
 
 Thank you for helping make this project **robust, reproducible, and impactful** for the **medical AI research community**!

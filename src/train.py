@@ -1,5 +1,18 @@
-# src/train.py
 from __future__ import annotations
+
+# ruff: noqa: E402
+# --- path shim so `python src/xyz.py` can import `src.*` ---
+import sys
+from pathlib import Path as _P
+
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+# -----------------------------------------------------------
+
+
+# src/train.py
 
 import argparse
 from pathlib import Path

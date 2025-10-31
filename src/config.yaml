@@ -1,2 +1,24 @@
+seed: 42
+num_classes: 7
+image_size: 224
+output:
+  dir: outputs
 model:
-  name: resnet50   # choices: resnet50, densenet121, efficientnet_b3, convnext_tiny, mobilenet_v3_large, vit_b_16
+  name: convnext_tiny
+data:
+  root: data/HAM10000/trainval
+  num_classes: 7
+  image_size: 224
+  batch_size: 16
+  num_workers: 2
+train:
+  epochs: 1
+  batch_size: 16
+  lr: 3e-4
+  weight_decay: 1e-4
+  scheduler: cosine
+  mixed_precision: true
+paths:
+  checkpoints_dir: checkpoints
+  logs_dir: outputs/logs
+  run_name: quickstart

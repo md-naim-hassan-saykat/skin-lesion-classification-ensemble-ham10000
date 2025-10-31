@@ -19,10 +19,10 @@ This strategy leverages the complementary strengths of diverse feature extractor
 
 Single CNNs often capture biased or limited visual cues depending on their architectural design. By aggregating multiple models:
 
-- **ResNet** contributes hierarchical texture features.  
-- **DenseNet** encourages feature reuse through dense connectivity.  
-- **EfficientNet** achieves optimal scaling of width, depth, and resolution.  
-- **ConvNeXt** captures long-range spatial patterns with modern convolutional blocks.  
+- **ResNet** contributes hierarchical texture features.
+- **DenseNet** encourages feature reuse through dense connectivity.
+- **EfficientNet** achieves optimal scaling of width, depth, and resolution.
+- **ConvNeXt** captures long-range spatial patterns with modern convolutional blocks.
 - **ViT** learns global attention-based representations.
 
 By fusing their outputs, the ensemble achieves **higher accuracy, stability, and calibration** across datasets (HAM10000 → ISIC 2019).
@@ -39,7 +39,7 @@ The ensemble computes the mean probability per class:
 p_{\text{ensemble}} = \frac{1}{N} \sum_{i=1}^{N} p_i
 \]
 
-where \( N \) is the total number of models.  
+where \( N \) is the total number of models.
 The final label is obtained as \( \arg\max(p_{\text{ensemble}}) \).
 
 ### 3.2 Weighted Averaging (Optional)
@@ -49,7 +49,7 @@ To emphasize higher-performing models (based on validation AUC or F1):
 p_{\text{ensemble}} = \sum_{i=1}^{N} w_i \cdot p_i
 \]
 
-where \( \sum_i w_i = 1 \).  
+where \( \sum_i w_i = 1 \).
 This allows models with better calibration or generalization to contribute more.
 
 ---

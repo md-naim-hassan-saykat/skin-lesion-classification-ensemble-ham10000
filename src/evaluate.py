@@ -1,5 +1,18 @@
-# src/evaluate.py
 from __future__ import annotations
+
+# ruff: noqa: E402
+# --- path shim so `python src/xyz.py` can import `src.*` ---
+import sys
+from pathlib import Path as _P
+
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+# -----------------------------------------------------------
+
+
+# src/evaluate.py
 
 import argparse
 
@@ -103,7 +116,7 @@ def main():
             with torch.no_grad():  # Disable gradient tracking
                 for imgs, labels in dl:
                     logits = model(imgs.to(device))
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist() 
+                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
                     for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
                         w.writerow([t] + [f"{float(x):.8f}" for x in row])
         print(f"[csv] wrote {args.save_csv}")
