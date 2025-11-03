@@ -20,14 +20,14 @@ Please provide detailed steps to reproduce the issue:
 	```
 
 2.	Activate the environment:
-```bash
+	```bash
    source .venv/bin/activate
-```
+	```
 
 3.	Run the evaluation:
-```bash
+	```bash
 	bash scripts/eval_all.sh
-```
+	```
 
 4.	Observe the error output: …
 
