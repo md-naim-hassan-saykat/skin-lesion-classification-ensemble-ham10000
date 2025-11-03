@@ -15,7 +15,6 @@ if str(_PROJECT_ROOT) not in sys.path:
 # stdlib/third-party
 import argparse
 import numpy as np
-from typing import TYPE_CHECKING
 
 # Optional heavy deps: only required when actually running evaluation
 try:
@@ -28,17 +27,6 @@ except Exception:  # pragma: no cover
 
 # internal (utils is safe; it guards torch usage inside functions)
 from src.utils import compute_metrics, save_json
-
-# --- make Ruff happy while keeping imports lazy ---
-if TYPE_CHECKING:
-    # Only for type-checkers/linters; not executed at runtime.
-    from src.models import get_model as get_model  # noqa: F401
-else:
-    def get_model(*args, **kwargs):
-        # Real import happens only when called.
-        from src.models import get_model as _real_get_model
-
-        return _real_get_model(*args, **kwargs)
 
 
 def _device():
@@ -85,8 +73,11 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "Use --help without them, or install the deps."
         )
 
+    # Import lazily and use a local alias so Ruff sees the name is defined.
+    from src.models import get_model as _get_model
+
     device = _device()
-    model = get_model(model_name, num_classes=num_classes).to(device)
+    model = _get_model(model_name, num_classes=num_classes).to(device)
     _safe_load(model, checkpoint, device)
     model.eval()
 
@@ -126,9 +117,11 @@ def main():
 
     if args.save_csv:
         import csv
+        # Lazy import here as well with a local alias
+        from src.models import get_model as _get_model
 
         device = _device()
-        model = get_model(args.model, num_classes=args.num_classes).to(device)
+        model = _get_model(args.model, num_classes=args.num_classes).to(device)
         _safe_load(model, args.checkpoint, device)
         model.eval()
 
