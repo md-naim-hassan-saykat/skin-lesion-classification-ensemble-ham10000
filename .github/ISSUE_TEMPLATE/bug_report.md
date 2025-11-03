@@ -15,13 +15,13 @@ Please provide detailed steps to reproduce the issue:
 
 1. Clone the repository:
 	```bash
-   git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
-   cd skin-lesion-classification-ensemble-ham10000
+   	git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
+   	cd skin-lesion-classification-ensemble-ham10000
 	```
 
 2.	Activate the environment:
 	```bash
-   source .venv/bin/activate
+ 	source .venv/bin/activate
 	```
 
 3.	Run the evaluation:
