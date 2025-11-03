@@ -5,6 +5,7 @@ from __future__ import annotations
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
+
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
@@ -71,10 +72,10 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "Use --help without them, or install the deps."
         )
     # Lazy import to avoid import-time failures in environments without torch
-    from src.models import get_model
+    from src.models import get_model as build_model  # alias avoids Ruff F821
 
     device = _device()
-    model = get_model(model_name, num_classes=num_classes).to(device)
+    model = build_model(model_name, num_classes=num_classes).to(device)
     _safe_load(model, checkpoint, device)
     model.eval()
 
@@ -114,11 +115,11 @@ def main():
 
     if args.save_csv:
         # Lazy import here as well
-        from src.models import get_model
+        from src.models import get_model as build_model
         import csv
 
         device = _device()
-        model = get_model(args.model, num_classes=args.num_classes).to(device)
+        model = build_model(args.model, num_classes=args.num_classes).to(device)
         _safe_load(model, args.checkpoint, device)
         model.eval()
 
