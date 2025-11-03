@@ -1,11 +1,8 @@
-# src/models.py
 from __future__ import annotations
 
 from collections.abc import Callable
-
 import torch.nn as nn
 from torchvision import models as tv
-
 
 def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
     """Replace the last nn.Linear inside a classifier/head with one of size out_features."""
