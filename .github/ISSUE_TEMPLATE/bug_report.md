@@ -14,10 +14,10 @@ A clear and concise description of the issue or unexpected behavior.
 Please provide detailed steps to reproduce the issue:
 
 1. Clone the repository:
-```bash
+	```bash
    git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
    cd skin-lesion-classification-ensemble-ham10000
-```
+	```
 
 2.	Activate the environment:
 ```bash
