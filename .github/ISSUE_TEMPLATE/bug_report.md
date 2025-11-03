@@ -21,7 +21,7 @@ Please provide detailed steps to reproduce the issue:
 
 2.	Activate the environment:
 	```bash
- 	source .venv/bin/activate
+ 	python -m venv .venv && source .venv/bin/activate
 	```
 
 3.	Run the evaluation:
