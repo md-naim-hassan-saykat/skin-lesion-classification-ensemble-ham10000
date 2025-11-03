@@ -60,4 +60,11 @@ Thumbs.db
 skin-lesion-classification-ensemble-ham10000/
 pytest.local.ini
 pytest.local.ini
+<<<<<<< Updated upstream
 .coverage
+=======
+
+# editor/backup junk
+*.bak
+*~
+>>>>>>> Stashed changes

@@ -8,7 +8,7 @@ repos:
   # Code Formatter: Black
   # ---------------------------------------------------------
   - repo: https://github.com/psf/black
-    rev: 24.10.0  # Latest stable Black release
+    rev: 25.9.0  # Latest stable Black release
     hooks:
       - id: black
         args: [--line-length=100]
@@ -18,7 +18,7 @@ repos:
   # Python Linter & Import Sorter: Ruff
   # ---------------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.2  # Current stable Ruff version
+    rev: v0.14.3  # Current stable Ruff version
     hooks:
       - id: ruff
         args: [--fix, --config=pyproject.toml]
@@ -26,7 +26,7 @@ repos:
   # General Hygiene Hooks
   # ---------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer              # Ensure newline at EOF
       - id: trailing-whitespace            # Remove stray spaces

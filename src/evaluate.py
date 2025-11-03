@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 # ruff: noqa: E402  # allow imports after the path shim
-
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
+
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
@@ -14,7 +14,9 @@ if str(_PROJECT_ROOT) not in sys.path:
 
 # stdlib/third-party
 import argparse
+
 import numpy as np
+
 
 # Optional heavy deps: only required when actually running evaluation
 try:
@@ -31,7 +33,9 @@ from src.utils import compute_metrics, save_json
 
 def _device():
     if torch is None:
-        raise RuntimeError("PyTorch not installed. Install 'torch'/'torchvision' or use --help only.")
+        raise RuntimeError(
+            "PyTorch not installed. Install 'torch'/'torchvision' or use --help only."
+        )
     if torch.cuda.is_available():
         return torch.device("cuda")
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -51,7 +55,7 @@ def _tfms(img_size: int):
     )
 
 
-def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device") -> None:
+def _safe_load(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> None:
     """Load only weights that exist in model AND match shape (drops 1000-class heads)."""
     state = torch.load(ckpt_path, map_location=device)
     raw = state["model"] if isinstance(state, dict) and "model" in state else state
@@ -66,7 +70,9 @@ def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device")
 
 
 @torch.no_grad()
-def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int):
+def evaluate_once(
+    checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int
+):
     """Run evaluation once and return metrics dict."""
     if torch is None or datasets is None or transforms is None:
         raise RuntimeError(
@@ -117,6 +123,7 @@ def main():
 
     if args.save_csv:
         import csv
+
         # Lazy import here as well with a local alias
         from src.models import get_model as _get_model
 
