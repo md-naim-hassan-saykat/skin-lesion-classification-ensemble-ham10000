@@ -72,8 +72,7 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "PyTorch/torchvision not available; cannot run evaluation. "
             "Use --help without them, or install the deps."
         )
-
-    # Import lazily and use a local alias so Ruff sees the name is defined.
+    # Lazy import with local alias
     from src.models import get_model as _get_model
 
     device = _device()
