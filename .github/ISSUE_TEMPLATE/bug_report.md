@@ -26,7 +26,7 @@ Please provide detailed steps to reproduce the issue:
 
 3.	Run the evaluation:
 ```bash
-bash scripts/eval_all.sh
+	bash scripts/eval_all.sh
 ```
 
 4.	Observe the error output: …
