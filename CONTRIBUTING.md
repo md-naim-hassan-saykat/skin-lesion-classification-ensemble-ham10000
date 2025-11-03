@@ -33,7 +33,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install -r requirements-ci.txt
-ruff check src --fix
+ruff check src --fix --no-cache
 black src
 
 # Enable pre-commit hooks (auto-formatting & lint checks)
