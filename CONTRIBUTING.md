@@ -37,6 +37,7 @@ ruff check src --fix --no-cache
 black src
 
 # Enable pre-commit hooks (auto-formatting & lint checks)
+pip install pre-commit
 pre-commit install
 ```
 You can now run:
