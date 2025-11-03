@@ -2,10 +2,10 @@
 from __future__ import annotations
 
 # ruff: noqa: E402  # allow imports after the path shim
-
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
+
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:

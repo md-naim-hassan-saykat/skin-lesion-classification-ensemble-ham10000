@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+
 import torch.nn as nn
 
 
@@ -9,6 +10,7 @@ try:
     from torchvision import models as tv
 except Exception:
     tv = None
+
 
 def _replace_last_linear(module: nn.Module, out_features: int) -> nn.Module:
     """Replace the last nn.Linear in a classifier/head with one sized to out_features."""
