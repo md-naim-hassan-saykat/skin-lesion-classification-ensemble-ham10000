@@ -1,36 +1,53 @@
-# src/evaluate.py
 from __future__ import annotations
 
-# ruff: noqa: E402
+# ruff: noqa: E402  # allow imports after the path shim
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
+
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
 # -----------------------------------------------------------
 
-# stdlib/third-party
+# ruff: noqa: E402  # allow imports after the path shim
+# --- path shim (lets `python src/xyz.py` import `src.*`) ---
+import sys
+from pathlib import Path as _P
+
+
+_PROJECT_ROOT = _P(__file__).resolve().parents[1]
+if str(_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(_PROJECT_ROOT))
+# -----------------------------------------------------------
+
+# src/evaluate.py
+
 import argparse
+
 import numpy as np
 
-# Optional heavy deps: only required when actually running evaluation
+
+# Optional at import time; required only when running evaluation
 try:
-    import torch  # type: ignore
-    from torchvision import datasets, transforms  # type: ignore
-except Exception:  # pragma: no cover
-    torch = None
+    import torch
+    from torchvision import datasets, transforms
+except Exception:
     datasets = None
     transforms = None
+    torch = None
 
-# internal (utils is safe; it guards torch usage inside functions)
+
+from src.models import get_model
 from src.utils import compute_metrics, save_json
 
 
 def _device():
     if torch is None:
-        raise RuntimeError("PyTorch not installed. Install 'torch'/'torchvision' or use --help only.")
+        raise RuntimeError(
+            "PyTorch not installed. Install 'torch'/'torchvision' or only use '--help'."
+        )
     if torch.cuda.is_available():
         return torch.device("cuda")
     if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
@@ -39,8 +56,6 @@ def _device():
 
 
 def _tfms(img_size: int):
-    if transforms is None:  # extra safety if someone calls this directly
-        raise RuntimeError("torchvision not available")
     return transforms.Compose(
         [
             transforms.Resize((img_size, img_size)),
@@ -50,7 +65,7 @@ def _tfms(img_size: int):
     )
 
 
-def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device") -> None:
+def _safe_load(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> None:
     """Load only weights that exist in model AND match shape (drops 1000-class heads)."""
     state = torch.load(ckpt_path, map_location=device)
     raw = state["model"] if isinstance(state, dict) and "model" in state else state
@@ -64,18 +79,12 @@ def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device")
         )
 
 
-def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int):
-    """Run evaluation once and return metrics dict."""
-    if torch is None or datasets is None or transforms is None:
-        raise RuntimeError(
-            "PyTorch/torchvision not available; cannot run evaluation. "
-            "Use --help without them, or install the deps."
-        )
-    # Lazy import to avoid import-time failures in environments without torch
-    from src.models import get_model as build_model  # alias avoids Ruff F821
-
+@torch.no_grad()
+def evaluate_once(
+    checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int
+):
     device = _device()
-    model = build_model(model_name, num_classes=num_classes).to(device)
+    model = get_model(model_name, num_classes=num_classes).to(device)
     _safe_load(model, checkpoint, device)
     model.eval()
 
@@ -114,12 +123,10 @@ def main():
     save_json(metrics, args.out)
 
     if args.save_csv:
-        # Lazy import here as well
-        from src.models import get_model as build_model
         import csv
 
         device = _device()
-        model = build_model(args.model, num_classes=args.num_classes).to(device)
+        model = get_model(args.model, num_classes=args.num_classes).to(device)
         _safe_load(model, args.checkpoint, device)
         model.eval()
 
