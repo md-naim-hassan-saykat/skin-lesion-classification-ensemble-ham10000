@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 # ruff: noqa: E402  # allow imports after the path shim
+
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
@@ -66,10 +67,8 @@ def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device")
 
 def _lazy_get_model():
     """Import get_model only when needed (keeps import-time light for CI / --help)."""
-    try:
-        from src.models import get_model as _get_model  # local import to avoid global NameError
-    except Exception as e:  # pragma: no cover
-        raise RuntimeError("Failed to import model factory (src.models.get_model).") from e
+    from src.models import get_model as _get_model
+
     return _get_model
 
 
@@ -81,7 +80,8 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "Use --help without them, or install the deps."
         )
 
-    get_model = _lazy_get_model()  # <-- ensures name exists in local scope
+    # Define local alias BEFORE first use (fixes Ruff F821)
+    get_model = _lazy_get_model()
 
     device = _device()
     model = get_model(model_name, num_classes=num_classes).to(device)
@@ -125,7 +125,8 @@ def main():
     if args.save_csv:
         import csv
 
-        get_model = _lazy_get_model()  # <-- local alias again
+        # Define local alias again inside this block
+        get_model = _lazy_get_model()
 
         device = _device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
@@ -138,7 +139,7 @@ def main():
         with open(args.save_csv, "w", newline="") as f:
             w = csv.writer(f)
             w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
-            with torch.no_grad():  # Disable gradient tracking
+            with torch.no_grad():
                 for imgs, labels in dl:
                     logits = model(imgs.to(device))
                     p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
