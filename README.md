@@ -213,6 +213,8 @@ If you wish to contribute or test locally:
 cd skin-lesion-classification-ensemble-ham10000
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt -r requirements-ci.txt
+ruff check src --fix
+black src
 make lint
 make test
 ```
