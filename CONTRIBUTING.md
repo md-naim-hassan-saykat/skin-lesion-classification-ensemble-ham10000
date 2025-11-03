@@ -32,6 +32,8 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 pip install -r requirements-ci.txt  # optional: for linting and testing tools
+ruff check src --fix
+black src
 
 # Enable pre-commit hooks (auto-formatting & lint checks)
 pre-commit install
