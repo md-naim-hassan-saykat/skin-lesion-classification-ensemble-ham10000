@@ -65,6 +65,7 @@ def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device")
         )
 
 
+@torch.no_grad()
 def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int):
     """Run evaluation once and return metrics dict."""
     if torch is None or datasets is None or transforms is None:
@@ -72,7 +73,7 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "PyTorch/torchvision not available; cannot run evaluation. "
             "Use --help without them, or install the deps."
         )
-    # Lazy import with local alias
+    # Lazy import with local alias (prevents import-time failures on systems without torch)
     from src.models import get_model as _get_model
 
     device = _device()
