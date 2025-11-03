@@ -15,6 +15,7 @@ if str(_PROJECT_ROOT) not in sys.path:
 # stdlib/third-party
 import argparse
 import numpy as np
+from typing import TYPE_CHECKING
 
 # Optional heavy deps: only required when actually running evaluation
 try:
@@ -27,6 +28,17 @@ except Exception:  # pragma: no cover
 
 # internal (utils is safe; it guards torch usage inside functions)
 from src.utils import compute_metrics, save_json
+
+# --- make Ruff happy while keeping imports lazy ---
+if TYPE_CHECKING:
+    # Only for type-checkers/linters; not executed at runtime.
+    from src.models import get_model as get_model  # noqa: F401
+else:
+    def get_model(*args, **kwargs):
+        # Real import happens only when called.
+        from src.models import get_model as _real_get_model
+
+        return _real_get_model(*args, **kwargs)
 
 
 def _device():
@@ -65,13 +77,6 @@ def _safe_load(model: "torch.nn.Module", ckpt_path: str, device: "torch.device")
         )
 
 
-def _lazy_get_model():
-    """Import get_model only when needed (keeps import-time light for CI / --help)."""
-    from src.models import get_model as _get_model
-
-    return _get_model
-
-
 def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int):
     """Run evaluation once and return metrics dict."""
     if torch is None or datasets is None or transforms is None:
@@ -79,9 +84,6 @@ def evaluate_once(checkpoint: str, data_dir: str, model_name: str, num_classes: 
             "PyTorch/torchvision not available; cannot run evaluation. "
             "Use --help without them, or install the deps."
         )
-
-    # Define local alias BEFORE first use (fixes Ruff F821)
-    get_model = _lazy_get_model()
 
     device = _device()
     model = get_model(model_name, num_classes=num_classes).to(device)
@@ -124,9 +126,6 @@ def main():
 
     if args.save_csv:
         import csv
-
-        # Define local alias again inside this block
-        get_model = _lazy_get_model()
 
         device = _device()
         model = get_model(args.model, num_classes=args.num_classes).to(device)
