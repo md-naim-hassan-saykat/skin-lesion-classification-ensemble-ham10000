@@ -1,7 +1,7 @@
 # src/evaluate.py
 from __future__ import annotations
-# ruff: noqa: E402
 
+# ruff: noqa: E402
 # --- path shim (lets `python src/xyz.py` import `src.*`) ---
 import sys
 from pathlib import Path as _P
