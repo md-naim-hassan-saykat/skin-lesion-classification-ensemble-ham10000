@@ -7,7 +7,7 @@ If you discover a vulnerability or potential security issue, please follow the r
 
 ## Reporting a Vulnerability
 
-If you believe you’ve found a security vulnerability:
+If you believe you have found a security vulnerability:
 
 1. **Do not open a public GitHub issue.**
 2. Instead, please contact us directly at **[mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)**.
