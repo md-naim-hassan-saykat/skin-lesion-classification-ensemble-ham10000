@@ -1,6 +1,6 @@
 # Installation Guide
 
-This guide explains how to set up and reproduce experiments for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification** project.
+This guide explains how to set up and reproduce experiments for the **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019** project.
 The framework uses **PyTorch**, **scikit-learn**, and **Grad-CAM**, ensuring full reproducibility across macOS, Linux, and Google Colab.
 
 ---
