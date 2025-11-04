@@ -63,6 +63,7 @@ Implemented in src/utils.py and plotted in the notebook as reliability diagrams.
 
 ## 4. Visual Diagnostics
 Generated automatically in the notebook:
+
 	•	ROC Curves — per class and averaged
 	•	Confusion Matrices — normalized
 	•	Grad-CAM Visualizations — lesion focus interpretability
