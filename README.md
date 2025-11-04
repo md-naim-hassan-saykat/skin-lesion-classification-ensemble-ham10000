@@ -96,7 +96,6 @@ skin-lesion-classification-ensemble-ham10000/
 │
 ├── requirements.txt
 ├── requirements-ci.txt
-├── Dockerfile
 ├── Makefile
 └── README.md
 
