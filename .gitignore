@@ -68,3 +68,4 @@ pytest.local.ini
 *.bak
 *~
 >>>>>>> Stashed changes
+.ipynb_checkpoints/
