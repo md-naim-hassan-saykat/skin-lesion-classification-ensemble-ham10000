@@ -152,35 +152,25 @@ find data/HAM10000 -type f -name "*.jpg" | wc -l
 Run all model evaluations using:
 ```bash
 cd skin-lesion-classification-ensemble-ham10000
-source ../.venv/bin/activate
-export PYTHONPATH="$PWD"
-bash scripts/eval_all.sh
-
-cd skin-lesion-classification-ensemble-ham10000
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
 
-# Run the standard evaluation script for all models
+# evaluate all pretrained models (writes CSVs + metrics)
 bash scripts/eval_all.sh
 
-# Replace DenseNet CSV with tuned version (if available)
-OUTDIR="outputs/from_zip_eval"
-if [ -f "$OUTDIR/densenet121_imgnet_tuned_val_preds.csv" ]; then
-  cp "$OUTDIR/densenet121_imgnet_tuned_val_preds.csv" \
-     "$OUTDIR/densenet121_ham10000_val_preds.csv"
-  echo "✔️ Replaced DenseNet with tuned version"
-fi
+# if the tuned DenseNet CSV is present, replace the official CSV
+OUT="outputs/from_zip_eval"
+if [ -f "$OUT/densenet121_imgnet_tuned_val_preds.csv" ]; then
+  cp "$OUT/densenet121_imgnet_tuned_val_preds.csv" "$OUT/densenet121_ham10000_val_preds.csv"
 
-# Recompute ensemble metrics (Acc/F1/AUC)
-python - <<'PY'
+  # recompute DenseNet metrics.json from the (now tuned) CSV
+  python - <<'PY'
 import os, json, numpy as np, pandas as pd
 from pathlib import Path
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
-
 OUT="outputs/from_zip_eval"
 VAL=os.path.expanduser("~/Desktop/HAM10000_split/val")
 exts={".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
-
 classes=sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
 C=len(classes)
 y_true=[]
@@ -188,30 +178,54 @@ for i,c in enumerate(classes):
     files=sorted([p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in exts])
     y_true += [i]*len(files)
 y_true=np.array(y_true)
+df=pd.read_csv(f"{OUT}/densenet121_ham10000_val_preds.csv")
+cols=[c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
+if not cols: cols=[c for c in df.columns if str(c).isdigit()]
+P=df[cols[-C:]].to_numpy(float)
+y=P.argmax(1)
+acc=float(accuracy_score(y_true,y))
+f1=float(f1_score(y_true,y,average="macro"))
+try: auc=float(roc_auc_score(np.eye(C)[y_true],P,average="macro",multi_class="ovr"))
+except Exception: auc=None
+json.dump({"accuracy":acc,"f1":f1,"auc":auc}, open(f"{OUT}/densenet121_ham10000_metrics.json","w"), indent=2)
+print(f"DenseNet updated: Acc={acc:.4f}  F1={f1:.4f}  AUC={'None' if auc is None else f'{auc:.4f}'}")
+PY
+fi
 
+# recompute ensemble metrics (Acc/F1/AUC) from the three CSVs
+python - <<'PY'
+import os, json, numpy as np, pandas as pd
+from pathlib import Path
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+OUT="outputs/from_zip_eval"
+VAL=os.path.expanduser("~/Desktop/HAM10000_split/val")
+exts={".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
+classes=sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
+C=len(classes)
+y_true=[]
+for i,c in enumerate(classes):
+    files=sorted([p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in exts])
+    y_true += [i]*len(files)
+y_true=np.array(y_true)
 def load(csv):
     df=pd.read_csv(csv)
     cols=[c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
     if not cols: cols=[c for c in df.columns if str(c).isdigit()]
     return df[cols[-C:]].to_numpy(float)
-
 P_eff  = load(f"{OUT}/efficientnet_b3_best_val_preds.csv")
 P_den  = load(f"{OUT}/densenet121_ham10000_val_preds.csv")
 P_conv = load(f"{OUT}/convnext_tiny_ham10000_val_preds.csv")
-
 P_ens=(P_eff+P_den+P_conv)/3
 y=P_ens.argmax(1)
 acc=float(accuracy_score(y_true,y))
 f1 =float(f1_score(y_true,y,average="macro"))
 try: auc=float(roc_auc_score(np.eye(C)[y_true],P_ens,average="macro",multi_class="ovr"))
 except Exception: auc=None
-
-json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc},
-          open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
+json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc}, open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
 print(f"Ensemble Acc={acc:.4f}  F1={f1:.4f}  AUC={'None' if auc is None else f'{auc:.4f}'}")
 PY
 
-# Print summary table for all models
+# print the final table (all *_metrics.json)
 python - <<'PY'
 import os, json, glob
 OUT="outputs/from_zip_eval"
