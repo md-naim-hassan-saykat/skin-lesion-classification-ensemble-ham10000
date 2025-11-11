@@ -113,8 +113,76 @@ git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-en
 cd skin-lesion-classification-ensemble-ham10000
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-```
 
+
+cd skin-lesion-classification-ensemble-ham10000
+source .venv/bin/activate
+export PYTHONPATH="$PWD"
+
+# Run the standard evaluation script for all models
+bash scripts/eval_all.sh
+
+# Replace DenseNet CSV with tuned version (if available)
+OUTDIR="outputs/from_zip_eval"
+if [ -f "$OUTDIR/densenet121_imgnet_tuned_val_preds.csv" ]; then
+  cp "$OUTDIR/densenet121_imgnet_tuned_val_preds.csv" \
+     "$OUTDIR/densenet121_ham10000_val_preds.csv"
+  echo "✔️ Replaced DenseNet with tuned version"
+fi
+
+# Recompute ensemble metrics (Acc/F1/AUC)
+python - <<'PY'
+import os, json, numpy as np, pandas as pd
+from pathlib import Path
+from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+
+OUT="outputs/from_zip_eval"
+VAL=os.path.expanduser("~/Desktop/HAM10000_split/val")
+exts={".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
+
+classes=sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
+C=len(classes)
+y_true=[]
+for i,c in enumerate(classes):
+    files=sorted([p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in exts])
+    y_true += [i]*len(files)
+y_true=np.array(y_true)
+
+def load(csv):
+    df=pd.read_csv(csv)
+    cols=[c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
+    if not cols: cols=[c for c in df.columns if str(c).isdigit()]
+    return df[cols[-C:]].to_numpy(float)
+
+P_eff  = load(f"{OUT}/efficientnet_b3_best_val_preds.csv")
+P_den  = load(f"{OUT}/densenet121_ham10000_val_preds.csv")
+P_conv = load(f"{OUT}/convnext_tiny_ham10000_val_preds.csv")
+
+P_ens=(P_eff+P_den+P_conv)/3
+y=P_ens.argmax(1)
+acc=float(accuracy_score(y_true,y))
+f1 =float(f1_score(y_true,y,average="macro"))
+try: auc=float(roc_auc_score(np.eye(C)[y_true],P_ens,average="macro",multi_class="ovr"))
+except Exception: auc=None
+
+json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc},
+          open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
+print(f"Ensemble Acc={acc:.4f}  F1={f1:.4f}  AUC={'None' if auc is None else f'{auc:.4f}'}")
+PY
+
+# Print summary table for all models
+python - <<'PY'
+import os, json, glob
+OUT="outputs/from_zip_eval"
+fmt=lambda x: "None" if x is None else f"{x:.4f}"
+print("\n=== Validation Metrics (HAM10000 Split) ===")
+for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
+    with open(f) as fh: m=json.load(fh)
+    name=os.path.basename(f).replace("_metrics.json","")
+    acc=m.get("accuracy"); f1=m.get("f1") or m.get("macro_f1"); auc=m.get("auc") or m.get("macro_auc")
+    print(f"{name:28s}  Accuracy={fmt(acc)}  F1={fmt(f1)}  AUC={fmt(auc)}")
+PY
+```
 ---
 
 ## Download Dataset
