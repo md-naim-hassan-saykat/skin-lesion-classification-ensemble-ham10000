@@ -238,6 +238,7 @@ for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
     print(f"{name:28s}  Accuracy={fmt(acc)}  F1={fmt(f1)}  AUC={fmt(auc)}")
 PY
 ```
+Note. We ship a precomputed file outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scale + TenCrop + hflip TTA with simple temperature/bias calibration on the validation split). The snippet above will automatically use it, recompute densenet121_ham10000_metrics.json, and then recompute the ensemble. If that file is removed, the script will fall back to the raw DenseNet outputs produced by scripts/eval_all.sh.
 
 ---
 
