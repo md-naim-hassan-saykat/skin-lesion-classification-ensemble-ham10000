@@ -231,21 +231,22 @@ Open the notebook:
 
 ## Results
 
-The ensemble consistently outperformed individual models in Accuracy, Weighted F1, and ROC-AUC on both internal (HAM10000) and external (ISIC 2019) validation.
-Calibration analysis using Expected Calibration Error (ECE) showed strong reliability, and Grad-CAM visualizations confirmed clinically relevant lesion focus.
+Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, if present, swap in the shipped `outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv` (multi-scale + TenCrop + hflip TTA with light temperature/bias calibration), then recompute `densenet121_ham10000_metrics.json` and the ensemble metrics.
 
 ### Validation Metrics (HAM10000 Split)
 
-Reproduced from `scripts/eval_all.sh`.
+| Model                  | Accuracy | Macro-F1 | AUC    |
+|------------------------|---------:|---------:|-------:|
+| EfficientNet-B3        | 0.6805   | 0.6678   | 0.7118 |
+| DenseNet-121 (tuned)   | 0.8130   | 0.6759   | 0.9650 |
+| ConvNeXt-Tiny          | 0.9790   | 0.9790   | 0.9969 |
+| **Ensemble (avg of 3)**| **0.9210**| **0.8830**| **0.9952** |
 
-| Model                  | Accuracy | F1     | AUC    |
-|------------------------|---------:|-------:|-------:|
-| EfficientNet-B3        | 0.638    | 0.625  | 0.671  |
-| DenseNet-121           | 0.809    | 0.791  | 0.968  |
-| ConvNeXt-Tiny          | 0.979    | 0.979  | 0.998  |
-| **Ensemble (above 3)** | **0.883**| **0.868**| **0.992** |
+*Metrics are read from `outputs/from_zip_eval/*_metrics.json` (and `ensemble_metrics.json`).*
 
-> Metrics are from `outputs/from_zip_eval/*_metrics.json` and `ensemble_metrics.json`.
+**Notes.**
+- The **ensemble** substantially improves over EfficientNet-B3 and DenseNet-121 and offers strong overall performance, while **ConvNeXt-Tiny** remains the top single model on this split.
+- Using the provided tuned DenseNet CSV is optional; if removed, results fall back to the raw DenseNet outputs produced by `scripts/eval_all.sh`.
 
 ---
 
