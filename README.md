@@ -113,7 +113,48 @@ git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-en
 cd skin-lesion-classification-ensemble-ham10000
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+```
+---
 
+## Download Dataset
+
+Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).
+The dataset is provided in **two parts**:
+
+- `HAM10000_images_part_1.zip`
+- `HAM10000_images_part_2.zip`
+
+After extracting both archives, merge all images and metadata into a single directory for training and evaluation.
+
+### Setup commands
+
+```bash
+# Navigate to the project root
+cd skin-lesion-classification-ensemble-ham10000
+
+# Create the target dataset folder
+mkdir -p data/HAM10000
+
+# Copy extracted image files from both parts (located on Desktop)
+cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
+cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
+
+# Copy metadata CSV file
+cp ~/Desktop/HAM10000_metadata.csv data/HAM10000/
+
+# Verify that all images were copied correctly
+find data/HAM10000 -type f -name "*.jpg" | wc -l
+```
+
+---
+
+## Reproducibility: Evaluate pretrained models
+Run all model evaluations using:
+```bash
+cd skin-lesion-classification-ensemble-ham10000
+source ../.venv/bin/activate
+export PYTHONPATH="$PWD"
+bash scripts/eval_all.sh
 
 cd skin-lesion-classification-ensemble-ham10000
 source .venv/bin/activate
@@ -182,48 +223,6 @@ for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
     acc=m.get("accuracy"); f1=m.get("f1") or m.get("macro_f1"); auc=m.get("auc") or m.get("macro_auc")
     print(f"{name:28s}  Accuracy={fmt(acc)}  F1={fmt(f1)}  AUC={fmt(auc)}")
 PY
-```
----
-
-## Download Dataset
-
-Download the **HAM10000 dataset** from the [ISIC Archive](https://www.isic-archive.com/).
-The dataset is provided in **two parts**:
-
-- `HAM10000_images_part_1.zip`
-- `HAM10000_images_part_2.zip`
-
-After extracting both archives, merge all images and metadata into a single directory for training and evaluation.
-
-### Setup commands
-
-```bash
-# Navigate to the project root
-cd skin-lesion-classification-ensemble-ham10000
-
-# Create the target dataset folder
-mkdir -p data/HAM10000
-
-# Copy extracted image files from both parts (located on Desktop)
-cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
-cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
-
-# Copy metadata CSV file
-cp ~/Desktop/HAM10000_metadata.csv data/HAM10000/
-
-# Verify that all images were copied correctly
-find data/HAM10000 -type f -name "*.jpg" | wc -l
-```
-
----
-
-## Reproducibility: Evaluate pretrained models
-Run all model evaluations using:
-```bash
-cd skin-lesion-classification-ensemble-ham10000
-source ../.venv/bin/activate
-export PYTHONPATH="$PWD"
-bash scripts/eval_all.sh
 ```
 
 ---
