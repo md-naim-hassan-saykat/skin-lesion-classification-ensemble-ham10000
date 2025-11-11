@@ -155,87 +155,67 @@ cd skin-lesion-classification-ensemble-ham10000
 source .venv/bin/activate
 export PYTHONPATH="$PWD"
 
-# evaluate all pretrained models (writes CSVs + metrics)
+# Run the standard evaluations (writes CSVs + baseline metrics)
 bash scripts/eval_all.sh
 
-# if the tuned DenseNet CSV is present, replace the official CSV
-OUT="outputs/from_zip_eval"
-if [ -f "$OUT/densenet121_imgnet_tuned_val_preds.csv" ]; then
-  cp "$OUT/densenet121_imgnet_tuned_val_preds.csv" "$OUT/densenet121_ham10000_val_preds.csv"
-
-  # recompute DenseNet metrics.json from the (now tuned) CSV
-  python - <<'PY'
-import os, json, numpy as np, pandas as pd
-from pathlib import Path
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
-OUT="outputs/from_zip_eval"
-VAL=os.path.expanduser("~/Desktop/HAM10000_split/val")
-exts={".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
-classes=sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
-C=len(classes)
-y_true=[]
-for i,c in enumerate(classes):
-    files=sorted([p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in exts])
-    y_true += [i]*len(files)
-y_true=np.array(y_true)
-df=pd.read_csv(f"{OUT}/densenet121_ham10000_val_preds.csv")
-cols=[c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
-if not cols: cols=[c for c in df.columns if str(c).isdigit()]
-P=df[cols[-C:]].to_numpy(float)
-y=P.argmax(1)
-acc=float(accuracy_score(y_true,y))
-f1=float(f1_score(y_true,y,average="macro"))
-try: auc=float(roc_auc_score(np.eye(C)[y_true],P,average="macro",multi_class="ovr"))
-except Exception: auc=None
-json.dump({"accuracy":acc,"f1":f1,"auc":auc}, open(f"{OUT}/densenet121_ham10000_metrics.json","w"), indent=2)
-print(f"DenseNet updated: Acc={acc:.4f}  F1={f1:.4f}  AUC={'None' if auc is None else f'{auc:.4f}'}")
-PY
-fi
-
-# recompute ensemble metrics (Acc/F1/AUC) from the three CSVs
+# Recompute (DenseNet if tuned CSV exists) + Ensemble + Print table
 python - <<'PY'
-import os, json, numpy as np, pandas as pd
+import os, glob, json, numpy as np, pandas as pd
 from pathlib import Path
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
-OUT="outputs/from_zip_eval"
-VAL=os.path.expanduser("~/Desktop/HAM10000_split/val")
-exts={".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
-classes=sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
-C=len(classes)
-y_true=[]
+
+OUT = "outputs/from_zip_eval"
+VAL = os.path.expanduser("~/Desktop/HAM10000_split/val")  # <-- change if your val path differs
+EXTS = {".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
+
+# ground truth in ImageFolder order
+classes = sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
+C = len(classes)
+y_true = []
 for i,c in enumerate(classes):
-    files=sorted([p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in exts])
+    files = sorted(p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in EXTS)
     y_true += [i]*len(files)
-y_true=np.array(y_true)
-def load(csv):
-    df=pd.read_csv(csv)
-    cols=[c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
-    if not cols: cols=[c for c in df.columns if str(c).isdigit()]
+y_true = np.array(y_true)
+
+def load_probs(csv, C):
+    df = pd.read_csv(csv)
+    cols = [c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
+    if not cols: cols = [c for c in df.columns if str(c).isdigit()]
     return df[cols[-C:]].to_numpy(float)
-P_eff  = load(f"{OUT}/efficientnet_b3_best_val_preds.csv")
-P_den  = load(f"{OUT}/densenet121_ham10000_val_preds.csv")
-P_conv = load(f"{OUT}/convnext_tiny_ham10000_val_preds.csv")
-P_ens=(P_eff+P_den+P_conv)/3
-y=P_ens.argmax(1)
-acc=float(accuracy_score(y_true,y))
-f1 =float(f1_score(y_true,y,average="macro"))
-try: auc=float(roc_auc_score(np.eye(C)[y_true],P_ens,average="macro",multi_class="ovr"))
-except Exception: auc=None
-json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc}, open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
-print(f"Ensemble Acc={acc:.4f}  F1={f1:.4f}  AUC={'None' if auc is None else f'{auc:.4f}'}")
-PY
 
-# print the final table (all *_metrics.json)
-python - <<'PY'
-import os, json, glob
-OUT="outputs/from_zip_eval"
-fmt=lambda x: "None" if x is None else f"{x:.4f}"
+# If tuned DenseNet CSV exists, replace official and refresh its metrics.json
+tuned = f"{OUT}/densenet121_imgnet_tuned_val_preds.csv"
+official = f"{OUT}/densenet121_ham10000_val_preds.csv"
+if os.path.exists(tuned):
+    pd.read_csv(tuned).to_csv(official, index=False)  # copy
+    P_den = load_probs(official, C)
+    y = P_den.argmax(1)
+    acc = float((y==y_true).mean())
+    f1  = float(f1_score(y_true,y,average="macro"))
+    try: auc = float(roc_auc_score(np.eye(C)[y_true], P_den, average="macro", multi_class="ovr"))
+    except: auc = None
+    json.dump({"accuracy":acc,"f1":f1,"auc":auc}, open(f"{OUT}/densenet121_ham10000_metrics.json","w"), indent=2)
+
+# Recompute ensemble from CSVs
+P_eff  = load_probs(f"{OUT}/efficientnet_b3_best_val_preds.csv", C)
+P_den  = load_probs(f"{OUT}/densenet121_ham10000_val_preds.csv", C)
+P_conv = load_probs(f"{OUT}/convnext_tiny_ham10000_val_preds.csv", C)
+P_ens  = (P_eff + P_den + P_conv)/3.0
+y = P_ens.argmax(1)
+acc = float(accuracy_score(y_true,y))
+f1  = float(f1_score(y_true,y,average="macro"))
+try: auc = float(roc_auc_score(np.eye(C)[y_true], P_ens, average="macro", multi_class="ovr"))
+except: auc = None
+json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc}, open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
+
+# Print the table (reads all *_metrics.json)
+fmt = lambda x: "None" if x is None else f"{x:.4f}"
 print("\n=== Validation Metrics (HAM10000 Split) ===")
 for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
-    with open(f) as fh: m=json.load(fh)
-    name=os.path.basename(f).replace("_metrics.json","")
-    acc=m.get("accuracy"); f1=m.get("f1") or m.get("macro_f1"); auc=m.get("auc") or m.get("macro_auc")
-    print(f"{name:28s}  Accuracy={fmt(acc)}  F1={fmt(f1)}  AUC={fmt(auc)}")
+    m = json.load(open(f))
+    name = os.path.basename(f).replace("_metrics.json","")
+    a = m.get("accuracy"); f1v = m.get("f1") or m.get("macro_f1"); aucv = m.get("auc") or m.get("macro_auc")
+    print(f"{name:28s}  Accuracy={fmt(a)}  F1={fmt(f1v)}  AUC={fmt(aucv)}")
 PY
 ```
 Note: We ship a precomputed file outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scale + TenCrop + hflip TTA with simple temperature/bias calibration on the validation split). The snippet above will automatically use it, recompute densenet121_ham10000_metrics.json, and then recompute the ensemble. If that file is removed, the script will fall back to the raw DenseNet outputs produced by scripts/eval_all.sh.
