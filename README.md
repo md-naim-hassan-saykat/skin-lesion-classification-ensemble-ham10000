@@ -1,5 +1,5 @@
 # Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification
-*Validated internally on HAM10000 and externally on ISIC 2019*
+*Internal and External Validation on HAM10000 and ISIC 2019*
 
 [![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
