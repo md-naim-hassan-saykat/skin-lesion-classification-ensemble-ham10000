@@ -305,7 +305,7 @@ If you use this work, please cite the Zenodo preprint:
 ```bibtex
 @misc{saykat2025zenodo,
   author       = {Hassan, Md Naim},
-  title        = {Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019},
+  title        = {Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019},
   year         = {2025},
   doi          = {10.5281/zenodo.17390952},
   url          = {https://doi.org/10.5281/zenodo.17390952},
