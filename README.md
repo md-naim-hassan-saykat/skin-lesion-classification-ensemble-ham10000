@@ -152,6 +152,7 @@ find data/HAM10000 -type f -name "*.jpg" | wc -l
 ## Reproducibility: evaluate pre-trained models (copy-paste)
 
 This single block:
+
 	1.	runs the standard repo evaluations,
 	2.	auto-swaps in the shipped DenseNet-121 tuned CSV if present,
 	3.	recomputes DenseNet metrics + the ensemble, and
