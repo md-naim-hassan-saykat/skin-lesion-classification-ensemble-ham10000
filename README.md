@@ -1,5 +1,4 @@
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification
-**_Internal and External Validation on HAM10000 and ISIC 2019_**
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification
 
 [![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
@@ -21,11 +20,10 @@ _A reproducible ensemble deep learning framework for skin lesion classification 
 
 ## Highlights
 
-- **Seven architectures evaluated:** ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large, Vision Transformer (ViT-B/16), and a baseline CNN.
-- **Ensemble fusion** improves generalization and AUC across datasets
-- **Grad-CAM** visualizations for interpretable lesion focus
-- **Pretrained weights, metrics, and outputs** hosted on Zenodo
-- **Reproducible pipeline** via bash or Colab
+	•	Backbones evaluated: ConvNeXt-Tiny, DenseNet-121, EfficientNet-B3 (others explored but excluded from the final ensemble if unstable).
+	•	Simple probability-level ensemble improves macro-F1/AUC and robustness.
+	•	Interpretability: Grad-CAM visualizations confirm lesion-focused attention.
+	•	Reproducibility: All weights, CSVs, and metrics are archived on Zenodo (DOI below) + one-shot evaluation script.
 
 ---
 
@@ -59,6 +57,8 @@ Due to GitHub storage limits, reproducibility assets are hosted on Zenodo:
 - LaTeX tables and figures
 
 **Zenodo DOI:** [https://doi.org/10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+
+Ethics & data use. Experiments rely on public ISIC datasets under their licenses. No additional patient data were collected; this repository contains no identifiable information.
 
 ---
 
@@ -148,7 +148,14 @@ find data/HAM10000 -type f -name "*.jpg" | wc -l
 
 ---
 
-## Reproducibility: Evaluate pretrained models
+## Reproducibility: evaluate pre-trained models (copy-paste)
+
+This single block:
+	1.	runs the standard repo evaluations,
+	2.	auto-swaps in the shipped DenseNet-121 tuned CSV if present,
+	3.	recomputes DenseNet metrics + the ensemble, and
+	4.	prints a compact table for all *_metrics.json.
+
 Run all model evaluations using:
 ```bash
 cd skin-lesion-classification-ensemble-ham10000
@@ -218,7 +225,7 @@ for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
     print(f"{name:28s}  Accuracy={fmt(a)}  F1={fmt(f1v)}  AUC={fmt(aucv)}")
 PY
 ```
-Note: We ship a precomputed file outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scale + TenCrop + hflip TTA with simple temperature/bias calibration on the validation split). The snippet above will automatically use it, recompute densenet121_ham10000_metrics.json, and then recompute the ensemble. If that file is removed, the script will fall back to the raw DenseNet outputs produced by scripts/eval_all.sh.
+We ship outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scale + TenCrop + hflip TTA with light temperature/bias calibration on the validation split). If that file is removed, the pipeline falls back to the raw DenseNet outputs produced by scripts/eval_all.sh.
 
 ---
 
@@ -242,11 +249,9 @@ Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, 
 | ConvNeXt-Tiny          | 0.9790   | 0.9790   | 0.9969 |
 | **Ensemble (avg of 3)**| **0.9210**| **0.8830**| **0.9952** |
 
-*Metrics are read from `outputs/from_zip_eval/*_metrics.json` (and `ensemble_metrics.json`).*
-
-**Notes.**
-- The **ensemble** substantially improves over EfficientNet-B3 and DenseNet-121 and offers strong overall performance, while **ConvNeXt-Tiny** remains the top single model on this split.
-- Using the provided tuned DenseNet CSV is optional; if removed, results fall back to the raw DenseNet outputs produced by `scripts/eval_all.sh`.
+Notes for reviewers
+	•	The tuned DenseNet CSV is a post-hoc calibration on the validation split; we include it to show the best achievable DenseNet performance without retraining. The ensemble is still robust if you delete the tuned CSV.
+	•	ISIC-2019 (external) evaluation and Grad-CAMs are reproduced in the notebook.
 
 ---
 
@@ -260,9 +265,9 @@ Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, 
 
 ---
 
-## Known Issues
-- **MobileNetV3 checkpoint** fails to load (shape mismatches across multiple blocks) — likely trained with a different architecture variant. Marked as TODO (skip in current eval).
-- **ResNet50 / ViT checkpoints** load but perform poorly on this split, so excluded from the default ensemble until retrained/verified.
+## Known issues & limitations
+	•	Some archived checkpoints (e.g., MobileNetV3 variants) show layer mismatches and are excluded from the default ensemble.
+	•	Post-hoc calibration (tuned DenseNet) uses the validation split; it may over-estimate generalization for that backbone. We therefore report the ensemble as the primary model.
 
 ---
 
