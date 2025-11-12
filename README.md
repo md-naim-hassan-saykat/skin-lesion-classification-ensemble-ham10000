@@ -149,7 +149,7 @@ find data/HAM10000 -type f -name "*.jpg" | wc -l
 
 ---
 
-## Reproducibility: evaluate pre-trained models (copy-paste)
+## Reproducibility: evaluate pre-trained models
 
 This single block:
 
