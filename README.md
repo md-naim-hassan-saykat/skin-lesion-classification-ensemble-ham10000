@@ -252,6 +252,7 @@ Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, 
 | **Ensemble (avg of 3)**| **0.9210**| **0.8830**| **0.9952** |
 
 Notes for reviewers
+
 	•	The tuned DenseNet CSV is a post-hoc calibration on the validation split; we include it to show the best achievable DenseNet performance without retraining. The ensemble is still robust if you delete the tuned CSV.
 	•	ISIC-2019 (external) evaluation and Grad-CAMs are reproduced in the notebook.
 
