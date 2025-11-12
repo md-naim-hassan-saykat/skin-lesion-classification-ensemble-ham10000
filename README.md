@@ -130,21 +130,16 @@ After extracting both archives, merge all images and metadata into a single dire
 ### Setup commands
 
 ```bash
-# Navigate to the project root
-cd skin-lesion-classification-ensemble-ham10000
+# Go to the dataset folder
+cd ~/skin-lesion-classification-ensemble-ham10000/data
 
-# Create the target dataset folder
-mkdir -p data/HAM10000
+# Remove duplicates by overwriting into a clean directory
+mkdir HAM10000_clean
+cp -n HAM10000/*.jpg HAM10000_clean/
 
-# Copy extracted image files from both parts (located on Desktop)
-cp ~/Desktop/HAM10000_images_part_1/* data/HAM10000/
-cp ~/Desktop/HAM10000_images_part_2/* data/HAM10000/
-
-# Copy metadata CSV file
-cp ~/Desktop/HAM10000_metadata.csv data/HAM10000/
-
-# Verify that all images were copied correctly
-find data/HAM10000 -type f -name "*.jpg" | wc -l
+# Check the correct count
+cd HAM10000_clean
+ls *.jpg | wc -l
 ```
 
 ---
