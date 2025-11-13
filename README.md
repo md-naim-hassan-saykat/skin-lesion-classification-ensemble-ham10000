@@ -328,7 +328,7 @@ Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, 
 |------------------------|---------:|---------:|-------:|
 | EfficientNet-B3        | 0.6805   | 0.6678   | 0.7118 |
 | ConvNeXt-Tiny          | 0.9790   | 0.9790   | 0.9969 |
-| **Ensemble (avg of 3)**| **0.9210**| **0.9952**| **0.9952** |
+| **Ensemble (avg of 3)**| **0.9210** | **0.8830** | **0.9952** |
 
 **Note.** The helper script in this README assumes that
 `~/Desktop/HAM10000_split/val` uses the same split and ordering as the
