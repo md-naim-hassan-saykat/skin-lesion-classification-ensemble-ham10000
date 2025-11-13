@@ -251,9 +251,9 @@ Kaggle runs out-of-the-box; local/Colab require minor setup.
 
     Kaggle already provides:
 
-	•	GPU acceleration
-	•	All key libraries (PyTorch, timm, torchvision)
-	•	A convenient dataset mount
+    	•	GPU acceleration
+    	•	All key libraries (PyTorch, timm, torchvision)
+    	•	A convenient dataset mount
 
     Expected dataset path:
     ```bash
@@ -262,11 +262,11 @@ Kaggle runs out-of-the-box; local/Colab require minor setup.
 
     Steps:
 
-	1.	Open a new Kaggle Notebook
-	2.	Attach the dataset: Add Data → “HAM10000”
-	3.	Run all cells without modification
+	    1.	Open a new Kaggle Notebook
+	    2.	Attach the dataset: Add Data → “HAM10000”
+	    3.	Run all cells without modification
 
-3. Google Colab
+4. Google Colab
 
     In Colab, install required libraries:
     ```bash
