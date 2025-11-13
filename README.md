@@ -248,6 +248,7 @@ GPU (CUDA/MPS) will be used automatically if available.
 2. Kaggle (recommended, zero changes required)
 
 Kaggle already provides:
+
 	•	GPU acceleration
 	•	All key libraries (PyTorch, timm, torchvision)
 	•	A convenient dataset mount
@@ -256,6 +257,7 @@ Expected dataset path:
 /kaggle/input/skin-cancer-mnist-ham10000/
 
 Steps:
+
 	1.	Open a new Kaggle Notebook
 	2.	Attach the dataset: Add Data → “HAM10000”
 	3.	Run all cells without modification
