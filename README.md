@@ -226,10 +226,53 @@ We ship outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scal
 
 ---
 
-### (Optional) Train or Visualize Locally / in Colab
+### (Optional) Run the Notebook Locally, on Kaggle, or in Google Colab
 
-Open the notebook:
+The main research notebook is available here:
 [`notebooks/skin-lesion-ensemble-classification.ipynb`](notebooks/skin-lesion-ensemble-classification.ipynb)
+
+This notebook can be executed in several environments with minimal adjustments.
+Kaggle runs out-of-the-box; local/Colab require minor setup.
+
+1. Local Environment
+
+Update only the dataset path:
+DATA_DIR = "/path/to/HAM10000/"
+
+If required, install missing dependencies:
+pip install -r requirements.txt
+
+GPU (CUDA/MPS) will be used automatically if available.
+
+
+2. Kaggle (recommended, zero changes required)
+
+Kaggle already provides:
+	•	GPU acceleration
+	•	All key libraries (PyTorch, timm, torchvision)
+	•	A convenient dataset mount
+
+Expected dataset path:
+/kaggle/input/skin-cancer-mnist-ham10000/
+
+Steps:
+	1.	Open a new Kaggle Notebook
+	2.	Attach the dataset: Add Data → “HAM10000”
+	3.	Run all cells without modification
+
+3. Google Colab
+
+In Colab, install required libraries:
+!pip install timm einops grad-cam
+
+Mount Google Drive:
+from google.colab import drive
+drive.mount('/content/drive')
+
+Set your dataset path:
+DATA_DIR = "/content/HAM10000/"
+
+All other notebook cells run normally.
 
 ---
 
