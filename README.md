@@ -241,27 +241,26 @@ Kaggle runs out-of-the-box; local/Colab require minor setup.
     DATA_DIR = "/path/to/HAM10000/"
     ```
 
-If required, install missing dependencies:
+    If required, install missing dependencies:
     ```bash
     pip install -r requirements.txt
     ```
-
-GPU (CUDA/MPS) will be used automatically if available.
+    GPU (CUDA/MPS) will be used automatically if available.
 
 2. Kaggle (recommended, zero changes required)
 
-Kaggle already provides:
+    Kaggle already provides:
 
 	•	GPU acceleration
 	•	All key libraries (PyTorch, timm, torchvision)
 	•	A convenient dataset mount
 
-Expected dataset path:
+    Expected dataset path:
     ```bash
     /kaggle/input/skin-cancer-mnist-ham10000/
     ```
 
-Steps:
+    Steps:
 
 	1.	Open a new Kaggle Notebook
 	2.	Attach the dataset: Add Data → “HAM10000”
@@ -269,18 +268,18 @@ Steps:
 
 3. Google Colab
 
-In Colab, install required libraries:
+    In Colab, install required libraries:
     ```bash
     !pip install timm einops grad-cam
     ```
 
-Mount Google Drive:
+    Mount Google Drive:
     ```bash
     from google.colab import drive
     drive.mount('/content/drive')
     ```
 
-Set your dataset path:
+    Set your dataset path:
     ```bash
     DATA_DIR = "/content/HAM10000/"
     ```
