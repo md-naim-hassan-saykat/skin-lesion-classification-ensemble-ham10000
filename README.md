@@ -237,13 +237,16 @@ Kaggle runs out-of-the-box; local/Colab require minor setup.
 1. Local Environment
 
 Update only the dataset path:
+```bash
 DATA_DIR = "/path/to/HAM10000/"
+```
 
 If required, install missing dependencies:
+```bash
 pip install -r requirements.txt
+```
 
 GPU (CUDA/MPS) will be used automatically if available.
-
 
 2. Kaggle (recommended, zero changes required)
 
@@ -254,7 +257,9 @@ Kaggle already provides:
 	•	A convenient dataset mount
 
 Expected dataset path:
+```bash
 /kaggle/input/skin-cancer-mnist-ham10000/
+```
 
 Steps:
 
@@ -265,14 +270,20 @@ Steps:
 3. Google Colab
 
 In Colab, install required libraries:
+```bash
 !pip install timm einops grad-cam
+```
 
 Mount Google Drive:
+```bash
 from google.colab import drive
 drive.mount('/content/drive')
+```
 
 Set your dataset path:
+```bash
 DATA_DIR = "/content/HAM10000/"
+```
 
 All other notebook cells run normally.
 
