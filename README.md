@@ -229,7 +229,7 @@ We ship outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scal
 ### (Optional) Run the Notebook Locally, on Kaggle, or in Google Colab
 
 The main research notebook is available here:
-[`notebooks/skin-lesion-ensemble-classification.ipynb`](notebooks/skin-lesion-ensemble-classification.ipynb)
+[`notebooks/skin_lesion_ensemble_classification.ipynb`](notebooks/skin_lesion_ensemble_classification.ipynb)
 
 This notebook can be executed in several environments with minimal adjustments.
 Kaggle runs out-of-the-box; local/Colab require minor setup.
@@ -285,7 +285,7 @@ Set your dataset path:
 DATA_DIR = "/content/HAM10000/"
 ```
 
-All other notebook cells run normally.
+All other notebook cells should run normally.
 
 ---
 
