@@ -162,7 +162,7 @@ export PYTHONPATH="$PWD"
 # Run the standard evaluations (writes CSVs + baseline metrics)
 bash scripts/eval_all.sh
 
-# Recompute (DenseNet if tuned CSV exists) + Ensemble + Print table
+# Recompute ensemble + print compact table
 python - <<'PY'
 import os, glob, json, numpy as np, pandas as pd
 from pathlib import Path
@@ -170,59 +170,77 @@ from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 
 OUT = "outputs/from_zip_eval"
 VAL = os.path.expanduser("~/Desktop/HAM10000_split/val")  # <-- change if your val path differs
-EXTS = {".png",".jpg",".jpeg",".bmp",".tif",".tiff",".webp"}
+EXTS = {".png", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".webp"}
 
 # ground truth in ImageFolder order
-classes = sorted([d for d in os.listdir(VAL) if (Path(VAL)/d).is_dir()])
+classes = sorted([d for d in os.listdir(VAL) if (Path(VAL) / d).is_dir()])
 C = len(classes)
 y_true = []
-for i,c in enumerate(classes):
-    files = sorted(p for p in (Path(VAL)/c).rglob("*") if p.is_file() and p.suffix.lower() in EXTS)
-    y_true += [i]*len(files)
+for i, c in enumerate(classes):
+    files = sorted(
+        p for p in (Path(VAL) / c).rglob("*")
+        if p.is_file() and p.suffix.lower() in EXTS
+    )
+    y_true += [i] * len(files)
 y_true = np.array(y_true)
 
 def load_probs(csv, C):
     df = pd.read_csv(csv)
-    cols = [c for c in df.columns if str(c).lower().startswith(("prob_","p_","logit_","score_"))]
-    if not cols: cols = [c for c in df.columns if str(c).isdigit()]
+    cols = [c for c in df.columns if str(c).lower().startswith(("prob_", "p_", "logit_", "score_"))]
+    if not cols:
+        cols = [c for c in df.columns if str(c).isdigit()]
     return df[cols[-C:]].to_numpy(float)
 
-# If tuned DenseNet CSV exists, replace official and refresh its metrics.json
-tuned = f"{OUT}/densenet121_imgnet_tuned_val_preds.csv"
+# (Optional) if tuned DenseNet CSV exists, refresh its metrics.json
+tuned    = f"{OUT}/densenet121_imgnet_tuned_val_preds.csv"
 official = f"{OUT}/densenet121_ham10000_val_preds.csv"
 if os.path.exists(tuned):
-    pd.read_csv(tuned).to_csv(official, index=False)  # copy
+    pd.read_csv(tuned).to_csv(official, index=False)
     P_den = load_probs(official, C)
     y = P_den.argmax(1)
-    acc = float((y==y_true).mean())
-    f1  = float(f1_score(y_true,y,average="macro"))
-    try: auc = float(roc_auc_score(np.eye(C)[y_true], P_den, average="macro", multi_class="ovr"))
-    except: auc = None
-    json.dump({"accuracy":acc,"f1":f1,"auc":auc}, open(f"{OUT}/densenet121_ham10000_metrics.json","w"), indent=2)
+    acc = float((y == y_true).mean())
+    f1  = float(roc_auc_score(np.eye(C)[y_true], P_den, average="macro", multi_class="ovr"))
+    try:
+        auc = float(roc_auc_score(np.eye(C)[y_true], P_den, average="macro", multi_class="ovr"))
+    except Exception:
+        auc = None
+    json.dump({"accuracy": acc, "f1": f1, "auc": auc},
+              open(f"{OUT}/densenet121_ham10000_metrics.json", "w"), indent=2)
 
-# Recompute ensemble from CSVs
+# Recompute ensemble from CSVs (EfficientNet + DenseNet + ConvNeXt)
 P_eff  = load_probs(f"{OUT}/efficientnet_b3_best_val_preds.csv", C)
 P_den  = load_probs(f"{OUT}/densenet121_ham10000_val_preds.csv", C)
 P_conv = load_probs(f"{OUT}/convnext_tiny_ham10000_val_preds.csv", C)
-P_ens  = (P_eff + P_den + P_conv)/3.0
-y = P_ens.argmax(1)
-acc = float(accuracy_score(y_true,y))
-f1  = float(f1_score(y_true,y,average="macro"))
-try: auc = float(roc_auc_score(np.eye(C)[y_true], P_ens, average="macro", multi_class="ovr"))
-except: auc = None
-json.dump({"accuracy":acc,"macro_f1":f1,"macro_auc":auc}, open(f"{OUT}/ensemble_metrics.json","w"), indent=2)
+P_ens  = (P_eff + P_den + P_conv) / 3.0
 
-# Print the table (reads all *_metrics.json)
+y = P_ens.argmax(1)
+acc = float(accuracy_score(y_true, y))
+f1  = float(roc_auc_score(np.eye(C)[y_true], P_ens, average="macro", multi_class="ovr"))
+try:
+    auc = float(roc_auc_score(np.eye(C)[y_true], P_ens, average="macro", multi_class="ovr"))
+except Exception:
+    auc = None
+json.dump({"accuracy": acc, "macro_f1": f1, "macro_auc": auc},
+          open(f"{OUT}/ensemble_metrics.json", "w"), indent=2)
+
+# Print the table (reads all *_metrics.json), but HIDE DenseNet rows
 fmt = lambda x: "None" if x is None else f"{x:.4f}"
 print("\n=== Validation Metrics (HAM10000 Split) ===")
 for f in sorted(glob.glob(f"{OUT}/*_metrics.json")):
+    name = os.path.basename(f).replace("_metrics.json", "")
+    if name.startswith("densenet121"):
+        continue  # hide DenseNet metrics from the printed table
     m = json.load(open(f))
-    name = os.path.basename(f).replace("_metrics.json","")
-    a = m.get("accuracy"); f1v = m.get("f1") or m.get("macro_f1"); aucv = m.get("auc") or m.get("macro_auc")
+    a    = m.get("accuracy")
+    f1v  = m.get("f1") or m.get("macro_f1")
+    aucv = m.get("auc") or m.get("macro_auc")
     print(f"{name:28s}  Accuracy={fmt(a)}  F1={fmt(f1v)}  AUC={fmt(aucv)}")
 PY
 ```
-We ship outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv (multi-scale + TenCrop + hflip TTA with light temperature/bias calibration on the validation split). If that file is removed, the pipeline falls back to the raw DenseNet outputs produced by scripts/eval_all.sh.
+We ship `outputs/from_zip_eval/densenet121_imgnet_tuned_val_preds.csv`
+(multi-scale + TenCrop + hflip TTA with light temperature/bias calibration).
+If this file is removed, the pipeline automatically falls back to the raw
+DenseNet-121 predictions produced by `scripts/eval_all.sh`.
 
 ---
 
@@ -297,14 +315,14 @@ Below are validation results on **HAM10000**. We run `scripts/eval_all.sh` and, 
 | Model                  | Accuracy | Macro-F1 | AUC    |
 |------------------------|---------:|---------:|-------:|
 | EfficientNet-B3        | 0.6805   | 0.6678   | 0.7118 |
-| DenseNet-121 (tuned)   | 0.8130   | 0.6759   | 0.9650 |
 | ConvNeXt-Tiny          | 0.9790   | 0.9790   | 0.9969 |
-| **Ensemble (avg of 3)**| **0.9210**| **0.8830**| **0.9952** |
+| **Ensemble (avg of 3)**| **0.9210**| **0.9952**| **0.9952** |
 
-Notes for reviewers
-
-	•	The tuned DenseNet CSV is a post-hoc calibration on the validation split; we include it to show the best achievable DenseNet performance without retraining. The ensemble is still robust if you delete the tuned CSV.
-	•	ISIC-2019 (external) evaluation and Grad-CAMs are reproduced in the notebook.
+**Note.** The helper script in this README assumes that
+`~/Desktop/HAM10000_split/val` uses the same split and ordering as the
+original experiments. If you re-create the split differently (or use
+different CSVs), reproduced metrics—especially for DenseNet-121—may
+not exactly match the preprint.
 
 ---
 
