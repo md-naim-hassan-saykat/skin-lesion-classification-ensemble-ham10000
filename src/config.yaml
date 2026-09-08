@@ -1,24 +1,97 @@
 seed: 42
 num_classes: 7
-image_size: 224
-output:
-  dir: outputs
-model:
-  name: convnext_tiny
+
+canonical_classes:
+  - akiec
+  - bcc
+  - bkl
+  - df
+  - mel
+  - nv
+  - vasc
+
+evaluation:
+  cohort_size_ham10000: 2003
+  bootstrap_resamples: 1000
+  bootstrap_seed: 42
+  ece_bins: 15
+
+  # Reported HAM10000 metrics:
+  # accuracy, weighted F1, macro ROC-AUC, micro ROC-AUC
+  ham10000_auc_averages:
+    - macro
+    - micro
+
+  # Reported ISIC 2019 metrics:
+  # accuracy, weighted F1, macro ROC-AUC, weighted ROC-AUC
+  isic2019_auc_averages:
+    - macro
+    - weighted
+
+ensemble:
+  method: probability_mean
+  expected_models: 7
+  models:
+    - cnn
+    - resnet50
+    - densenet121
+    - efficientnet_b3
+    - convnext_tiny
+    - mobilenet_v3_large
+    - vit_b_16
+
+# Historical class-order permutations must be filled from the archived
+# evaluation audit/checkpoint metadata. Do not guess these values.
+#
+# Each list means:
+# canonical_probs = raw_probs[:, permutation]
+#
+# Identity order:
+# [0, 1, 2, 3, 4, 5, 6]
+output_permutations:
+  cnn: [0, 1, 2, 3, 4, 5, 6]
+  densenet121: [0, 1, 2, 3, 4, 5, 6]
+  efficientnet_b3: [0, 1, 2, 3, 4, 5, 6]
+  convnext_tiny: [0, 1, 2, 3, 4, 5, 6]
+  mobilenet_v3_large: [0, 1, 2, 3, 4, 5, 6]
+
+  # REQUIRED: replace with audited historical permutations.
+  resnet50: null
+  vit_b_16: null
+
+# These defaults are provided for repository execution only.
+# For reproduction of the reported manuscript predictions, use the
+# exact preprocessing associated with each archived checkpoint.
+preprocessing:
+  cnn:
+    image_size: 224
+  resnet50:
+    image_size: 224
+  densenet121:
+    image_size: 224
+  efficientnet_b3:
+    image_size: 224
+  convnext_tiny:
+    image_size: 224
+  mobilenet_v3_large:
+    image_size: 224
+  vit_b_16:
+    image_size: 224
+
 data:
   root: data/HAM10000/trainval
-  num_classes: 7
-  image_size: 224
-  batch_size: 16
+  batch_size: 32
   num_workers: 2
+
+output:
+  dir: outputs
+
 train:
-  epochs: 1
-  batch_size: 16
-  lr: 3e-4
-  weight_decay: 1e-4
-  scheduler: cosine
-  mixed_precision: true
-paths:
-  checkpoints_dir: checkpoints
-  logs_dir: outputs/logs
-  run_name: quickstart
+  # Quick-start training settings only.
+  # These do not claim to reproduce the seven historical archived runs.
+  epochs: 50
+  batch_size: 32
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  early_stop_patience: 7
+  pretrained: true
