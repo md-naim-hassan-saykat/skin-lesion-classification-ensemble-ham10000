@@ -3,7 +3,6 @@
 # --------------------------------------------------------------
 # Handles large/binary files efficiently and enforces consistent
 # line endings for code and documentation.
-
 # === Use Git LFS for large or binary files ===
 *.ipynb  filter=lfs diff=lfs merge=lfs -text
 *.pth    filter=lfs diff=lfs merge=lfs -text
@@ -32,3 +31,4 @@
 *.tar    binary
 *.gz     binary
 notebooks/*.ipynb !text !filter !merge !diff
+results/figures/*.png filter=lfs diff=lfs merge=lfs -text
