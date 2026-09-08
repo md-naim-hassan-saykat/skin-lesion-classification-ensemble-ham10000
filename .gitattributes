@@ -1,34 +1,46 @@
 # ==============================================================
-# Git LFS Configuration for Skin Lesion Ensemble Project
-# --------------------------------------------------------------
-# Handles large/binary files efficiently and enforces consistent
-# line endings for code and documentation.
-# === Use Git LFS for large or binary files ===
-*.ipynb  filter=lfs diff=lfs merge=lfs -text
+# .gitattributes
+# Skin Lesion Classification Ensemble — HAM10000 & ISIC 2019
+#
+# Git LFS is reserved for genuinely large/binary research assets.
+# Human-readable source, configuration, metadata, and result tables
+# remain in regular Git so they can be viewed and diffed on GitHub.
+# ==============================================================
+
+# === Large model/checkpoint files: Git LFS ===
 *.pth    filter=lfs diff=lfs merge=lfs -text
 *.pt     filter=lfs diff=lfs merge=lfs -text
-*.onnx   filter=lfs diff=lfs merge=lfs -text
 *.ckpt   filter=lfs diff=lfs merge=lfs -text
-# === Dataset and Output Files ===
-*.csv    filter=lfs diff=lfs merge=lfs -text
-*.json   filter=lfs diff=lfs merge=lfs -text
+*.onnx   filter=lfs diff=lfs merge=lfs -text
+
+# === Numerical binary arrays: Git LFS ===
 *.npy    filter=lfs diff=lfs merge=lfs -text
-# === Image and Visualization Assets ===
+*.npz    filter=lfs diff=lfs merge=lfs -text
+
+# === Binary figure/image assets: Git LFS ===
 *.png    filter=lfs diff=lfs merge=lfs -text
 *.jpg    filter=lfs diff=lfs merge=lfs -text
 *.jpeg   filter=lfs diff=lfs merge=lfs -text
-*.svg    filter=lfs diff=lfs merge=lfs -text
-# === Enforce LF Line Endings for Code and Text Files ===
+
+# === Text/source files: regular Git with LF endings ===
 *.py     text eol=lf
 *.sh     text eol=lf
 *.yml    text eol=lf
 *.yaml   text eol=lf
+*.json   text eol=lf
+*.csv    text eol=lf
+*.tsv    text eol=lf
 *.md     text eol=lf
 *.txt    text eol=lf
-*.json   text eol=lf
-# === Exclude Binary Archives from Automatic Diffs ===
+*.svg    text eol=lf
+*.tex    text eol=lf
+*.toml   text eol=lf
+
+# === Jupyter notebooks ===
+# Keep notebooks in regular Git so GitHub can render them.
+*.ipynb  text eol=lf
+
+# === Binary archives ===
 *.zip    binary
 *.tar    binary
 *.gz     binary
-notebooks/*.ipynb !text !filter !merge !diff
-results/figures/*.png filter=lfs diff=lfs merge=lfs -text
