@@ -1,71 +1,103 @@
-# General .gitignore for Deep Learning Projects
+# ==============================================================
+# .gitignore
+# Skin Lesion Classification Ensemble — HAM10000 & ISIC 2019
+#
+# Excludes local datasets, generated outputs, model checkpoints,
+# environments, caches, and temporary files while preserving
+# curated reproducibility artifacts committed under results/.
+# ==============================================================
 
-# Data & Outputs
+# === Local datasets ===
 data/
 datasets/
+
+# === Generated outputs and logs ===
 outputs/
-results/
 logs/
+
+# === Model checkpoints ===
 checkpoints/
-
-# Python Build/Cache
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-*.egg-info/
-build/
-dist/
-
-# Virtual Environments
-.venv/
-env/
-venv/
-
-# Large or Accidental Artifacts
 *.pth
 *.pt
 *.ckpt
 *.onnx
-*.csv
-*.xlsx
+*.h5
+
+# === Large/local numerical artifacts ===
 *.npy
 *.npz
+*.xlsx
+
+# === Archives ===
 *.zip
 *.tar
 *.tar.gz
-*.h5
+*.gz
 
-# Image and Visualization Artifacts
+# === Generated image/document artifacts ===
 *.png
 *.jpg
 *.jpeg
 *.pdf
 
-# IDE / Editor Settings
+# === Result directory ===
+# Ignore generated results by default, but preserve curated
+# manuscript tables and figures committed for reproducibility.
+results/*
+!results/tables/
+!results/figures/
+
+results/tables/*
+!results/tables/*.csv
+!results/tables/*.tex
+
+results/figures/*
+!results/figures/*.png
+!results/figures/*.svg
+!results/figures/*.pdf
+
+# === CSV files ===
+# Ignore arbitrary/generated CSV files elsewhere in the project.
+*.csv
+
+# Allow curated manuscript result tables.
+!results/tables/*.csv
+
+# === Python cache/build artifacts ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# === Virtual environments ===
+.venv/
+venv/
+env/
+
+# === Jupyter ===
+.ipynb_checkpoints/
+
+# === IDE/editor files ===
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# OS-Specific Files
+# === Operating-system files ===
 .DS_Store
 Thumbs.db
 
-# Temporary or Backup Files
+# === Temporary/backup files ===
 *.bak
 *.tmp
 
-# Local Project Copies
-skin-lesion-classification-ensemble-ham10000/
+# === Local testing/configuration ===
 pytest.local.ini
-pytest.local.ini
-<<<<<<< Updated upstream
-.coverage
-=======
 
-# editor/backup junk
-*.bak
-*~
->>>>>>> Stashed changes
-.ipynb_checkpoints/
+# === Accidental nested repository copy ===
+skin-lesion-classification-ensemble-ham10000/
