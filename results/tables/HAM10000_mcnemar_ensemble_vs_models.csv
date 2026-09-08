@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:84ed919c8e55f04e2263096a467eb211e66140257a8f27c8e0b8c3cc0dea99fe
-size 661
+Model,"b (Model wrong, Ensemble correct)","c (Model correct, Ensemble wrong)",Disagreements (b+c),Chi-square,p-value,Significance,Direction
+CNN,322,24,346,254.93930635838151,2.176043362031653e-57,***,Ensemble
+ResNet-50,540,32,572,449.3863636363636,9.809797288984139e-100,***,Ensemble
+DenseNet-121,137,17,154,91.95454545454545,8.86904175115787e-22,***,Ensemble
+EfficientNet-B3,100,22,122,48.59836065573771,3.1413169866547386e-12,***,Ensemble
+ConvNeXt-Tiny,84,32,116,22.42241379310345,2.1880560706933413e-06,***,Ensemble
+MobileNetV3-L,175,15,190,133.05789473684212,8.781328499225416e-31,***,Ensemble
+ViT,47,88,135,11.851851851851851,0.0005760403386062825,***,ViT

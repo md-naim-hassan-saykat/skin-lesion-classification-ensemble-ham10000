@@ -17,12 +17,12 @@
 *.npy    filter=lfs diff=lfs merge=lfs -text
 *.npz    filter=lfs diff=lfs merge=lfs -text
 
-# === Binary figure/image assets: Git LFS ===
+# === Binary image assets: Git LFS ===
 *.png    filter=lfs diff=lfs merge=lfs -text
 *.jpg    filter=lfs diff=lfs merge=lfs -text
 *.jpeg   filter=lfs diff=lfs merge=lfs -text
 
-# === Text/source files: regular Git with LF endings ===
+# === Human-readable text files: regular Git ===
 *.py     text eol=lf
 *.sh     text eol=lf
 *.yml    text eol=lf
@@ -37,7 +37,6 @@
 *.toml   text eol=lf
 
 # === Jupyter notebooks ===
-# Keep notebooks in regular Git so GitHub can render them.
 *.ipynb  text eol=lf
 
 # === Binary archives ===
