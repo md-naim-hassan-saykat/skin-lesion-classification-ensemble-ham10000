@@ -1,8 +1,7 @@
-# src/evaluate.py
 from __future__ import annotations
 
-# ruff: noqa: E402  # allow imports after the path shim
-# --- path shim (lets `python src/xyz.py` import `src.*`) ---
+# ruff: noqa: E402
+
 import sys
 from pathlib import Path as _P
 
@@ -10,141 +9,384 @@ from pathlib import Path as _P
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(_PROJECT_ROOT))
-# -----------------------------------------------------------
 
-# stdlib/third-party
 import argparse
+import csv
+import json
+from pathlib import Path
 
 import numpy as np
+import torch
+from torch.utils.data import DataLoader
+from torchvision import datasets, transforms
 
-
-# Optional heavy deps: only required when actually running evaluation
-try:
-    import torch  # type: ignore
-    from torchvision import datasets, transforms  # type: ignore
-except Exception:  # pragma: no cover
-    torch = None
-    datasets = None
-    transforms = None
-
-# internal (utils is safe; it guards torch usage inside functions)
+from src.models import get_model
 from src.utils import compute_metrics, save_json
 
 
-def _device():
-    if torch is None:
-        raise RuntimeError(
-            "PyTorch not installed. Install 'torch'/'torchvision' or use --help only."
-        )
+CANONICAL_CLASSES = [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc",
+]
+
+
+def best_device() -> torch.device:
     if torch.cuda.is_available():
         return torch.device("cuda")
-    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
+
+    if (
+        getattr(torch.backends, "mps", None)
+        and torch.backends.mps.is_available()
+    ):
         return torch.device("mps")
+
     return torch.device("cpu")
 
 
-def _tfms(img_size: int):
-    if transforms is None:  # extra safety if someone calls this directly
-        raise RuntimeError("torchvision not available")
+def build_eval_transform(
+    model_name: str,
+    image_size: int,
+) -> transforms.Compose:
+    """
+    Generic repository evaluation transform.
+
+    IMPORTANT:
+    The manuscript used the preprocessing pipeline associated with each
+    archived checkpoint. If a checkpoint used different resize/crop or
+    normalization parameters, reproduce those exact parameters here.
+    """
+
     return transforms.Compose(
         [
-            transforms.Resize((img_size, img_size)),
+            transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
         ]
     )
 
 
-def _safe_load(model: torch.nn.Module, ckpt_path: str, device: torch.device) -> None:
-    """Load only weights that exist in model AND match shape (drops 1000-class heads)."""
-    state = torch.load(ckpt_path, map_location=device)
-    raw = state["model"] if isinstance(state, dict) and "model" in state else state
-    msd = model.state_dict()
-    filt = {k: v for k, v in raw.items() if k in msd and msd[k].shape == v.shape}
-    missing, unexpected = model.load_state_dict(filt, strict=False)
-    if missing or unexpected or len(filt) != len(raw):
-        print(
-            f"[safe_load] kept={len(filt)} dropped={len(raw)-len(filt)} "
-            f"missing={len(missing)} unexpected={len(unexpected)}"
+def clean_state_dict(state: dict) -> dict:
+    cleaned = {}
+
+    for key, value in state.items():
+        k = key
+
+        for prefix in (
+            "module.",
+            "model.",
+            "net.",
+        ):
+            if k.startswith(prefix):
+                k = k[len(prefix):]
+
+        cleaned[k] = value
+
+    return cleaned
+
+
+def load_checkpoint_strict(
+    model: torch.nn.Module,
+    checkpoint: str,
+    device: torch.device,
+) -> None:
+    """
+    Load a checkpoint without silently discarding unmatched learned parameters.
+    """
+
+    raw = torch.load(
+        checkpoint,
+        map_location=device,
+    )
+
+    if isinstance(raw, dict):
+        if "model" in raw and isinstance(raw["model"], dict):
+            raw = raw["model"]
+        elif "state_dict" in raw and isinstance(raw["state_dict"], dict):
+            raw = raw["state_dict"]
+
+    if not isinstance(raw, dict):
+        raise TypeError(
+            f"Unsupported checkpoint format: {type(raw)}"
         )
 
+    state = clean_state_dict(raw)
 
-@torch.no_grad()
-def evaluate_once(
-    checkpoint: str, data_dir: str, model_name: str, num_classes: int, image_size: int
-):
-    """Run evaluation once and return metrics dict."""
-    if torch is None or datasets is None or transforms is None:
+    try:
+        model.load_state_dict(
+            state,
+            strict=True,
+        )
+    except RuntimeError as exc:
         raise RuntimeError(
-            "PyTorch/torchvision not available; cannot run evaluation. "
-            "Use --help without them, or install the deps."
-        )
-    # Lazy import with local alias (prevents import-time failures on systems without torch)
-    from src.models import get_model as _get_model
+            "\nCheckpoint does not exactly match the selected architecture.\n"
+            "Do not silently drop checkpoint parameters for manuscript evaluation.\n"
+            f"Checkpoint: {checkpoint}\n"
+            f"Model: {model.__class__.__name__}\n\n"
+            f"{exc}"
+        ) from exc
 
-    device = _device()
-    model = _get_model(model_name, num_classes=num_classes).to(device)
-    _safe_load(model, checkpoint, device)
+
+def validate_imagefolder_classes(
+    ds: datasets.ImageFolder,
+) -> None:
+    if ds.classes != CANONICAL_CLASSES:
+        raise ValueError(
+            "ImageFolder class ordering is not canonical.\n"
+            f"Expected: {CANONICAL_CLASSES}\n"
+            f"Found:    {ds.classes}"
+        )
+
+
+def parse_permutation(value: str | None) -> list[int]:
+    if value is None:
+        return list(range(7))
+
+    permutation = [
+        int(x.strip())
+        for x in value.split(",")
+    ]
+
+    if sorted(permutation) != list(range(7)):
+        raise ValueError(
+            "Permutation must contain every index 0..6 exactly once."
+        )
+
+    return permutation
+
+
+def run_inference(
+    model: torch.nn.Module,
+    loader: DataLoader,
+    device: torch.device,
+    permutation: list[int],
+) -> tuple[np.ndarray, np.ndarray]:
+    y_true = []
+    probabilities = []
+
     model.eval()
 
-    ds = datasets.ImageFolder(data_dir, transform=_tfms(image_size))
-    dl = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
+    with torch.no_grad():
+        for images, labels in loader:
+            images = images.to(device)
 
-    y_true, y_pred, probs = [], [], []
-    for imgs, labels in dl:
-        logits = model(imgs.to(device))
-        p = torch.softmax(logits, dim=1).cpu().numpy()
-        probs.append(p)
-        y_true.extend(labels.numpy())
-        y_pred.extend(p.argmax(1))
-    y_true = np.array(y_true)
-    y_pred = np.array(y_pred)
-    y_prob = np.concatenate(probs, axis=0)
-    return compute_metrics(y_true, y_pred, y_prob=y_prob)
+            logits = model(images)
 
+            if logits.ndim != 2 or logits.shape[1] != 7:
+                raise ValueError(
+                    f"Expected model output (N, 7), got {tuple(logits.shape)}"
+                )
 
-def main():
-    ap = argparse.ArgumentParser(
-        description="Evaluate a single checkpoint on an ImageFolder validation set."
+            p = torch.softmax(
+                logits,
+                dim=1,
+            ).cpu().numpy()
+
+            p = p[:, permutation]
+
+            probabilities.append(p)
+            y_true.extend(
+                labels.numpy().astype(int).tolist()
+            )
+
+    return (
+        np.asarray(y_true, dtype=int),
+        np.concatenate(probabilities, axis=0),
     )
-    ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--data_dir", required=True)
-    ap.add_argument("--model", required=True)
-    ap.add_argument("--num_classes", type=int, default=7)
-    ap.add_argument("--image_size", type=int, default=224)
-    ap.add_argument("--out", required=True)
-    ap.add_argument("--save_csv", default=None)
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(
+        description=(
+            "Evaluate one archived checkpoint using canonical seven-class outputs."
+        )
+    )
+
+    ap.add_argument(
+        "--checkpoint",
+        required=True,
+    )
+    ap.add_argument(
+        "--data_dir",
+        required=True,
+    )
+    ap.add_argument(
+        "--model",
+        required=True,
+    )
+    ap.add_argument(
+        "--dataset",
+        choices=["ham10000", "isic2019"],
+        default="ham10000",
+    )
+    ap.add_argument(
+        "--num_classes",
+        type=int,
+        default=7,
+    )
+    ap.add_argument(
+        "--image_size",
+        type=int,
+        default=224,
+    )
+    ap.add_argument(
+        "--batch_size",
+        type=int,
+        default=32,
+    )
+    ap.add_argument(
+        "--num_workers",
+        type=int,
+        default=2,
+    )
+    ap.add_argument(
+        "--output_permutation",
+        default=None,
+        help=(
+            "Comma-separated mapping from raw checkpoint output columns "
+            "to canonical order. Example: 0,1,2,3,4,5,6"
+        ),
+    )
+    ap.add_argument(
+        "--out",
+        required=True,
+    )
+    ap.add_argument(
+        "--save_csv",
+        default=None,
+    )
+
     args = ap.parse_args()
 
-    metrics = evaluate_once(
-        args.checkpoint, args.data_dir, args.model, args.num_classes, args.image_size
+    if args.num_classes != 7:
+        raise ValueError(
+            "This study uses exactly seven canonical classes."
+        )
+
+    permutation = parse_permutation(
+        args.output_permutation
     )
-    save_json(metrics, args.out)
+
+    device = best_device()
+
+    model = get_model(
+        args.model,
+        num_classes=7,
+        pretrained=False,
+    ).to(device)
+
+    load_checkpoint_strict(
+        model,
+        args.checkpoint,
+        device,
+    )
+
+    transform = build_eval_transform(
+        args.model,
+        args.image_size,
+    )
+
+    ds = datasets.ImageFolder(
+        args.data_dir,
+        transform=transform,
+    )
+
+    validate_imagefolder_classes(ds)
+
+    loader = DataLoader(
+        ds,
+        batch_size=args.batch_size,
+        shuffle=False,
+        num_workers=args.num_workers,
+    )
+
+    y_true, y_prob = run_inference(
+        model,
+        loader,
+        device,
+        permutation,
+    )
+
+    metrics = compute_metrics(
+        y_true,
+        y_prob=y_prob,
+        dataset=args.dataset,
+        ece_bins=15,
+    )
+
+    metrics.update(
+        {
+            "samples": int(len(y_true)),
+            "model": args.model,
+            "dataset": args.dataset,
+            "canonical_classes": CANONICAL_CLASSES,
+            "output_permutation": permutation,
+            "checkpoint": str(args.checkpoint),
+        }
+    )
+
+    save_json(
+        metrics,
+        args.out,
+    )
 
     if args.save_csv:
-        import csv
+        p = Path(args.save_csv)
+        p.parent.mkdir(
+            parents=True,
+            exist_ok=True,
+        )
 
-        # Lazy import here as well with a local alias
-        from src.models import get_model as _get_model
+        with p.open(
+            "w",
+            newline="",
+            encoding="utf-8",
+        ) as f:
+            writer = csv.writer(f)
 
-        device = _device()
-        model = _get_model(args.model, num_classes=args.num_classes).to(device)
-        _safe_load(model, args.checkpoint, device)
-        model.eval()
+            writer.writerow(
+                ["sample_index", "y_true"]
+                + [
+                    f"p_{c}"
+                    for c in CANONICAL_CLASSES
+                ]
+            )
 
-        ds = datasets.ImageFolder(args.data_dir, transform=_tfms(args.image_size))
-        dl = torch.utils.data.DataLoader(ds, batch_size=32, shuffle=False, num_workers=2)
+            for idx, (target, probs) in enumerate(
+                zip(
+                    y_true,
+                    y_prob,
+                    strict=True,
+                )
+            ):
+                writer.writerow(
+                    [
+                        idx,
+                        int(target),
+                        *[
+                            f"{float(x):.10f}"
+                            for x in probs
+                        ],
+                    ]
+                )
 
-        with open(args.save_csv, "w", newline="") as f:
-            w = csv.writer(f)
-            w.writerow(["y_true"] + [f"p_{i}" for i in range(args.num_classes)])
-            with torch.no_grad():
-                for imgs, labels in dl:
-                    logits = model(imgs.to(device))
-                    p = torch.softmax(logits, dim=1).detach().cpu().numpy().tolist()
-                    for t, row in zip(labels.numpy().astype(int).tolist(), p, strict=False):
-                        w.writerow([t] + [f"{float(x):.8f}" for x in row])
-        print(f"[csv] wrote {args.save_csv}")
+        print(
+            f"[csv] wrote {args.save_csv}"
+        )
+
+    print(
+        json.dumps(
+            metrics,
+            indent=2,
+        )
+    )
 
 
 if __name__ == "__main__":
