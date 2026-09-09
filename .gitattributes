@@ -53,18 +53,18 @@
 # -----------------------------------------------------------------------------
 # Binary images and documents — regular Git
 # -----------------------------------------------------------------------------
-*.png    -text
-*.jpg    -text
-*.jpeg   -text
-*.gif    -text
-*.webp   -text
-*.tif    -text
-*.tiff   -text
-*.pdf    -text
+*.png    binary
+*.jpg    binary
+*.jpeg   binary
+*.gif    binary
+*.webp   binary
+*.tif    binary
+*.tiff   binary
+*.pdf    binary
 
 # -----------------------------------------------------------------------------
 # Binary archives
 # -----------------------------------------------------------------------------
-*.zip    -text
-*.tar    -text
-*.gz     -text
+*.zip    binary
+*.tar    binary
+*.gz     binary
