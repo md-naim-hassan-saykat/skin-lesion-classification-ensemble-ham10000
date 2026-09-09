@@ -12,15 +12,18 @@ Before contributing, please review the repository’s Code of Conduct.
 
 1. Fork the repository to your GitHub account.
 2. Clone your fork locally:
+
 ```
 git clone https://github.com/<your-username>/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
 ```
 3. Create a branch for your contribution:
+
 ```
 git checkout -b feat/my-feature
 ```
-   Use a descriptive branch name such as fix/data-loader, docs/evaluation, or test/ensemble.
+Use a descriptive branch name such as fix/data-loader, docs/evaluation, or test/ensemble.
+
 4. Make your changes while keeping the scope of the contribution focused.
 5. Run the quality checks and tests described below before opening a pull request.
 
