@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
-
 import sys
 from pathlib import Path as _P
-
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
@@ -18,7 +16,6 @@ from pathlib import Path
 import numpy as np
 
 from src.utils import CANONICAL_CLASSES, compute_metrics, save_json
-
 
 EXPECTED_MODELS = [
     "cnn",
@@ -44,10 +41,7 @@ def read_prediction_csv(
     labels = []
     probabilities = []
 
-    expected_prob_columns = [
-        f"p_{c}"
-        for c in CANONICAL_CLASSES
-    ]
+    expected_prob_columns = [f"p_{c}" for c in CANONICAL_CLASSES]
 
     with open(
         path,
@@ -57,9 +51,7 @@ def read_prediction_csv(
         reader = csv.DictReader(f)
 
         if reader.fieldnames is None:
-            raise ValueError(
-                f"{path}: missing CSV header."
-            )
+            raise ValueError(f"{path}: missing CSV header.")
 
         required = {
             "sample_index",
@@ -67,29 +59,16 @@ def read_prediction_csv(
             *expected_prob_columns,
         }
 
-        missing = required.difference(
-            reader.fieldnames
-        )
+        missing = required.difference(reader.fieldnames)
 
         if missing:
-            raise ValueError(
-                f"{path}: missing columns: {sorted(missing)}"
-            )
+            raise ValueError(f"{path}: missing columns: {sorted(missing)}")
 
         for row in reader:
-            indices.append(
-                int(row["sample_index"])
-            )
-            labels.append(
-                int(row["y_true"])
-            )
+            indices.append(int(row["sample_index"]))
+            labels.append(int(row["y_true"]))
 
-            probabilities.append(
-                [
-                    float(row[c])
-                    for c in expected_prob_columns
-                ]
-            )
+            probabilities.append([float(row[c]) for c in expected_prob_columns])
 
     return (
         np.asarray(indices, dtype=int),
@@ -115,40 +94,32 @@ def validate_alignment(
     ):
         if len(idx) != len(ref_idx):
             raise ValueError(
-                f"Prediction file {i} has {len(idx)} samples; "
-                f"expected {len(ref_idx)}."
+                f"Prediction file {i} has {len(idx)} samples; " f"expected {len(ref_idx)}."
             )
 
         if not np.array_equal(
             idx,
             ref_idx,
         ):
-            raise ValueError(
-                f"Prediction file {i} sample ordering differs."
-            )
+            raise ValueError(f"Prediction file {i} sample ordering differs.")
 
         if not np.array_equal(
             y,
             ref_y,
         ):
-            raise ValueError(
-                f"Prediction file {i} labels differ."
-            )
+            raise ValueError(f"Prediction file {i} labels differ.")
 
         if p.shape != (
             len(ref_idx),
             7,
         ):
-            raise ValueError(
-                f"Prediction file {i} has invalid probability shape {p.shape}."
-            )
+            raise ValueError(f"Prediction file {i} has invalid probability shape {p.shape}.")
 
 
 def main() -> None:
     ap = argparse.ArgumentParser(
         description=(
-            "Equal-weight probability ensemble across exactly seven "
-            "canonical model outputs."
+            "Equal-weight probability ensemble across exactly seven " "canonical model outputs."
         )
     )
 
@@ -170,14 +141,9 @@ def main() -> None:
     args = ap.parse_args()
 
     if len(args.csvs) != 7:
-        raise ValueError(
-            "The final manuscript ensemble requires exactly seven model CSVs."
-        )
+        raise ValueError("The final manuscript ensemble requires exactly seven model CSVs.")
 
-    outputs = [
-        read_prediction_csv(path)
-        for path in args.csvs
-    ]
+    outputs = [read_prediction_csv(path) for path in args.csvs]
 
     validate_alignment(outputs)
 
@@ -185,10 +151,7 @@ def main() -> None:
     y_true = outputs[0][1]
 
     probs = np.stack(
-        [
-            output[2]
-            for output in outputs
-        ],
+        [output[2] for output in outputs],
         axis=0,
     )
 
@@ -225,10 +188,7 @@ def main() -> None:
         out_path,
     )
 
-    csv_path = (
-        out_path.parent
-        / "ensemble_predictions.csv"
-    )
+    csv_path = out_path.parent / "ensemble_predictions.csv"
 
     with csv_path.open(
         "w",
@@ -242,10 +202,7 @@ def main() -> None:
                 "sample_index",
                 "y_true",
                 "y_pred",
-                *[
-                    f"p_{c}"
-                    for c in CANONICAL_CLASSES
-                ],
+                *[f"p_{c}" for c in CANONICAL_CLASSES],
             ]
         )
 
@@ -265,10 +222,7 @@ def main() -> None:
                     int(idx),
                     int(target),
                     int(pred),
-                    *[
-                        f"{float(x):.10f}"
-                        for x in p
-                    ],
+                    *[f"{float(x):.10f}" for x in p],
                 ]
             )
 
@@ -279,9 +233,7 @@ def main() -> None:
         )
     )
 
-    print(
-        f"[csv] wrote {csv_path}"
-    )
+    print(f"[csv] wrote {csv_path}")
 
 
 if __name__ == "__main__":

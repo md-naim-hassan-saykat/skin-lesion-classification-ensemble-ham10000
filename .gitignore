@@ -5,16 +5,13 @@
 # Excludes local datasets, generated outputs, model checkpoints,
 # environments, caches, and temporary files while preserving
 # curated reproducibility artifacts committed under results/.
-# ==============================================================
 
 # === Local datasets ===
 data/
 datasets/
-
 # === Generated outputs and logs ===
 outputs/
 logs/
-
 # === Model checkpoints ===
 checkpoints/
 *.pth
@@ -22,47 +19,37 @@ checkpoints/
 *.ckpt
 *.onnx
 *.h5
-
 # === Large/local numerical artifacts ===
 *.npy
 *.npz
 *.xlsx
-
 # === Archives ===
 *.zip
 *.tar
 *.tar.gz
 *.gz
-
 # === Generated image/document artifacts ===
 *.png
 *.jpg
 *.jpeg
 *.pdf
-
 # === Result directory ===
 # Ignore generated results by default, but preserve curated
 # manuscript tables and figures committed for reproducibility.
 results/*
 !results/tables/
 !results/figures/
-
 results/tables/*
 !results/tables/*.csv
 !results/tables/*.tex
-
 results/figures/*
 !results/figures/*.png
 !results/figures/*.svg
 !results/figures/*.pdf
-
 # === CSV files ===
 # Ignore arbitrary/generated CSV files elsewhere in the project.
 *.csv
-
 # Allow curated manuscript result tables.
-!results/tables/*.csv
-
 # === Python cache/build artifacts ===
 __pycache__/
 *.py[cod]
@@ -72,32 +59,25 @@ dist/
 .pytest_cache/
 .coverage
 htmlcov/
-
 # === Virtual environments ===
 .venv/
 venv/
 env/
-
 # === Jupyter ===
 .ipynb_checkpoints/
-
 # === IDE/editor files ===
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
 # === Operating-system files ===
 .DS_Store
 Thumbs.db
-
 # === Temporary/backup files ===
 *.bak
 *.tmp
-
 # === Local testing/configuration ===
 pytest.local.ini
-
 # === Accidental nested repository copy ===
 skin-lesion-classification-ensemble-ham10000/

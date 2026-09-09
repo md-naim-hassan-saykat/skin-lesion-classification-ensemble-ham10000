@@ -11,7 +11,6 @@ import yaml
 from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
 from sklearn.preprocessing import label_binarize
 
-
 CANONICAL_CLASSES = [
     "akiec",
     "bcc",
@@ -88,9 +87,7 @@ def compute_metrics(
         y_prob = np.asarray(y_prob, dtype=float)
 
         if y_prob.ndim != 2 or y_prob.shape[1] != 7:
-            raise ValueError(
-                f"Expected probability matrix of shape (N, 7), got {y_prob.shape}"
-            )
+            raise ValueError(f"Expected probability matrix of shape (N, 7), got {y_prob.shape}")
 
         if y_pred is None:
             y_pred = np.argmax(y_prob, axis=1)
@@ -170,9 +167,7 @@ def compute_metrics(
             result["weighted_roc_auc_ovr"] = None
 
     else:
-        raise ValueError(
-            "dataset must be 'ham10000' or 'isic2019'"
-        )
+        raise ValueError("dataset must be 'ham10000' or 'isic2019'")
 
     return result
 

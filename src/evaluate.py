@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
-
 import sys
 from pathlib import Path as _P
-
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
@@ -23,7 +21,6 @@ from torchvision import datasets, transforms
 from src.models import get_model
 from src.utils import compute_metrics, save_json
 
-
 CANONICAL_CLASSES = [
     "akiec",
     "bcc",
@@ -39,10 +36,7 @@ def best_device() -> torch.device:
     if torch.cuda.is_available():
         return torch.device("cuda")
 
-    if (
-        getattr(torch.backends, "mps", None)
-        and torch.backends.mps.is_available()
-    ):
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
         return torch.device("mps")
 
     return torch.device("cpu")
@@ -85,7 +79,7 @@ def clean_state_dict(state: dict) -> dict:
             "net.",
         ):
             if k.startswith(prefix):
-                k = k[len(prefix):]
+                k = k[len(prefix) :]
 
         cleaned[k] = value
 
@@ -113,9 +107,7 @@ def load_checkpoint_strict(
             raw = raw["state_dict"]
 
     if not isinstance(raw, dict):
-        raise TypeError(
-            f"Unsupported checkpoint format: {type(raw)}"
-        )
+        raise TypeError(f"Unsupported checkpoint format: {type(raw)}")
 
     state = clean_state_dict(raw)
 
@@ -149,15 +141,10 @@ def parse_permutation(value: str | None) -> list[int]:
     if value is None:
         return list(range(7))
 
-    permutation = [
-        int(x.strip())
-        for x in value.split(",")
-    ]
+    permutation = [int(x.strip()) for x in value.split(",")]
 
     if sorted(permutation) != list(range(7)):
-        raise ValueError(
-            "Permutation must contain every index 0..6 exactly once."
-        )
+        raise ValueError("Permutation must contain every index 0..6 exactly once.")
 
     return permutation
 
@@ -180,21 +167,21 @@ def run_inference(
             logits = model(images)
 
             if logits.ndim != 2 or logits.shape[1] != 7:
-                raise ValueError(
-                    f"Expected model output (N, 7), got {tuple(logits.shape)}"
-                )
+                raise ValueError(f"Expected model output (N, 7), got {tuple(logits.shape)}")
 
-            p = torch.softmax(
-                logits,
-                dim=1,
-            ).cpu().numpy()
+            p = (
+                torch.softmax(
+                    logits,
+                    dim=1,
+                )
+                .cpu()
+                .numpy()
+            )
 
             p = p[:, permutation]
 
             probabilities.append(p)
-            y_true.extend(
-                labels.numpy().astype(int).tolist()
-            )
+            y_true.extend(labels.numpy().astype(int).tolist())
 
     return (
         np.asarray(y_true, dtype=int),
@@ -204,9 +191,7 @@ def run_inference(
 
 def main() -> None:
     ap = argparse.ArgumentParser(
-        description=(
-            "Evaluate one archived checkpoint using canonical seven-class outputs."
-        )
+        description=("Evaluate one archived checkpoint using canonical seven-class outputs.")
     )
 
     ap.add_argument(
@@ -266,13 +251,9 @@ def main() -> None:
     args = ap.parse_args()
 
     if args.num_classes != 7:
-        raise ValueError(
-            "This study uses exactly seven canonical classes."
-        )
+        raise ValueError("This study uses exactly seven canonical classes.")
 
-    permutation = parse_permutation(
-        args.output_permutation
-    )
+    permutation = parse_permutation(args.output_permutation)
 
     device = best_device()
 
@@ -351,13 +332,7 @@ def main() -> None:
         ) as f:
             writer = csv.writer(f)
 
-            writer.writerow(
-                ["sample_index", "y_true"]
-                + [
-                    f"p_{c}"
-                    for c in CANONICAL_CLASSES
-                ]
-            )
+            writer.writerow(["sample_index", "y_true"] + [f"p_{c}" for c in CANONICAL_CLASSES])
 
             for idx, (target, probs) in enumerate(
                 zip(
@@ -370,16 +345,11 @@ def main() -> None:
                     [
                         idx,
                         int(target),
-                        *[
-                            f"{float(x):.10f}"
-                            for x in probs
-                        ],
+                        *[f"{float(x):.10f}" for x in probs],
                     ]
                 )
 
-        print(
-            f"[csv] wrote {args.save_csv}"
-        )
+        print(f"[csv] wrote {args.save_csv}")
 
     print(
         json.dumps(

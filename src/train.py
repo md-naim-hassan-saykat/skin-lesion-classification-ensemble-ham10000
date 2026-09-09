@@ -1,10 +1,8 @@
 from __future__ import annotations
 
 # ruff: noqa: E402
-
 import sys
 from pathlib import Path as _P
-
 
 _PROJECT_ROOT = _P(__file__).resolve().parents[1]
 if str(_PROJECT_ROOT) not in sys.path:
@@ -36,10 +34,7 @@ def best_device() -> torch.device:
     if torch.cuda.is_available():
         return torch.device("cuda")
 
-    if (
-        getattr(torch.backends, "mps", None)
-        and torch.backends.mps.is_available()
-    ):
+    if getattr(torch.backends, "mps", None) and torch.backends.mps.is_available():
         return torch.device("mps")
 
     return torch.device("cpu")
@@ -61,15 +56,17 @@ def evaluate(
 
         logits = model(images)
 
-        p = torch.softmax(
-            logits,
-            dim=1,
-        ).cpu().numpy()
+        p = (
+            torch.softmax(
+                logits,
+                dim=1,
+            )
+            .cpu()
+            .numpy()
+        )
 
         probabilities.append(p)
-        y_true.extend(
-            targets.numpy().tolist()
-        )
+        y_true.extend(targets.numpy().tolist())
 
     y_true_arr = np.asarray(
         y_true,
@@ -104,9 +101,7 @@ def train_one_epoch(
         images = images.to(device)
         targets = targets.to(device)
 
-        optimizer.zero_grad(
-            set_to_none=True
-        )
+        optimizer.zero_grad(set_to_none=True)
 
         logits = model(images)
         loss = criterion(
@@ -117,15 +112,9 @@ def train_one_epoch(
         loss.backward()
         optimizer.step()
 
-        running_loss += (
-            loss.item()
-            * images.size(0)
-        )
+        running_loss += loss.item() * images.size(0)
 
-    return (
-        running_loss
-        / len(loader.dataset)
-    )
+    return running_loss / len(loader.dataset)
 
 
 def main() -> None:
@@ -152,25 +141,16 @@ def main() -> None:
 
     args = ap.parse_args()
 
-    cfg: dict[str, Any] = load_yaml(
-        args.config
-    )
+    cfg: dict[str, Any] = load_yaml(args.config)
 
-    seed_everything(
-        int(cfg.get("seed", 42))
-    )
+    seed_everything(int(cfg.get("seed", 42)))
 
     data_cfg = cfg["data"]
     train_cfg = cfg["train"]
 
-    num_classes = int(
-        cfg["num_classes"]
-    )
+    num_classes = int(cfg["num_classes"])
 
-    model_cfg = (
-        cfg.get("preprocessing", {})
-        .get(args.model, {})
-    )
+    model_cfg = cfg.get("preprocessing", {}).get(args.model, {})
 
     image_size = int(
         model_cfg.get(
@@ -179,13 +159,7 @@ def main() -> None:
         )
     )
 
-    outdir = (
-        Path(
-            args.outdir
-            or cfg["output"]["dir"]
-        )
-        / args.model
-    )
+    outdir = Path(args.outdir or cfg["output"]["dir"]) / args.model
 
     outdir.mkdir(
         parents=True,
@@ -197,9 +171,7 @@ def main() -> None:
     train_loader, val_loader, classes = build_loaders(
         data_root=data_cfg["root"],
         image_size=image_size,
-        batch_size=int(
-            train_cfg["batch_size"]
-        ),
+        batch_size=int(train_cfg["batch_size"]),
         num_workers=int(
             data_cfg.get(
                 "num_workers",
@@ -208,9 +180,7 @@ def main() -> None:
         ),
     )
 
-    expected_classes = cfg[
-        "canonical_classes"
-    ]
+    expected_classes = cfg["canonical_classes"]
 
     if classes != expected_classes:
         raise ValueError(
@@ -235,23 +205,15 @@ def main() -> None:
         num_classes,
     ).to(device)
 
-    criterion = nn.CrossEntropyLoss(
-        weight=class_weights
-    )
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
 
     optimizer = optim.AdamW(
         model.parameters(),
-        lr=float(
-            train_cfg["lr"]
-        ),
-        weight_decay=float(
-            train_cfg["weight_decay"]
-        ),
+        lr=float(train_cfg["lr"]),
+        weight_decay=float(train_cfg["weight_decay"]),
     )
 
-    max_epochs = int(
-        train_cfg["epochs"]
-    )
+    max_epochs = int(train_cfg["epochs"])
 
     scheduler = optim.lr_scheduler.CosineAnnealingLR(
         optimizer,
@@ -289,10 +251,7 @@ def main() -> None:
 
         scheduler.step()
 
-        weighted_f1 = float(
-            metrics["weighted_f1"]
-            or 0.0
-        )
+        weighted_f1 = float(metrics["weighted_f1"] or 0.0)
 
         history.append(
             {
@@ -319,32 +278,26 @@ def main() -> None:
                     "model_name": args.model,
                     "classes": classes,
                 },
-                outdir
-                / f"{args.model}_best.pth",
+                outdir / f"{args.model}_best.pth",
             )
 
             save_json(
                 metrics,
-                outdir
-                / "best_val_metrics.json",
+                outdir / "best_val_metrics.json",
             )
 
         else:
             no_improvement += 1
 
             if no_improvement >= patience:
-                print(
-                    f"Early stopping "
-                    f"(patience={patience})"
-                )
+                print(f"Early stopping " f"(patience={patience})")
                 break
 
     save_json(
         {
             "history": history,
         },
-        outdir
-        / "train_history.json",
+        outdir / "train_history.json",
     )
 
     torch.save(
@@ -353,14 +306,10 @@ def main() -> None:
             "model_name": args.model,
             "classes": classes,
         },
-        outdir
-        / f"{args.model}_last.pth",
+        outdir / f"{args.model}_last.pth",
     )
 
-    print(
-        "Training complete. "
-        f"Best weighted F1: {best_f1:.6f}"
-    )
+    print("Training complete. " f"Best weighted F1: {best_f1:.6f}")
 
 
 if __name__ == "__main__":

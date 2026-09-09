@@ -5,7 +5,6 @@ import sys
 
 import pytest
 
-
 SOURCE_MODULES = [
     "src.data",
     "src.ensemble",

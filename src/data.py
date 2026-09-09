@@ -5,7 +5,6 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
@@ -23,9 +22,7 @@ def make_train_transform(
 
     return transforms.Compose(
         [
-            transforms.Resize(
-                (image_size, image_size)
-            ),
+            transforms.Resize((image_size, image_size)),
             transforms.RandomHorizontalFlip(),
             transforms.RandomRotation(10),
             transforms.ColorJitter(
@@ -46,9 +43,7 @@ def make_validation_transform(
 ) -> transforms.Compose:
     return transforms.Compose(
         [
-            transforms.Resize(
-                (image_size, image_size)
-            ),
+            transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
             transforms.Normalize(
                 mean=IMAGENET_MEAN,
@@ -70,16 +65,12 @@ def build_loaders(
 ]:
     train_ds = datasets.ImageFolder(
         f"{data_root}/train",
-        transform=make_train_transform(
-            image_size
-        ),
+        transform=make_train_transform(image_size),
     )
 
     val_ds = datasets.ImageFolder(
         f"{data_root}/val",
-        transform=make_validation_transform(
-            image_size
-        ),
+        transform=make_validation_transform(image_size),
     )
 
     train_loader = DataLoader(
@@ -120,11 +111,7 @@ def compute_class_weights(
         1,
     )
 
-    weights = (
-        weights
-        / weights.sum()
-        * num_classes
-    )
+    weights = weights / weights.sum() * num_classes
 
     return torch.tensor(
         weights,

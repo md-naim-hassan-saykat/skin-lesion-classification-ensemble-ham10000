@@ -777,7 +777,7 @@ The released resources include, where applicable:
 - tables and figures;
 - supporting reproducibility files.
 
-**Zenodo DOI:**  
+**Zenodo DOI:**
 [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 The GitHub repository and Zenodo archive together provide the code and artifacts required for independent verification and further methodological investigation.
@@ -786,16 +786,16 @@ The GitHub repository and Zenodo archive together provide the code and artifacts
 
 ## Paper / Preprint
 
-**Title:**  
+**Title:**
 *Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019*
 
-**Author:**  
+**Author:**
 Md Naim Hassan Saykat
 
-**Affiliation:**  
+**Affiliation:**
 Department of Computer Science, Université Paris-Saclay, France
 
-**Associated archive:**  
+**Associated archive:**
 [Zenodo DOI: 10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
@@ -920,18 +920,18 @@ The author also acknowledges:
 
 ## Contact
 
-**Md Naim Hassan Saykat**  
-Department of Computer Science  
-Université Paris-Saclay  
+**Md Naim Hassan Saykat**
+Department of Computer Science
+Université Paris-Saclay
 France
 
-Academic correspondence:  
+Academic correspondence:
 `md-naim-hassan.saykat@universite-paris-saclay.fr`
 
-Project / collaboration correspondence:  
+Project / collaboration correspondence:
 `mdnaimhassansaykat@gmail.com`
 
-GitHub:  
+GitHub:
 [md-naim-hassan-saykat](https://github.com/md-naim-hassan-saykat)
 
 ---

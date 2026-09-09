@@ -1,5 +1,5 @@
 [tool.ruff]
-line-length = 120
+line-length = 100
 target-version = "py311"
 extend-exclude = [".venv","data","outputs","results","build","dist","__pycache__","*.ipynb","notebooks"]
 
@@ -10,4 +10,3 @@ per-file-ignores = { "src/ensemble.py" = ["C901"] }
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
-lines-after-imports = 2
