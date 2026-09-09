@@ -12,14 +12,14 @@ Before contributing, please review the repository’s Code of Conduct.
 
 1. Fork the repository to your GitHub account.
 2. Clone your fork locally:
-
+```
 git clone https://github.com/<your-username>/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
-
+```
 3. Create a branch for your contribution:
-
+```
 git checkout -b feat/my-feature
-
+```
     Use a descriptive branch name such as fix/data-loader, docs/evaluation, or test/ensemble.
 4. Make your changes while keeping the scope of the contribution focused.
 5. Run the quality checks and tests described below before opening a pull request.
@@ -29,26 +29,26 @@ git checkout -b feat/my-feature
 ## Local Development Setup
 
 Create and activate a virtual environment:
-
+```
 python3 -m venv .venv
 source .venv/bin/activate
-
+```
 On Windows:
-
+```
 python -m venv .venv
 .venv\Scripts\activate
-
+```
 Upgrade pip and install the project and development dependencies:
-
+```
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 python -m pip install -r requirements-ci.txt
-
+```
 Install and enable pre-commit:
-
+```
 python -m pip install pre-commit
 pre-commit install
-
+```
 ---
 
 ## Code Quality
@@ -63,17 +63,17 @@ The repository uses:
 Black and Ruff are configured with a line length of 100 characters.
 
 Before submitting a pull request, run:
-
+```
 pre-commit run --all-files
 pytest -q
-
+```
 All applicable checks should pass.
 
 If you prefer the repository’s Makefile commands, you may also use:
-
+```
 make lint
 make test
-
+```
 Do not manually reformat files in a way that conflicts with Black or Ruff. The project-specific Ruff configuration is maintained in pyproject.toml, and the pre-commit hooks are defined in .pre-commit-config.yaml.
 
 ---
@@ -91,9 +91,9 @@ When adding or modifying functionality:
 * Ensure existing tests continue to pass.
 
 Run the complete test suite with:
-
+```
 pytest -q
-
+```
 ---
 
 ## Research and Reproducibility Contributions
@@ -147,10 +147,10 @@ Before opening a pull request:
 
 1. Synchronize your branch with the latest upstream main when necessary.
 2. Run:
-
+```
 pre-commit run --all-files
 pytest -q
-
+```
 3. Push your branch to your fork.
 4. Open a pull request against the repository’s main branch.
 
