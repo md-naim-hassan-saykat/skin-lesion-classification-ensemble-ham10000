@@ -1,37 +1,76 @@
-# Pre-commit configuration for Skin Lesion Ensemble Project
-# ---------------------------------------------------------
-# Enforces consistent formatting, linting, and basic file hygiene
-# across all commits to maintain code quality and reproducibility.
+# ==============================================================
+# .pre-commit-config.yaml
+# Automated code-quality and repository-hygiene checks for the
+# HAM10000 / ISIC 2019 skin-lesion classification project
+# ==============================================================
+
+# Jupyter notebooks are intentionally excluded from automated
+# formatting and linting to avoid unnecessary notebook JSON changes.
+exclude: '\.ipynb$'
 
 repos:
-  # ---------------------------------------------------------
-  # Code Formatter: Black
-  # ---------------------------------------------------------
+  # ------------------------------------------------------------
+  # Python formatter: Black
+  # ------------------------------------------------------------
   - repo: https://github.com/psf/black
-    rev: 25.9.0  # Latest stable Black release
+    rev: 26.5.1
     hooks:
       - id: black
-        args: [--line-length=100]
+        args:
+          - --line-length=100
         language_version: python3
 
-  # ---------------------------------------------------------
-  # Python Linter & Import Sorter: Ruff
-  # ---------------------------------------------------------
+  # ------------------------------------------------------------
+  # Python linter and import checker: Ruff
+  # Configuration is defined in pyproject.toml.
+  # ------------------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.3  # Current stable Ruff version
+    rev: v0.16.5
     hooks:
-      - id: ruff
-        args: [--fix, --config=pyproject.toml]
-  # ---------------------------------------------------------
-  # General Hygiene Hooks
-  # ---------------------------------------------------------
+      - id: ruff-check
+        args:
+          - --fix
+          - --config=pyproject.toml
+        types_or:
+          - python
+          - pyi
+
+  # ------------------------------------------------------------
+  # General repository hygiene
+  # ------------------------------------------------------------
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      - id: end-of-file-fixer              # Ensure newline at EOF
-      - id: trailing-whitespace            # Remove stray spaces
-      - id: check-yaml                     # Validate YAML syntax
-      - id: check-json                     # Validate JSON syntax
-      - id: mixed-line-ending              # Normalize LF line endings
-      - id: check-executables-have-shebangs  # Ensure scripts start with #!
-      - id: check-merge-conflict           # Detect leftover merge markers
+      # Remove trailing whitespace from text files.
+      - id: trailing-whitespace
+
+      # Ensure text files end with a newline.
+      - id: end-of-file-fixer
+
+      # Validate structured configuration files.
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+
+      # Validate Python syntax.
+      - id: check-ast
+
+      # Detect unresolved merge-conflict markers.
+      - id: check-merge-conflict
+
+      # Detect filenames that differ only by letter case.
+      - id: check-case-conflict
+
+      # Normalize mixed line endings.
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+
+      # Ensure executable scripts contain a valid shebang.
+      - id: check-executables-have-shebangs
+
+      # Prevent accidentally committing very large files directly
+      # to Git rather than Git LFS or an external archive.
+      - id: check-added-large-files
+        args:
+          - --maxkb=10240
