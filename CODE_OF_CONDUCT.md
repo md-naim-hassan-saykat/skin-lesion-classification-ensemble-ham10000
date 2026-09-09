@@ -73,6 +73,6 @@ Reports will be reviewed in good faith and handled as promptly and confidentiall
 
 This Code of Conduct is informed by the [Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) and adapted for an open-source academic research and reproducibility project.
 
-⸻
+---
 
 By participating in this project, you agree to follow this Code of Conduct and contribute to a respectful, constructive, and professional research community.
