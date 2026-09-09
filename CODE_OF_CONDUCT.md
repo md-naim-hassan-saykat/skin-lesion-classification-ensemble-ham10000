@@ -1,12 +1,12 @@
-Code of Conduct
+# Code of Conduct
 
-Our Commitment
+## Our Commitment
 
 We are committed to providing a welcoming, respectful, inclusive, and harassment-free environment for everyone who participates in this project, regardless of background, identity, experience, or level of expertise.
 
 This Code of Conduct applies to all contributors, maintainers, reviewers, users, and other participants interacting with the project.
 
-Our Standards
+## Our Standards
 
 Examples of behavior that contributes to a positive and professional community include:
 
@@ -19,7 +19,7 @@ Examples of behavior that contributes to a positive and professional community i
 * Respecting privacy, personal boundaries, and the confidentiality of information shared in appropriate contexts.
 * Acknowledging mistakes and working constructively to address them.
 
-Unacceptable Behavior
+## Unacceptable Behavior
 
 Examples of unacceptable behavior include:
 
@@ -32,7 +32,7 @@ Examples of unacceptable behavior include:
 * Deliberately misrepresenting another participant’s work, statements, or contributions.
 * Other conduct that would reasonably be considered inappropriate in a professional or academic environment.
 
-Scope
+## Scope
 
 This Code of Conduct applies to project spaces, including:
 
@@ -43,7 +43,7 @@ This Code of Conduct applies to project spaces, including:
 
 It also applies when an individual is officially representing the project in public or professional settings.
 
-Research and Technical Discussions
+## Research and Technical Discussions
 
 Scientific and technical disagreement is welcome when conducted constructively.
 
@@ -51,7 +51,7 @@ Participants are encouraged to question methods, results, implementation choices
 
 Concerns related to research integrity, reproducibility, data handling, or potential errors should be raised responsibly and supported with sufficient information for investigation whenever possible.
 
-Enforcement Responsibilities
+## Enforcement Responsibilities
 
 Project maintainers are responsible for interpreting and enforcing this Code of Conduct.
 
@@ -59,7 +59,7 @@ Maintainers may remove, edit, or reject comments, commits, code, issues, pull re
 
 Enforcement decisions should be proportionate to the circumstances and handled with appropriate respect for privacy and confidentiality.
 
-Reporting a Concern
+## Reporting a Concern
 
 Conduct that may violate this Code of Conduct can be reported privately to the project maintainer at:
 
@@ -69,9 +69,9 @@ Reports should include enough information to understand and evaluate the concern
 
 Reports will be reviewed in good faith and handled as promptly and confidentially as reasonably possible. Information concerning a report will be shared only when necessary to evaluate or address the matter or when disclosure is otherwise required.
 
-Attribution
+## Attribution
 
-This Code of Conduct is informed by the Contributor Covenant, version 2.1 and adapted for an open-source academic research and reproducibility project.
+This Code of Conduct is informed by the [Contributor Covenant, version 2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/) and adapted for an open-source academic research and reproducibility project.
 
 ⸻
 
