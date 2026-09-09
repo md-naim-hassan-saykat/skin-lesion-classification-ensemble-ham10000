@@ -1,6 +1,30 @@
+# =============================================================================
+# Project Configuration
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+# Classification: Internal Evaluation on HAM10000 and External Evaluation
+# on ISIC 2019
+#
+# This file contains:
+#   1. canonical class definitions;
+#   2. reported evaluation settings;
+#   3. ensemble membership;
+#   4. checkpoint-output compatibility metadata;
+#   5. repository execution defaults; and
+#   6. quick-start training settings.
+#
+# IMPORTANT:
+# Repository execution defaults do not necessarily reproduce the exact
+# historical training or preprocessing configuration of every archived
+# manuscript checkpoint.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Global reproducibility
+# -----------------------------------------------------------------------------
 seed: 42
 num_classes: 7
 
+# Canonical class ordering used for harmonized evaluation and ensembling.
 canonical_classes:
   - akiec
   - bcc
@@ -10,27 +34,41 @@ canonical_classes:
   - nv
   - vasc
 
+# -----------------------------------------------------------------------------
+# Reported evaluation protocol
+# -----------------------------------------------------------------------------
 evaluation:
+  # Standardized retrospective HAM10000 evaluation cohort.
   cohort_size_ham10000: 2003
+
+  # Bootstrap uncertainty analysis.
   bootstrap_resamples: 1000
   bootstrap_seed: 42
+
+  # Maximum-confidence multiclass Expected Calibration Error.
   ece_bins: 15
 
-  # Reported HAM10000 metrics:
-  # accuracy, weighted F1, macro ROC-AUC, micro ROC-AUC
+  # Reported HAM10000 discrimination metrics:
+  # accuracy, weighted F1, macro ROC-AUC, micro ROC-AUC.
   ham10000_auc_averages:
     - macro
     - micro
 
-  # Reported ISIC 2019 metrics:
-  # accuracy, weighted F1, macro ROC-AUC, weighted ROC-AUC
+  # Reported ISIC 2019 discrimination metrics:
+  # accuracy, weighted F1, macro ROC-AUC, weighted ROC-AUC.
   isic2019_auc_averages:
     - macro
     - weighted
 
+# -----------------------------------------------------------------------------
+# Ensemble definition
+# -----------------------------------------------------------------------------
 ensemble:
+  # Equal-weight arithmetic mean of class-probability vectors.
   method: probability_mean
+
   expected_models: 7
+
   models:
     - cnn
     - resnet50
@@ -40,14 +78,24 @@ ensemble:
     - mobilenet_v3_large
     - vit_b_16
 
-# Historical class-order permutations must be filled from the archived
-# evaluation audit/checkpoint metadata. Do not guess these values.
+# -----------------------------------------------------------------------------
+# Historical checkpoint output ordering
+# -----------------------------------------------------------------------------
 #
-# Each list means:
-# canonical_probs = raw_probs[:, permutation]
+# Archived models may not all emit probabilities in the canonical class order.
 #
-# Identity order:
-# [0, 1, 2, 3, 4, 5, 6]
+# Each permutation is interpreted as:
+#
+#   canonical_probs = raw_probs[:, permutation]
+#
+# Canonical identity ordering:
+#
+#   [0, 1, 2, 3, 4, 5, 6]
+#
+# Historical permutations must be populated only from audited checkpoint or
+# evaluation metadata. Unknown values must remain null rather than being
+# inferred or guessed.
+#
 output_permutations:
   cnn: [0, 1, 2, 3, 4, 5, 6]
   densenet121: [0, 1, 2, 3, 4, 5, 6]
@@ -55,40 +103,92 @@ output_permutations:
   convnext_tiny: [0, 1, 2, 3, 4, 5, 6]
   mobilenet_v3_large: [0, 1, 2, 3, 4, 5, 6]
 
-  # REQUIRED: replace with audited historical permutations.
+  # REQUIRED for exact archived-checkpoint reproduction:
+  # replace only when verified from historical audit metadata.
   resnet50: null
   vit_b_16: null
 
-# These defaults are provided for repository execution only.
-# For reproduction of the reported manuscript predictions, use the
-# exact preprocessing associated with each archived checkpoint.
+# -----------------------------------------------------------------------------
+# Repository preprocessing defaults
+# -----------------------------------------------------------------------------
+#
+# These values support current repository execution and quick-start workflows.
+#
+# They must not be interpreted as proof that every historical manuscript
+# checkpoint used identical preprocessing. Exact reproduction of archived
+# predictions requires the preprocessing associated with each checkpoint.
+#
 preprocessing:
   cnn:
     image_size: 224
+
   resnet50:
     image_size: 224
+
   densenet121:
     image_size: 224
+
   efficientnet_b3:
     image_size: 224
+
   convnext_tiny:
     image_size: 224
+
   mobilenet_v3_large:
     image_size: 224
+
   vit_b_16:
     image_size: 224
 
+# -----------------------------------------------------------------------------
+# Data-loader defaults
+# -----------------------------------------------------------------------------
 data:
+  # Expected ImageFolder structure:
+  #
+  # data/HAM10000/trainval/
+  # ├── train/
+  # │   ├── akiec/
+  # │   ├── bcc/
+  # │   ├── bkl/
+  # │   ├── df/
+  # │   ├── mel/
+  # │   ├── nv/
+  # │   └── vasc/
+  # └── val/
+  #     ├── akiec/
+  #     ├── bcc/
+  #     ├── bkl/
+  #     ├── df/
+  #     ├── mel/
+  #     ├── nv/
+  #     └── vasc/
+  #
   root: data/HAM10000/trainval
-  batch_size: 32
   num_workers: 2
 
+# -----------------------------------------------------------------------------
+# Output directory
+# -----------------------------------------------------------------------------
 output:
   dir: outputs
 
+# -----------------------------------------------------------------------------
+# Quick-start training defaults
+# -----------------------------------------------------------------------------
+#
+# These settings support new repository training runs.
+#
+# They do NOT claim to reconstruct the seven historical archived manuscript
+# training runs.
+#
+# Current src/train.py uses:
+#   - weighted cross-entropy;
+#   - AdamW optimizer;
+#   - cosine-annealing learning-rate scheduling;
+#   - weighted F1 for early stopping/model selection.
+#
 train:
-  # Quick-start training settings only.
-  # These do not claim to reproduce the seven historical archived runs.
   epochs: 50
   batch_size: 32
   lr: 1.0e-4
