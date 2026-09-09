@@ -1,62 +1,78 @@
-# Code of Conduct
+Code of Conduct
 
-Thank you for contributing to **Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019**!
+Our Commitment
 
-We are committed to maintaining a **welcoming, respectful, and inclusive** environment for everyone involved in this project — contributors, reviewers, and users alike.
-Please follow these guidelines when participating in issues, pull requests, discussions, and commits.
+We are committed to providing a welcoming, respectful, inclusive, and harassment-free environment for everyone who participates in this project, regardless of background, identity, experience, or level of expertise.
 
----
+This Code of Conduct applies to all contributors, maintainers, reviewers, users, and other participants interacting with the project.
 
-## Our Standards
+Our Standards
 
-We expect all participants to:
+Examples of behavior that contributes to a positive and professional community include:
 
-- Be respectful, considerate, and open to differing viewpoints and experiences.
-- Offer and accept constructive feedback gracefully.
-- Use inclusive, professional, and clear language.
-- Focus on collaboration and continuous improvement.
-- Respect personal boundaries and community spaces.
+* Treating others with respect, consideration, and professionalism.
+* Being open to differing viewpoints, experiences, and technical perspectives.
+* Providing constructive, evidence-based feedback.
+* Accepting constructive feedback respectfully.
+* Focusing discussions on improving the research, software, documentation, and reproducibility of the project.
+* Using clear, inclusive, and professional language.
+* Respecting privacy, personal boundaries, and the confidentiality of information shared in appropriate contexts.
+* Acknowledging mistakes and working constructively to address them.
 
----
+Unacceptable Behavior
 
-## Unacceptable Behavior
+Examples of unacceptable behavior include:
 
-Examples of unacceptable behavior include, but are not limited to:
+* Harassment, discrimination, intimidation, or hate speech.
+* Personal attacks, insults, threats, or deliberately hostile communication.
+* Trolling, spamming, or intentionally disruptive behavior.
+* Unwelcome sexual attention or other inappropriate conduct.
+* Sustained disruption of technical or research discussions.
+* Publishing or sharing another person’s private or personally identifiable information without permission.
+* Deliberately misrepresenting another participant’s work, statements, or contributions.
+* Other conduct that would reasonably be considered inappropriate in a professional or academic environment.
 
-- Harassment, discrimination, or hate speech of any kind.
-- Trolling, spamming, or intentionally disruptive comments.
-- Public or private harassment, including unwanted direct messages.
-- Sharing private information without consent.
+Scope
 
----
+This Code of Conduct applies to project spaces, including:
 
-## Enforcement
+* Issues and pull requests.
+* GitHub Discussions and other project communication channels.
+* Code reviews and repository contributions.
+* Project-related correspondence and collaborative activities.
 
-Project maintainers have the right and responsibility to:
+It also applies when an individual is officially representing the project in public or professional settings.
 
-- Remove, edit, or reject comments, commits, or contributions that violate this Code of Conduct.
-- Temporarily or permanently restrict participation for repeated or severe violations.
+Research and Technical Discussions
 
-Enforcement will always be handled **fairly, proportionately, and transparently**.
+Scientific and technical disagreement is welcome when conducted constructively.
 
----
+Participants are encouraged to question methods, results, implementation choices, evaluation procedures, and interpretations when doing so in good faith and with appropriate evidence. Criticism should focus on the work rather than the individual.
 
-## Reporting a Concern
+Concerns related to research integrity, reproducibility, data handling, or potential errors should be raised responsibly and supported with sufficient information for investigation whenever possible.
 
-If you experience or witness behavior that violates this Code of Conduct, please contact:
+Enforcement Responsibilities
 
-**Email:** [mdnaimhassansaykat@gmail.com](mailto:mdnaimhassansaykat@gmail.com)
+Project maintainers are responsible for interpreting and enforcing this Code of Conduct.
 
-Reports will be reviewed promptly and confidentially.
-We will take all concerns seriously and aim to resolve them respectfully.
+Maintainers may remove, edit, or reject comments, commits, code, issues, pull requests, or other contributions that are inconsistent with these standards. Depending on the nature and severity of the conduct, maintainers may also issue a warning or temporarily or permanently restrict participation in project spaces.
 
----
+Enforcement decisions should be proportionate to the circumstances and handled with appropriate respect for privacy and confidentiality.
 
-## Attribution
+Reporting a Concern
 
-This Code of Conduct is adapted from the [Contributor Covenant v2.1](https://www.contributor-covenant.org/version/2/1/code_of_conduct/),
-with modifications for clarity and alignment with academic research collaboration.
+Conduct that may violate this Code of Conduct can be reported privately to the project maintainer at:
 
----
+Email: mdnaimhassansaykat@gmail.com
 
-*By contributing to this repository, you agree to uphold this Code of Conduct and foster a positive, inclusive environment for all contributors.*
+Reports should include enough information to understand and evaluate the concern where reasonably possible.
+
+Reports will be reviewed in good faith and handled as promptly and confidentially as reasonably possible. Information concerning a report will be shared only when necessary to evaluate or address the matter or when disclosure is otherwise required.
+
+Attribution
+
+This Code of Conduct is informed by the Contributor Covenant, version 2.1 and adapted for an open-source academic research and reproducibility project.
+
+⸻
+
+By participating in this project, you agree to follow this Code of Conduct and contribute to a respectful, constructive, and professional research community.
