@@ -947,7 +947,7 @@ Larger archived resources are distributed through Zenodo where applicable,
 including model, prediction, and supporting analysis artifacts associated with
 the study.
 
-**Zenodo DOI:**  
+**Zenodo DOI:**
 [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 GitHub should be treated as the version-controlled code and curated-results
@@ -1202,18 +1202,18 @@ The author acknowledges:
 
 ## Contact
 
-**Md Naim Hassan Saykat**  
-Department of Computer Science  
-Université Paris-Saclay  
+**Md Naim Hassan Saykat**
+Department of Computer Science
+Université Paris-Saclay
 France
 
-Academic correspondence:  
+Academic correspondence:
 `md-naim-hassan.saykat@universite-paris-saclay.fr`
 
-Project and collaboration correspondence:  
+Project and collaboration correspondence:
 `mdnaimhassansaykat@gmail.com`
 
-GitHub:  
+GitHub:
 [md-naim-hassan-saykat](https://github.com/md-naim-hassan-saykat)
 
 ---
