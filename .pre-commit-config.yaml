@@ -21,8 +21,8 @@ repos:
         language_version: python3
 
   # ------------------------------------------------------------
-  # Python linter and import checker: Ruff
-  # Configuration is defined in pyproject.toml.
+  # Python linter: Ruff
+  # Project-specific Ruff settings are defined in pyproject.toml.
   # ------------------------------------------------------------
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.16.5
@@ -55,13 +55,13 @@ repos:
       # Validate Python syntax.
       - id: check-ast
 
-      # Detect unresolved merge-conflict markers.
+      # Detect unresolved Git merge-conflict markers.
       - id: check-merge-conflict
 
-      # Detect filenames that differ only by letter case.
+      # Detect filenames that conflict on case-insensitive systems.
       - id: check-case-conflict
 
-      # Normalize mixed line endings.
+      # Normalize mixed line endings to LF.
       - id: mixed-line-ending
         args:
           - --fix=lf
@@ -69,8 +69,8 @@ repos:
       # Ensure executable scripts contain a valid shebang.
       - id: check-executables-have-shebangs
 
-      # Prevent accidentally committing very large files directly
-      # to Git rather than Git LFS or an external archive.
+      # Prevent accidentally committing large files directly to Git.
+      # Properly tracked Git LFS files are skipped automatically.
       - id: check-added-large-files
         args:
           - --maxkb=10240
