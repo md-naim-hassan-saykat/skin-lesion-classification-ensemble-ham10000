@@ -1,3 +1,30 @@
-ruff>=0.6.9
-pytest>=8.3
-PyYAML>=6.0
+# =============================================================================
+# Development and CI Requirements
+# Generalizable Ensemble Deep Learning for Skin Lesion Classification
+# =============================================================================
+#
+# Install after the main project dependencies:
+#   python -m pip install -r requirements.txt
+#   python -m pip install -r requirements-ci.txt
+#
+# These packages support linting, formatting, testing, pre-commit checks,
+# and CI/repository validation.
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Code Quality
+# -----------------------------------------------------------------------------
+black==26.5.1
+ruff==0.16.6
+
+# -----------------------------------------------------------------------------
+# Testing
+# -----------------------------------------------------------------------------
+pytest>=8.3,<10.0
+pytest-timeout>=2.3,<3.0
+
+# -----------------------------------------------------------------------------
+# Repository and Configuration Validation
+# -----------------------------------------------------------------------------
+pre-commit>=4.6,<5.0
+PyYAML>=6.0,<7.0
