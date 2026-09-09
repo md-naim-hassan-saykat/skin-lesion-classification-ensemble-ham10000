@@ -2,11 +2,11 @@
 
 **Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019**
 
-[![Build](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
+[![CI](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/actions/workflows/ci.yml)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)](https://pytorch.org/)
-![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)
-![Linter: Ruff](https://img.shields.io/badge/linter-ruff-informational)
+[![PyTorch 2.9.0](https://img.shields.io/badge/PyTorch-2.9.0-red.svg)](https://pytorch.org/)
+![Code style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)
+![Linter: Ruff](https://img.shields.io/badge/linter-Ruff-informational)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17390952.svg)](https://doi.org/10.5281/zenodo.17390952)
 
@@ -14,27 +14,66 @@
 
 ---
 
-A reproducible evaluation framework for dermoscopic skin-lesion classification using seven convolutional and transformer-based architectures and an equal-weight probability ensemble, with retrospective internal evaluation on HAM10000 and external cross-dataset evaluation on ISIC 2019.
+A reproducible research framework for seven-class dermoscopic skin-lesion
+classification using seven convolutional and transformer-based architectures,
+an equal-weight probability ensemble, retrospective harmonized evaluation on
+HAM10000, and external cross-dataset evaluation on ISIC 2019.
 
-The study evaluates predictive performance, cross-dataset generalization, probabilistic calibration, paired statistical differences, and qualitative Grad-CAM attribution within a harmonized seven-class evaluation framework.
+The study examines predictive performance, cross-dataset generalization,
+probabilistic calibration, paired statistical differences, and qualitative
+Grad-CAM attribution within a common seven-class evaluation framework.
 
-> **Research-use notice:** This repository is intended for research and reproducibility purposes. The models and outputs have not been clinically validated and must not be used as a substitute for professional medical diagnosis or clinical decision-making.
+> **Research-use notice:** This repository contains experimental research
+> software and reproducibility artifacts. The models have not undergone
+> prospective clinical validation and must not be used for diagnosis,
+> treatment decisions, patient triage, or other clinical decision-making.
 
 ---
 
 ## Highlights
 
-- **Seven architectures:** custom CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large, and ViT-B/16.
-- **Seven-model ensemble:** equal-weight probability averaging across all seven models (`1/7` per model), with no validation-based optimization of ensemble weights.
-- **HAM10000 evaluation:** standardized retrospective evaluation cohort of **2,003 images** across seven diagnostic classes.
-- **External evaluation:** harmonized **ISIC 2019 cohort of 25,331 images** mapped to the same seven-class label space.
-- **Strongest internal model:** ViT-B/16, with **0.9591 accuracy**, **0.9585 weighted F1**, **0.9959 macro ROC-AUC**, and **0.9978 micro ROC-AUC**.
-- **Strongest external model:** ConvNeXt-Tiny, with **0.6963 accuracy**, **0.6755 weighted F1**, **0.9021 macro ROC-AUC**, and **0.9053 weighted ROC-AUC**.
-- **Ensemble performance:** competitive internally and externally, but it does **not** uniformly outperform the strongest individual architecture.
-- **Calibration:** ViT achieved the lowest HAM10000 ECE (**1.37%**), whereas the equal-weight ensemble had an ECE of **11.54%**.
-- **Statistical analysis:** McNemar's test and paired bootstrap comparisons quantify differences between the ensemble and individual models.
-- **Interpretability:** Grad-CAM provides qualitative comparisons of spatial attribution patterns; no claim of clinically validated localization is made.
-- **Reproducibility:** code, trained model checkpoints, prediction outputs, figures, tables, and evaluation artifacts are released through GitHub and Zenodo.
+- **Seven architectures:** custom CNN, ResNet-50, DenseNet-121,
+  EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large, and ViT-B/16.
+- **Seven-model ensemble:** equal-weight probability averaging across all seven
+  models (`1/7` per model), without validation-based optimization of ensemble
+  weights.
+- **HAM10000 evaluation:** standardized retrospective evaluation cohort of
+  **2,003 images** across seven diagnostic classes.
+- **External evaluation:** harmonized **ISIC 2019 cohort of 25,331 images**
+  mapped to the same seven-class label space.
+- **Strongest internal model:** ViT-B/16 with **0.9591 accuracy**,
+  **0.9585 weighted F1**, **0.9959 macro ROC-AUC**, and
+  **0.9978 micro ROC-AUC**.
+- **Strongest external model:** ConvNeXt-Tiny with **0.6963 accuracy**,
+  **0.6755 weighted F1**, **0.9021 macro ROC-AUC**, and
+  **0.9053 weighted ROC-AUC**.
+- **Ensemble performance:** strong internally and externally, but the
+  equal-weight ensemble does **not** uniformly outperform the strongest
+  individual architecture.
+- **Calibration:** ViT achieved the lowest HAM10000 ECE (**1.37%**), whereas
+  the ensemble had an ECE of **11.54%**.
+- **Statistical analysis:** McNemar's test and paired bootstrap comparisons
+  quantify ensemble-versus-model differences.
+- **Interpretability:** Grad-CAM is used as a qualitative model-attribution
+  aid; no clinically validated localization claim is made.
+- **Reproducibility:** source code, curated tables and figures, evaluation
+  utilities, documentation, and associated archived artifacts are provided
+  through GitHub and Zenodo.
+
+---
+
+## Quick Links
+
+- [Installation guide](docs/installation.md)
+- [Training pipeline](docs/training_pipeline.md)
+- [Evaluation metrics](docs/evaluation_metrics.md)
+- [Ensemble method](docs/ensemble_method.md)
+- [Result tables](results/tables/)
+- [Result figures](results/figures/)
+- [Research notebook](notebooks/skin_lesion_ensemble_classification.ipynb)
+- [Contributing guide](CONTRIBUTING.md)
+- [Citation metadata](CITATION.cff)
+- [Zenodo archive](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
@@ -47,11 +86,9 @@ The study evaluates predictive performance, cross-dataset generalization, probab
 - [Evaluation Protocol](#evaluation-protocol)
 - [Ensemble Strategy](#ensemble-strategy)
 - [Results](#results)
-  - [HAM10000 Internal Evaluation](#ham10000-internal-evaluation)
-  - [ISIC 2019 External Evaluation](#isic-2019-external-evaluation)
-  - [Calibration](#calibration)
-  - [Statistical Comparisons](#statistical-comparisons)
-  - [External Per-Class Performance](#external-per-class-performance)
+- [Calibration](#calibration)
+- [Statistical Comparisons](#statistical-comparisons)
+- [External Per-Class Performance](#external-per-class-performance)
 - [Explainability](#explainability)
 - [Reproducibility](#reproducibility)
 - [Installation](#installation)
@@ -59,29 +96,37 @@ The study evaluates predictive performance, cross-dataset generalization, probab
 - [Running the Repository](#running-the-repository)
 - [Notebook](#notebook)
 - [Repository Structure](#repository-structure)
+- [Result Artifacts](#result-artifacts)
+- [Environment](#environment)
 - [Limitations](#limitations)
 - [Ethics and Data Use](#ethics-and-data-use)
-- [Reproducibility Assets](#reproducibility-assets)
 - [Citation](#citation)
 - [Development and Contributions](#development-and-contributions)
 - [License](#license)
 - [Acknowledgements](#acknowledgements)
 - [Contact](#contact)
+- [Responsible Use](#responsible-use)
 
 ---
 
 ## Study Overview
 
-This project investigates the performance and generalizability of deep learning models for seven-class dermoscopic skin-lesion classification.
+This project investigates the performance and generalizability of deep
+learning models for seven-class dermoscopic skin-lesion classification.
 
-Seven fixed archived HAM10000-trained model checkpoints are evaluated using architecture-specific preprocessing and a common canonical output ordering. Their predictions are also combined using an equal-weight probability ensemble.
+Seven fixed archived HAM10000-trained model checkpoints are evaluated using
+their documented inference requirements and a common canonical output
+ordering. Their class-probability predictions are additionally combined using
+an equal-weight probability ensemble.
 
 The evaluation has two complementary components:
 
-1. **HAM10000:** retrospective harmonized comparison on a standardized 2,003-image evaluation cohort.
-2. **ISIC 2019:** external cross-dataset evaluation on a harmonized 25,331-image cohort.
+1. **HAM10000:** retrospective harmonized comparison on a standardized
+   2,003-image evaluation cohort.
+2. **ISIC 2019:** external cross-dataset evaluation on a harmonized
+   25,331-image cohort.
 
-The framework evaluates multiple dimensions of model behavior rather than relying on accuracy alone:
+The framework evaluates multiple dimensions of model behavior:
 
 - accuracy;
 - weighted F1 score;
@@ -89,14 +134,16 @@ The framework evaluates multiple dimensions of model behavior rather than relyin
 - micro ROC-AUC on HAM10000;
 - weighted ROC-AUC on ISIC 2019;
 - bootstrap confidence intervals;
-- paired McNemar comparisons;
+- McNemar paired comparisons;
 - paired bootstrap performance differences;
 - Expected Calibration Error (ECE);
 - confusion matrices;
-- classwise ROC analysis;
+- classwise ROC analysis; and
 - qualitative Grad-CAM attribution.
 
-A central finding is that **model ranking changes under cross-dataset evaluation**. ViT provides the strongest internal point estimates, whereas ConvNeXt-Tiny provides the strongest external point estimates.
+A central finding is that **model ranking changes under cross-dataset
+evaluation**. ViT provides the strongest internal point estimates, whereas
+ConvNeXt-Tiny provides the strongest external point estimates.
 
 ---
 
@@ -104,20 +151,21 @@ A central finding is that **model ranking changes under cross-dataset evaluation
 
 ### HAM10000
 
-The **HAM10000** dataset contains 10,015 dermoscopic images representing seven common pigmented skin-lesion categories.
+The **HAM10000** dataset contains **10,015 dermoscopic images** representing
+seven common pigmented skin-lesion categories.
 
-HAM10000 is used for model training and retrospective internal evaluation.
+HAM10000 is used for the historical model-development workflows and for the
+retrospective internal evaluation reported in this project.
 
-The final harmonized internal analysis uses a standardized evaluation cohort containing:
+The final harmonized internal analysis uses a standardized cohort containing:
 
 **n = 2,003 images**
 
-Because the archived checkpoints were originally generated under differing historical training and data-partitioning pipelines, this cohort should be interpreted as a **standardized retrospective evaluation cohort**, not as a universally untouched test set shared by every model.
-
-Dataset:
-
-- HAM10000 / Human Against Machine with 10,000 training images
-- ISIC Archive / associated public dataset distribution
+Because the archived checkpoints were generated under differing historical
+training and data-partitioning pipelines, this cohort must be interpreted as a
+**standardized retrospective evaluation cohort**, not as a universally
+untouched test set identically held out during the historical development of
+every model.
 
 ### ISIC 2019
 
@@ -125,20 +173,26 @@ ISIC 2019 is used for external cross-dataset evaluation.
 
 For compatibility with the HAM10000 seven-class label space:
 
-- `AK` and `SCC` are mapped to `akiec`;
-- only samples corresponding to the seven canonical diagnostic classes are retained.
+- ISIC 2019 `AK` and `SCC` are mapped to `akiec`; and
+- only samples corresponding to the seven canonical diagnostic categories are
+  retained.
 
-The resulting harmonized external evaluation cohort contains:
+The harmonized external evaluation cohort contains:
 
 **n = 25,331 images**
 
-This external evaluation is intended to assess model behavior under dataset shift rather than to represent prospective clinical validation.
+The external experiment evaluates model behavior under dataset shift. It does
+not constitute prospective clinical validation.
+
+> Dataset files are not redistributed through this repository. Users must
+> obtain HAM10000 and ISIC 2019 from their authorized public distributions and
+> comply with the corresponding licenses and terms of use.
 
 ---
 
 ## Diagnostic Classes
 
-All downstream analyses use the following canonical seven-class ordering:
+All harmonized analyses use the following canonical seven-class ordering:
 
 | Code | Diagnostic category |
 |---|---|
@@ -150,15 +204,18 @@ All downstream analyses use the following canonical seven-class ordering:
 | `nv` | Melanocytic nevi |
 | `vasc` | Vascular lesions |
 
-Historical classifier outputs are mapped to this canonical ordering before metric calculation and ensembling.
+Historical classifier outputs are mapped to this canonical ordering before
+metric calculation or ensembling.
 
-This harmonization is particularly important for archived models whose original classifier ordering differed from the standardized evaluation ordering.
+This step is particularly important for archived checkpoints whose original
+classifier-output ordering differs from the harmonized evaluation order.
 
 ---
 
 ## Models
 
-Seven architectures spanning conventional CNNs, modern convolutional networks, efficient architectures, and transformers are evaluated.
+Seven architectures spanning conventional convolutional networks, modern CNN
+families, efficient architectures, and transformers are evaluated.
 
 | Model | Architecture family |
 |---|---|
@@ -174,53 +231,64 @@ Seven architectures spanning conventional CNNs, modern convolutional networks, e
 
 The baseline CNN uses four convolutional blocks based on:
 
-`Conv → BatchNorm → ReLU → MaxPool`
+```text
+Conv → BatchNorm → ReLU → MaxPool
+```
 
 followed by a fully connected seven-class classifier.
 
 ### Transfer-learning architectures
 
-The remaining architectures use their corresponding archived training configurations and architecture-specific preprocessing pipelines.
+The remaining architectures use their corresponding model definitions and
+documented preprocessing/evaluation requirements.
+
+For new repository training runs, see
+[`docs/training_pipeline.md`](docs/training_pipeline.md).
 
 ---
 
 ## Evaluation Protocol
 
-The study uses **fixed archived model checkpoints**.
+The reported study evaluates **fixed archived model checkpoints**.
 
-The historical checkpoints were not all generated from an identical original training split. Accordingly, the purpose of the current evaluation framework is to provide a harmonized retrospective comparison using:
+The historical checkpoints were not all produced from an identical original
+train/validation/test protocol. The harmonized framework therefore provides a
+retrospective comparison using:
 
 - fixed checkpoint versions;
-- fixed evaluation datasets;
-- architecture-specific preprocessing;
+- fixed evaluation cohorts;
+- documented preprocessing;
 - canonical seven-class output harmonization;
-- common downstream metric calculation;
+- common downstream metric calculation; and
 - reproducible prediction and analysis artifacts.
 
-For HAM10000, all final quantitative analyses are derived from the same standardized 2,003-image evaluation cohort and harmonized prediction outputs.
+For HAM10000, the final quantitative analyses are derived from the standardized
+2,003-image evaluation cohort and harmonized prediction outputs.
 
-These outputs are used for:
+These outputs support:
 
-- performance metrics;
+- primary performance metrics;
 - bootstrap confidence intervals;
 - Expected Calibration Error;
 - McNemar comparisons;
 - paired bootstrap differences;
-- confusion matrices;
+- confusion matrices; and
 - ROC analyses.
 
-For ISIC 2019, the same fixed checkpoint versions are evaluated on the same harmonized external dataset using their corresponding preprocessing pipelines and the common seven-class output ordering.
+For ISIC 2019, the fixed HAM10000-trained models are evaluated on the same
+harmonized external cohort using the corresponding inference procedures and
+canonical output ordering.
 
 ### Primary metrics
 
-HAM10000:
+**HAM10000**
 
 - Accuracy
 - Weighted F1
 - Macro one-vs-rest ROC-AUC
 - Micro one-vs-rest ROC-AUC
 
-ISIC 2019:
+**ISIC 2019**
 
 - Accuracy
 - Weighted F1
@@ -229,21 +297,25 @@ ISIC 2019:
 
 ### Uncertainty analysis
 
-For the HAM10000 supplementary uncertainty analysis:
+For the HAM10000 uncertainty analysis:
 
-- point estimates are calculated on the complete 2,003-image cohort;
+- point estimates are calculated on the full 2,003-image evaluation cohort;
 - **1,000 bootstrap resamples** are used;
-- **95% bootstrap percentile confidence intervals** are reported;
+- **95% bootstrap percentile confidence intervals** are reported; and
 - the base random seed is **42**.
 
 ### Calibration
 
 Expected Calibration Error is evaluated on HAM10000 using:
 
-- maximum-confidence multiclass calibration;
-- **15 confidence bins**.
+- maximum-confidence multiclass calibration; and
+- **15 equal-width confidence bins**.
 
-Lower ECE indicates closer agreement between predictive confidence and observed accuracy.
+Lower ECE indicates closer agreement between predictive confidence and
+observed accuracy.
+
+For the precise metric implementations, see
+[`docs/evaluation_metrics.md`](docs/evaluation_metrics.md).
 
 ---
 
@@ -259,9 +331,10 @@ The final ensemble combines all seven evaluated models:
 6. MobileNetV3-Large
 7. ViT-B/16
 
-For each image, each model produces a seven-class probability vector.
+For image $begin:math:text$i$end:math:text$, each model produces a seven-class probability vector
+$begin:math:text$p\_m\^\{\(i\)\}$end:math:text$.
 
-The ensemble prediction is:
+The ensemble probability is the arithmetic mean:
 
 ```text
 p_ensemble = (p_CNN
@@ -273,13 +346,17 @@ p_ensemble = (p_CNN
             + p_ViT) / 7
 ```
 
-Equivalently,
+Equivalently:
 
 ```text
 p_ensemble = (1/7) × Σ p_m
 ```
 
-No validation-based optimization of ensemble weights is used in the reported final analysis.
+No validation-based optimization of ensemble weights is used in the reported
+final analysis.
+
+See [`docs/ensemble_method.md`](docs/ensemble_method.md) for implementation
+details and compatibility requirements.
 
 ---
 
@@ -300,9 +377,16 @@ Performance on the standardized **2,003-image HAM10000 evaluation cohort**:
 | CNN | 0.7898 | 0.7763 | 0.9388 | 0.9712 |
 | ResNet-50 | 0.6850 | 0.7142 | 0.9319 | 0.9386 |
 
-**ViT achieved the highest point estimate across all four reported HAM10000 performance metrics.**
+**ViT achieved the highest point estimate across all four reported HAM10000
+performance metrics.**
 
-The equal-weight ensemble achieved the second-highest point estimates across all four metrics. Therefore, the final results do **not** support a claim that the ensemble uniformly outperforms the strongest individual architecture.
+The equal-weight ensemble achieved the second-highest point estimates across
+all four metrics. The reported results therefore do **not** support a claim
+that the ensemble uniformly outperforms the strongest individual
+architecture.
+
+Source table:
+[`results/tables/HAM10000_model_performance.csv`](results/tables/HAM10000_model_performance.csv)
 
 ### 95% bootstrap confidence intervals
 
@@ -317,11 +401,21 @@ The equal-weight ensemble achieved the second-highest point estimates across all
 | CNN | 0.7898 [0.7718, 0.8083] | 0.7763 [0.7569, 0.7949] | 0.9388 [0.9301, 0.9470] | 0.9712 [0.9672, 0.9747] |
 | ResNet-50 | 0.6850 [0.6625, 0.7050] | 0.7142 [0.6962, 0.7320] | 0.9319 [0.9226, 0.9399] | 0.9386 [0.9321, 0.9446] |
 
+Source table:
+[`results/tables/HAM10000_master_results_with_95CI.csv`](results/tables/HAM10000_master_results_with_95CI.csv)
+
+### Internal performance figures
+
+![HAM10000 accuracy and weighted F1 comparison](results/figures/model_comp_accuracy_f1.png)
+
+![HAM10000 ROC-AUC comparison](results/figures/model_comp_auc.png)
+
 ---
 
 ## ISIC 2019 External Evaluation
 
-The same fixed HAM10000-trained models are evaluated on the harmonized **25,331-image ISIC 2019 external evaluation set**.
+The same fixed HAM10000-trained models are evaluated on the harmonized
+**25,331-image ISIC 2019 external evaluation cohort**.
 
 | Model | Accuracy | Weighted F1 | Macro ROC-AUC | Weighted ROC-AUC |
 |---|---:|---:|---:|---:|
@@ -334,11 +428,20 @@ The same fixed HAM10000-trained models are evaluated on the harmonized **25,331-
 | ViT | 0.6651 | 0.6239 | 0.8995 | 0.8962 |
 | Ensemble | 0.6830 | 0.6446 | 0.8981 | 0.9011 |
 
-**ConvNeXt-Tiny achieved the highest point estimate across all four external evaluation metrics.**
+**ConvNeXt-Tiny achieved the highest point estimate across all four external
+evaluation metrics.**
 
-The change in ranking relative to HAM10000 illustrates substantial architecture-dependent sensitivity to cross-dataset domain shift.
+The change in ranking relative to HAM10000 demonstrates
+architecture-dependent sensitivity to cross-dataset domain shift. In
+particular, ViT provides the strongest internal results but does not retain
+the highest external ranking.
 
-ViT, despite providing the strongest internal results, does not retain the top external ranking.
+Source table:
+[`results/tables/ISIC2019_model_performance.csv`](results/tables/ISIC2019_model_performance.csv)
+
+### External ensemble ROC curves
+
+![ISIC 2019 ensemble ROC curves](results/figures/roc_curve_ensemble_isic2019.png)
 
 ---
 
@@ -359,9 +462,15 @@ Expected Calibration Error on the standardized HAM10000 evaluation cohort:
 
 ViT achieved the lowest ECE (**1.37%**).
 
-The ensemble exhibited the highest ECE (**11.54%**), demonstrating that strong classification and discrimination performance does not necessarily imply well-calibrated predictive probabilities.
+The ensemble exhibited the highest ECE (**11.54%**), illustrating that strong
+classification and discrimination performance does not necessarily imply
+well-calibrated predictive probabilities.
 
-Explicit ensemble-level calibration should therefore be investigated before probability estimates are considered for downstream clinical interpretation.
+Explicit ensemble-level calibration should be investigated before
+probability estimates are considered for downstream clinical interpretation.
+
+Source table:
+[`results/tables/HAM10000_calibration_ece.csv`](results/tables/HAM10000_calibration_ece.csv)
 
 ---
 
@@ -369,7 +478,8 @@ Explicit ensemble-level calibration should therefore be investigated before prob
 
 ### McNemar's test
 
-Paired classification outcomes between the equal-weight ensemble and each individual model were compared on HAM10000.
+Paired classification outcomes between the equal-weight ensemble and each
+individual model were compared on HAM10000.
 
 | Comparison | b | c | p-value |
 |---|---:|---:|---:|
@@ -386,11 +496,16 @@ Here:
 - `b > c` favors the ensemble;
 - `c > b` favors the individual model.
 
-The ensemble therefore shows favorable paired classification differences relative to CNN, ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, and MobileNetV3-L.
+The paired comparison therefore favors the ensemble relative to CNN,
+ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, and
+MobileNetV3-Large.
 
-The comparison with **ViT favors ViT**, not the ensemble.
+The comparison with **ViT favors ViT**.
 
-### Paired bootstrap: Ensemble minus ViT
+Source table:
+[`results/tables/HAM10000_mcnemar_ensemble_vs_models.csv`](results/tables/HAM10000_mcnemar_ensemble_vs_models.csv)
+
+### Paired bootstrap: ensemble minus ViT
 
 | Metric | Δ Estimate | 95% CI |
 |---|---:|---|
@@ -400,13 +515,20 @@ The comparison with **ViT favors ViT**, not the ensemble.
 
 Negative values favor ViT.
 
-The accuracy and weighted F1 confidence intervals remain below zero, whereas the small macro ROC-AUC difference includes zero.
+The accuracy and weighted F1 confidence intervals remain below zero, whereas
+the macro ROC-AUC difference is small and its confidence interval includes
+zero.
+
+Additional statistical artifacts:
+
+- [`HAM10000_paired_bootstrap_differences.csv`](results/tables/HAM10000_paired_bootstrap_differences.csv)
+- [`HAM10000_point_deltas_ensemble_vs_models.csv`](results/tables/HAM10000_point_deltas_ensemble_vs_models.csv)
 
 ---
 
 ## External Per-Class Performance
 
-Per-class F1 scores on the harmonized ISIC 2019 external evaluation set:
+Per-class F1 scores on the harmonized ISIC 2019 external evaluation cohort:
 
 | Model | AKIEC | BCC | BKL | DF | MEL | NV | VASC |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -418,7 +540,11 @@ Per-class F1 scores on the harmonized ISIC 2019 external evaluation set:
 | MobileNetV3-L | 0.23 | 0.38 | 0.43 | 0.34 | 0.44 | 0.80 | 0.68 |
 | ViT | 0.19 | 0.43 | 0.46 | 0.39 | 0.48 | 0.81 | 0.74 |
 
-ConvNeXt-Tiny achieved the highest reported F1 for **AKIEC, BKL, DF, MEL, NV, and VASC**, while DenseNet-121 achieved the highest F1 for **BCC**.
+ConvNeXt-Tiny achieved the highest reported F1 for **AKIEC, BKL, DF, MEL,
+NV, and VASC**, whereas DenseNet-121 achieved the highest F1 for **BCC**.
+
+Source table:
+[`results/tables/ISIC2019_per_class_F1.csv`](results/tables/ISIC2019_per_class_F1.csv)
 
 ### Ensemble classwise ROC-AUC on ISIC 2019
 
@@ -432,63 +558,84 @@ ConvNeXt-Tiny achieved the highest reported F1 for **AKIEC, BKL, DF, MEL, NV, an
 | NV | 0.933 |
 | VASC | 0.980 |
 
-The ensemble's highest classwise external AUC was observed for **VASC (0.980)**, followed by **NV (0.933)** and **DF (0.920)**.
+The ensemble's highest classwise external AUC was observed for
+**VASC (0.980)**, followed by **NV (0.933)** and **DF (0.920)**.
 
 ---
 
 ## Explainability
 
-Grad-CAM is used to qualitatively examine spatial attribution patterns associated with model predictions.
+Grad-CAM is used to qualitatively examine spatial attribution patterns
+associated with model predictions.
 
-For the ensemble:
+For the equal-weight ensemble:
 
-1. Grad-CAM maps are generated independently from the seven component models.
-2. Each model uses its corresponding preprocessing pipeline and canonical class mapping.
-3. Individual attribution maps are independently normalized.
-4. Maps are resized to a common spatial resolution.
-5. The seven normalized maps are combined using equal-weight averaging.
+1. attribution maps are generated independently for the seven component
+   models;
+2. each model uses its corresponding inference preprocessing and class-output
+   mapping;
+3. individual attribution maps are normalized independently;
+4. maps are resized to a common spatial resolution; and
+5. the normalized maps are combined using equal-weight averaging.
 
-The attribution analyses use the same fixed archived checkpoints as the quantitative evaluation.
+The attribution analysis uses the same fixed archived checkpoints as the
+quantitative evaluation.
 
-Representative visualizations include:
+The repository contains:
 
-- per-class HAM10000 ensemble Grad-CAM examples;
-- same-image melanoma comparisons across CNN, ResNet-50, DenseNet-121, ViT, and the ensemble.
+- representative per-class HAM10000 ensemble attribution maps; and
+- same-image melanoma comparisons across CNN, ResNet-50, DenseNet-121, ViT,
+  and the ensemble.
 
-These visualizations demonstrate differences in spatial attribution patterns across architectures.
+Example:
 
-> **Important:** Grad-CAM results are qualitative interpretability aids. They were not evaluated against dermatologist annotations or localization ground truth and should not be interpreted as evidence of causal attribution, clinically validated lesion localization, or superior clinical explainability.
+![Ensemble melanoma Grad-CAM](results/figures/gradcam_ensemble_mel.png)
+
+> **Important:** Grad-CAM results are qualitative interpretability aids. They
+> were not evaluated against dermatologist annotations or localization ground
+> truth and must not be interpreted as evidence of causal attribution,
+> clinically validated lesion localization, or superior clinical
+> explainability.
 
 ---
 
 ## Reproducibility
 
-The repository is designed to support independent verification of the reported analyses.
+The repository is designed to support independent verification of the
+reported analyses.
 
 The final evaluation framework is based on:
 
 - fixed archived model checkpoints;
-- documented architecture-specific preprocessing;
+- documented inference and preprocessing requirements;
 - standardized HAM10000 evaluation cohort;
-- harmonized ISIC 2019 external evaluation set;
+- harmonized ISIC 2019 external evaluation cohort;
 - canonical seven-class output mapping;
 - harmonized prediction outputs;
-- standardized downstream metric calculation;
+- standardized downstream metric calculations; and
 - released statistical and visualization artifacts.
 
 ### Important reproducibility note
 
-The seven archived checkpoints were produced under **different historical training and data-partitioning pipelines**.
+The seven archived checkpoints were produced under **different historical
+training and data-partitioning pipelines**.
 
-Therefore, reproducibility in this project means reproducing the evaluation of the fixed archived models using the documented datasets, preprocessing procedures, class mappings, prediction outputs, and downstream analysis.
+Accordingly, reproducibility in this repository primarily means reproducing
+the **evaluation of the fixed archived models** using the documented cohorts,
+preprocessing procedures, class mappings, prediction outputs, and downstream
+analysis.
 
-It does **not** imply that all seven architectures were originally trained prospectively using the same train/validation/test split.
+It does **not** imply that all seven architectures were originally trained
+prospectively using the same predefined train/validation/test split.
 
-This distinction is essential when interpreting the internal HAM10000 comparison.
+This distinction is essential when interpreting the retrospective HAM10000
+comparison.
 
 ---
 
 ## Installation
+
+Python **3.11** is the recommended environment.
 
 Clone the repository:
 
@@ -497,31 +644,36 @@ git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-en
 cd skin-lesion-classification-ensemble-ham10000
 ```
 
-Create and activate a virtual environment:
+Create a virtual environment:
 
 ```bash
-python -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 ```
 
 On Windows:
 
-```bash
+```powershell
+py -3.11 -m venv .venv
 .venv\Scripts\activate
 ```
 
-Install the required packages:
+Install project dependencies:
 
 ```bash
-pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
 ```
 
-For development and CI dependencies:
+For development and repository validation:
 
 ```bash
-pip install -r requirements-ci.txt
+python -m pip install -r requirements-ci.txt
+pre-commit install
 ```
+
+For additional details, see
+[`docs/installation.md`](docs/installation.md).
 
 ---
 
@@ -529,9 +681,7 @@ pip install -r requirements-ci.txt
 
 ### HAM10000
 
-Download HAM10000 from its public distribution or the ISIC resources.
-
-Common distributions contain:
+Common HAM10000 distributions contain:
 
 ```text
 HAM10000_images_part_1.zip
@@ -539,27 +689,27 @@ HAM10000_images_part_2.zip
 HAM10000_metadata.csv
 ```
 
-After downloading, extract both image archives into an appropriate local data directory.
+The repository provides:
 
-Example:
-
-```text
-data/
-└── HAM10000/
-    ├── HAM10000_metadata.csv
-    └── images/
-        ├── ISIC_0024306.jpg
-        ├── ISIC_0024307.jpg
-        └── ...
+```bash
+bash scripts/prepare_ham10000.sh
 ```
 
-The complete HAM10000 dataset contains **10,015 dermoscopic images**.
+to assist with preparation and validation of the raw HAM10000 image
+collection.
+
+The complete dataset should contain **10,015 images**.
+
+The script prepares the raw dataset resources; it should not be interpreted as
+reconstructing a universally shared historical train/validation split for all
+archived checkpoints.
 
 ### ISIC 2019
 
-For external evaluation, obtain the public ISIC 2019 images and ground-truth labels.
+For external evaluation, obtain the public ISIC 2019 image and ground-truth
+resources from the official ISIC distribution.
 
-The external evaluation used in the study retains samples mapping to:
+The external evaluation retains samples mapped to:
 
 ```text
 akiec
@@ -571,42 +721,80 @@ nv
 vasc
 ```
 
-with ISIC 2019 `AK` and `SCC` mapped to the unified `akiec` category.
+with `AK` and `SCC` mapped to the common `akiec` category.
 
-After harmonization, the external evaluation cohort contains **25,331 images**.
-
-> Dataset files are not redistributed through this repository. Users are responsible for obtaining the datasets from their official/public sources and complying with their respective licenses and terms of use.
+After harmonization, the reported external cohort contains **25,331 images**.
 
 ---
 
 ## Running the Repository
 
-The repository contains training, evaluation, ensembling, and analysis utilities for reproducing the project workflow.
-
-Set the repository root on `PYTHONPATH` when required:
+Set the repository root on `PYTHONPATH` when needed:
 
 ```bash
 export PYTHONPATH="$PWD"
 ```
 
-The exact commands depend on whether you are:
+### Repository validation
 
-- training a model;
-- evaluating a fixed checkpoint;
-- generating prediction outputs;
-- calculating ensemble predictions;
-- reproducing statistical analyses;
-- generating ROC curves or confusion matrices;
-- generating Grad-CAM attribution maps.
+Run the complete local repository validation workflow:
 
-For evaluation of archived checkpoints, ensure that:
+```bash
+make verify
+```
 
-1. the expected checkpoint files are available;
+This runs the configured pre-commit checks and automated test suite.
+
+### Training a new model
+
+The repository training interface supports:
+
+```text
+cnn
+resnet50
+densenet121
+efficientnet_b3
+convnext_tiny
+mobilenet_v3_large
+vit_b_16
+```
+
+Example:
+
+```bash
+python -m src.train \
+  --model resnet50 \
+  --config src/config.yaml
+```
+
+These commands are intended for new repository training runs. They should not
+be assumed to reconstruct every historical archived manuscript checkpoint
+exactly.
+
+See
+[`docs/training_pipeline.md`](docs/training_pipeline.md)
+for dataset layout, preprocessing, optimization, and output details.
+
+### Evaluate archived checkpoints
+
+The batch evaluation workflow is provided through:
+
+```bash
+bash scripts/eval_all.sh
+```
+
+Before running it, ensure that:
+
+1. the required checkpoint files are available;
 2. dataset paths are configured correctly;
-3. architecture-specific preprocessing is preserved;
-4. model outputs are converted to the canonical seven-class ordering before ensembling or metric calculation.
+3. checkpoint-specific compatibility requirements are preserved;
+4. output class ordering is mapped correctly; and
+5. the required seven model outputs are available before constructing the
+   ensemble.
 
-The final manuscript results should be reproduced from the **fixed checkpoint and harmonized evaluation artifacts** associated with the reported analysis rather than by substituting alternative checkpoints or post-hoc tuned predictions.
+The reported manuscript values should be reproduced from the documented fixed
+checkpoint and harmonized evaluation artifacts rather than by substituting
+alternative checkpoints or post-hoc tuned predictions.
 
 ---
 
@@ -616,193 +804,285 @@ The main research notebook is available at:
 
 [`notebooks/skin_lesion_ensemble_classification.ipynb`](notebooks/skin_lesion_ensemble_classification.ipynb)
 
-It can be used in:
+It may be used in:
 
 - a local Python environment;
-- Kaggle;
+- Kaggle; or
 - Google Colab.
 
 ### Local
 
-Install dependencies:
+Install the repository dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-Then configure dataset and checkpoint paths for your local environment.
+Then configure dataset and checkpoint paths for the local environment.
 
 ### Kaggle
 
-Kaggle provides GPU-enabled notebook environments and convenient dataset mounting.
-
-Attach the required HAM10000 and/or ISIC 2019 datasets and update paths where necessary before running the notebook.
+Attach the required HAM10000 and/or ISIC 2019 resources and update
+environment-specific paths before running the notebook.
 
 ### Google Colab
 
-Install additional packages if required:
+The repository requirements can be installed with:
 
-```bash
-!pip install timm einops grad-cam
+```python
+!pip install -r requirements.txt
 ```
 
-If using Google Drive:
+when the repository has been cloned into the Colab environment.
+
+If Google Drive is used for datasets or checkpoints:
 
 ```python
 from google.colab import drive
+
 drive.mount("/content/drive")
 ```
 
-Then configure the dataset and checkpoint paths for the Colab environment.
-
-> Paths are environment-specific. Reproducing the final reported results requires the same fixed checkpoints, evaluation-cohort definitions, preprocessing procedures, and class mappings used in the released evaluation artifacts.
+> Paths are environment-specific. Reproducing the final reported results
+> requires the same fixed checkpoints, evaluation-cohort definitions,
+> preprocessing procedures, and class mappings used by the released
+> evaluation artifacts.
 
 ---
 
 ## Repository Structure
 
-A simplified overview of the project structure is shown below:
-
 ```text
 skin-lesion-classification-ensemble-ham10000/
 │
-├── .github/                      # GitHub workflows and repository configuration
-├── notebooks/                    # Research and demonstration notebooks
-├── outputs/                      # Evaluation and reproducibility outputs
-├── results/                      # Tables, figures, and analysis results
+├── .github/
+│   ├── ISSUE_TEMPLATE/
+│   ├── pull_request_template.md
+│   └── workflows/
+│       └── ci.yml
+│
+├── docs/
+│   ├── ensemble_method.md
+│   ├── evaluation_metrics.md
+│   ├── installation.md
+│   └── training_pipeline.md
+│
+├── notebooks/
+│   └── skin_lesion_ensemble_classification.ipynb
+│
+├── results/
 │   ├── figures/
 │   └── tables/
-├── scripts/                      # Evaluation and automation scripts
-├── src/                          # Core source code
-│   ├── train.py
-│   ├── evaluate.py
-│   ├── ensemble.py
-│   ├── utils.py
-│   └── config.yaml
-├── tests/                        # Automated tests
 │
+├── scripts/
+│   ├── eval_all.sh
+│   └── prepare_ham10000.sh
+│
+├── src/
+│   ├── config.yaml
+│   ├── data.py
+│   ├── ensemble.py
+│   ├── evaluate.py
+│   ├── train.py
+│   └── utils.py
+│
+├── tests/
+│
+├── .gitattributes
+├── .gitignore
+├── .pre-commit-config.yaml
 ├── CITATION.cff
 ├── CODE_OF_CONDUCT.md
 ├── CONTRIBUTING.md
-├── CHANGELOG.md
 ├── LICENSE
 ├── Makefile
-├── requirements.txt
+├── metadata.yaml
+├── pyproject.toml
+├── pytest.ini
 ├── requirements-ci.txt
+├── requirements.txt
 └── README.md
 ```
 
-The exact repository contents may evolve as reproducibility artifacts are consolidated.
+Generated experimental outputs may be written locally under `outputs/`,
+whereas curated manuscript and reproducibility artifacts are maintained under
+`results/`.
+
+---
+
+## Result Artifacts
+
+### Curated tables
+
+The repository currently provides the manuscript and supplementary result
+tables in machine-readable CSV form:
+
+- [`HAM10000_model_performance.csv`](results/tables/HAM10000_model_performance.csv)
+- [`HAM10000_master_results_with_95CI.csv`](results/tables/HAM10000_master_results_with_95CI.csv)
+- [`HAM10000_calibration_ece.csv`](results/tables/HAM10000_calibration_ece.csv)
+- [`HAM10000_mcnemar_ensemble_vs_models.csv`](results/tables/HAM10000_mcnemar_ensemble_vs_models.csv)
+- [`HAM10000_paired_bootstrap_differences.csv`](results/tables/HAM10000_paired_bootstrap_differences.csv)
+- [`HAM10000_point_deltas_ensemble_vs_models.csv`](results/tables/HAM10000_point_deltas_ensemble_vs_models.csv)
+- [`ISIC2019_model_performance.csv`](results/tables/ISIC2019_model_performance.csv)
+- [`ISIC2019_per_class_F1.csv`](results/tables/ISIC2019_per_class_F1.csv)
+
+### Curated figures
+
+Curated figures are maintained under:
+
+[`results/figures/`](results/figures/)
+
+They include:
+
+- HAM10000 and ISIC 2019 ensemble confusion matrices;
+- HAM10000 model-comparison figures;
+- HAM10000 ensemble ROC curves;
+- ISIC 2019 ensemble ROC curves;
+- per-class ensemble Grad-CAM examples; and
+- same-image melanoma attribution comparisons.
+
+### Larger reproducibility artifacts
+
+Larger archived resources are distributed through Zenodo where applicable,
+including model, prediction, and supporting analysis artifacts associated with
+the study.
+
+**Zenodo DOI:**  
+[10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+
+GitHub should be treated as the version-controlled code and curated-results
+repository, while Zenodo provides the persistent archival record for the
+associated release.
+
+---
+
+## Environment
+
+The recommended repository environment is:
+
+| Component | Version / support |
+|---|---|
+| Python | **3.11** |
+| PyTorch | **2.9.0** |
+| torchvision | **0.24.0** |
+| Operating systems | Linux, macOS; Windows for supported workflows |
+| CUDA | Supported when available |
+| Apple MPS | Supported where compatible |
+| CPU | Supported; computationally slower for deep-learning workloads |
+
+For the authoritative dependency specification, see:
+
+- [`requirements.txt`](requirements.txt)
+- [`requirements-ci.txt`](requirements-ci.txt)
 
 ---
 
 ## Limitations
 
-Several limitations should be considered when interpreting the reported results.
-
 ### 1. Retrospective internal harmonization
 
-The archived model checkpoints were produced under differing historical training and data-partitioning pipelines.
+The archived model checkpoints were produced under differing historical
+training and data-partitioning pipelines.
 
-The standardized 2,003-image HAM10000 cohort therefore represents a **retrospective harmonized comparison cohort**, not a common untouched test split for every model.
+The standardized 2,003-image HAM10000 cohort therefore represents a
+**retrospective harmonized comparison cohort**, not a common untouched test
+split identically held out during development of every model.
 
 ### 2. External domain shift
 
 Performance changes substantially for several architectures on ISIC 2019.
 
-Differences between HAM10000 and ISIC 2019 may include:
+Potential differences between HAM10000 and ISIC 2019 include:
 
 - acquisition conditions;
+- institutional sources;
 - class distributions;
 - lesion appearance;
-- institutional sources;
-- dataset-specific characteristics.
+- image-processing characteristics; and
+- other dataset-specific factors.
 
-The current experiments do not isolate the causal contribution of individual sources of domain shift.
+The current experiments do not isolate the causal contribution of individual
+sources of domain shift.
 
 ### 3. Calibration
 
-The ensemble achieved strong discrimination metrics but had an ECE of **11.54%** on HAM10000.
+The ensemble achieved strong discrimination metrics but an ECE of **11.54%**
+on HAM10000.
 
-Independent calibration assessment and explicit calibration procedures would be required before probabilistic outputs could be considered for clinical decision support.
+Independent calibration assessment and explicit calibration procedures would
+be required before predictive probabilities could be considered for clinical
+decision support.
 
 ### 4. Interpretability
 
-Grad-CAM analysis was performed qualitatively on representative HAM10000 examples.
+Grad-CAM analysis was performed qualitatively on representative HAM10000
+examples.
 
-External ISIC 2019 Grad-CAM analysis was not performed as part of the reported study.
+Corresponding attribution analysis on the external ISIC 2019 cohort was not
+part of the reported study.
 
 ### 5. No dermatologist validation
 
 Predictions and attribution maps were not evaluated by dermatologists.
 
-The results therefore do not establish clinical diagnostic utility or clinically meaningful localization.
+The results therefore do not establish clinical diagnostic utility or
+clinically meaningful localization.
 
-### 6. Additional external validation
+### 6. Further external validation
 
-Evaluation on additional independent institutions, demographic subgroups, and prospective clinical datasets is required before conclusions about real-world clinical generalizability can be made.
+Additional evaluation across independent institutions, demographic groups,
+acquisition settings, and prospective clinical cohorts is needed before
+claims of real-world clinical generalizability can be supported.
 
 ---
 
 ## Ethics and Data Use
 
-This study uses only publicly available, de-identified dermoscopic datasets:
+This study uses publicly available, de-identified dermoscopic datasets:
 
 - HAM10000
 - ISIC 2019
 
-No new human participants, identifiable patient information, or animal subjects were involved.
+No new human participants, identifiable patient information, or animal
+subjects were enrolled or collected by this project.
 
-Accordingly, institutional ethics approval and informed consent were not required for this analysis.
+The repository contains no newly collected identifiable patient data.
 
-Nevertheless, dataset composition, class imbalance, demographic representation, fairness, calibration, and cross-domain generalization remain important considerations for future clinical translation.
+Users remain responsible for complying with the licenses, access conditions,
+and data-use requirements of the original dataset providers.
 
-This repository contains no newly collected identifiable patient information.
-
----
-
-## Reproducibility Assets
-
-Due to repository storage constraints, larger reproducibility assets are archived through Zenodo.
-
-The released resources include, where applicable:
-
-- trained model checkpoints;
-- prediction outputs;
-- evaluation metrics;
-- statistical analysis artifacts;
-- ROC analyses;
-- confusion matrices;
-- Grad-CAM visualizations;
-- tables and figures;
-- supporting reproducibility files.
-
-**Zenodo DOI:**
-[10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
-
-The GitHub repository and Zenodo archive together provide the code and artifacts required for independent verification and further methodological investigation.
+Dataset composition, class imbalance, demographic representation, fairness,
+calibration, and cross-domain generalization remain important considerations
+for future clinical translation.
 
 ---
 
-## Paper / Preprint
+## Paper / Manuscript
 
-**Title:**
-*Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019*
+**Title**
 
-**Author:**
+*Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+Classification: Internal Evaluation on HAM10000 and External Evaluation on
+ISIC 2019*
+
+**Author**
+
 Md Naim Hassan Saykat
 
-**Affiliation:**
+**Affiliation**
+
 Department of Computer Science, Université Paris-Saclay, France
 
-**Associated archive:**
+**Associated reproducibility archive**
+
 [Zenodo DOI: 10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
 
 ---
 
 ## Citation
 
-If you use this repository, evaluation framework, models, or associated artifacts, please cite the accompanying work and Zenodo archive.
+If you use the repository, software, evaluation framework, or associated
+reproducibility artifacts, please cite the archived project:
 
 ```bibtex
 @misc{saykat2025dermoscopic,
@@ -812,152 +1092,163 @@ If you use this repository, evaluation framework, models, or associated artifact
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.17390952},
   url       = {https://doi.org/10.5281/zenodo.17390952},
-  note      = {Preprint, code, models, and accompanying reproducibility artifacts}
+  note      = {Software and reproducibility archive}
 }
 ```
 
-A machine-readable citation file is also provided in [`CITATION.cff`](CITATION.cff).
+Machine-readable citation metadata are provided in
+[`CITATION.cff`](CITATION.cff).
 
 ---
 
 ## Development and Contributions
 
-Contributions that improve reproducibility, documentation, evaluation, or code quality are welcome.
+Contributions that improve reproducibility, documentation, testing,
+evaluation, or code quality are welcome.
 
-For development:
+Set up the development environment:
 
 ```bash
 git clone https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000.git
 cd skin-lesion-classification-ensemble-ham10000
 
-python -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 
-pip install -r requirements.txt -r requirements-ci.txt
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt -r requirements-ci.txt
 
-ruff check src
-black --check src
-make test
+pre-commit install
 ```
 
-Before submitting changes, please review:
+Run the complete repository validation suite before submitting changes:
+
+```bash
+make verify
+```
+
+Please review:
 
 - [`CONTRIBUTING.md`](CONTRIBUTING.md)
 - [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md)
+- [`SECURITY.md`](SECURITY.md)
 
-For bugs, reproducibility problems, or feature requests, please open a GitHub issue.
-
----
-
-## Environment
-
-The project is designed for modern Python/PyTorch environments.
-
-| Component | Supported / used environment |
-|---|---|
-| Python | 3.9+ |
-| PyTorch | 2.x |
-| Torchvision | compatible with installed PyTorch version |
-| OS | Linux / macOS |
-| Accelerator | CUDA / MPS where supported |
-| CPU | supported for evaluation, but slower |
-
-For exact dependency versions, refer to:
-
-- [`requirements.txt`](requirements.txt)
-- [`requirements-ci.txt`](requirements-ci.txt)
+For bugs or reproducibility problems, open an issue using the repository issue
+templates.
 
 ---
 
 ## Future Work
 
-Important directions for extending this work include:
+Important directions include:
 
-- prospectively training all architectures using one predefined train/validation/test protocol;
-- evaluating additional independent clinical datasets;
-- investigating domain adaptation;
-- evaluating ensemble-level calibration;
-- extending attribution analysis to external datasets;
-- investigating self-supervised and semi-supervised learning;
-- incorporating multimodal clinical information;
-- performing subgroup and fairness analyses;
-- conducting dermatologist reader studies;
-- evaluating predictions and attribution maps against clinically meaningful reference standards.
+- prospectively training all architectures under one predefined
+  train/validation/test protocol;
+- evaluation on additional independent clinical datasets;
+- domain adaptation and domain generalization;
+- explicit ensemble-level calibration;
+- external-dataset attribution analysis;
+- self-supervised and semi-supervised learning;
+- multimodal clinical information;
+- subgroup and fairness analyses;
+- dermatologist reader studies; and
+- comparison of model attributions with clinically meaningful reference
+  annotations.
 
 ---
 
 ## Keywords
 
-Dermoscopic Image Analysis · Skin-Lesion Classification · HAM10000 · ISIC 2019 · Deep Learning · Ensemble Learning · Vision Transformer · ConvNeXt · External Evaluation · Domain Shift · Model Calibration · Grad-CAM · Explainable AI · Medical Imaging · Reproducibility
+Dermoscopic Image Analysis · Skin-Lesion Classification · HAM10000 ·
+ISIC 2019 · Deep Learning · Ensemble Learning · Vision Transformer · ConvNeXt ·
+External Evaluation · Domain Shift · Model Calibration · Grad-CAM ·
+Explainable AI · Medical Imaging · Reproducibility
 
 ---
 
 ## License
 
-This project is released under the **MIT License**.
+The repository software is released under the **MIT License**.
 
 See [`LICENSE`](LICENSE) for details.
 
-Dataset licenses and terms remain governed by the respective dataset providers.
+Dataset licenses, pretrained-weight licenses, and third-party material remain
+governed by their respective providers and are not relicensed by this
+repository.
 
 ---
 
 ## Acknowledgements
 
-This research was conducted independently as part of the Master's programme in Artificial Intelligence at **Université Paris-Saclay**.
+This research was conducted independently as part of the Master's programme
+in Artificial Intelligence at **Université Paris-Saclay**.
 
-The author's academic studies were supported by the **French Government Scholarship (BGF — Bourses du Gouvernement Français)**. The scholarship did not specifically fund the design, implementation, or reporting of this research.
+The author's academic studies were supported by the **French Government
+Scholarship (BGF — Bourses du Gouvernement Français)**. The scholarship did
+not specifically fund the design, implementation, or reporting of this
+research.
 
-Computational experiments were conducted using publicly accessible **Kaggle cloud infrastructure**.
+Computational experiments were conducted using publicly accessible
+**Kaggle cloud infrastructure**.
 
-The author also acknowledges:
+The author acknowledges:
 
 - the creators and maintainers of HAM10000;
 - the International Skin Imaging Collaboration (ISIC);
-- the developers and maintainers of PyTorch, torchvision, scikit-learn, NumPy, pandas, Matplotlib, and the broader open-source scientific Python ecosystem.
+- the developers and maintainers of PyTorch and torchvision; and
+- the broader open-source scientific Python ecosystem supporting this work.
 
 ---
 
 ## Contact
 
-**Md Naim Hassan Saykat**
-Department of Computer Science
-Université Paris-Saclay
+**Md Naim Hassan Saykat**  
+Department of Computer Science  
+Université Paris-Saclay  
 France
 
-Academic correspondence:
+Academic correspondence:  
 `md-naim-hassan.saykat@universite-paris-saclay.fr`
 
-Project / collaboration correspondence:
+Project and collaboration correspondence:  
 `mdnaimhassansaykat@gmail.com`
 
-GitHub:
+GitHub:  
 [md-naim-hassan-saykat](https://github.com/md-naim-hassan-saykat)
 
 ---
 
 ## Need Help?
 
-If you encounter a reproducibility, installation, or evaluation issue, please open an issue through the repository's issue tracker:
+For installation, evaluation, or reproducibility problems, open an issue:
 
 [Open a GitHub issue](https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000/issues/new/choose)
 
-When reporting reproducibility issues, please include:
+Please include, where relevant:
 
 - operating system;
 - Python version;
 - PyTorch version;
 - dataset being evaluated;
 - model/checkpoint name;
-- relevant command;
+- command executed; and
 - complete error message or traceback.
+
+Do not include patient information, credentials, API keys, private datasets,
+or other sensitive material in public issues.
 
 ---
 
 ## Responsible Use
 
-This repository provides experimental research software for dermoscopic image classification.
+This repository provides experimental research software for dermoscopic image
+classification.
 
-It is **not a medical device**, has **not undergone prospective clinical validation**, and should **not be used independently for diagnosis, treatment decisions, patient triage, or other clinical decision-making**.
+It is **not a medical device**, has **not undergone prospective clinical
+validation**, and must **not** be used independently for diagnosis, treatment
+decisions, patient triage, or other clinical decision-making.
 
-The reported results should be interpreted in the context of the methodological limitations described above, particularly retrospective internal harmonization, dataset shift, calibration differences, and the absence of dermatologist validation.
+The reported results should be interpreted in the context of the documented
+methodological limitations, particularly retrospective internal
+harmonization, cross-dataset shift, calibration differences, and the absence
+of dermatologist validation.
