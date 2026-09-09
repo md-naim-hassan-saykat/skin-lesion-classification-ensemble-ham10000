@@ -1,12 +1,36 @@
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+exclude = '''
+/(
+    \.venv
+  | data
+  | outputs
+  | results
+  | build
+  | dist
+  | notebooks
+)/
+'''
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-extend-exclude = [".venv","data","outputs","results","build","dist","__pycache__","*.ipynb","notebooks"]
+extend-exclude = [
+    ".venv",
+    "data",
+    "outputs",
+    "results",
+    "build",
+    "dist",
+    "__pycache__",
+    "*.ipynb",
+    "notebooks",
+]
 
 [tool.ruff.lint]
-select = ["E","F","I","UP"]
+select = ["E", "F", "I", "UP"]
 ignore = ["E501"]
-per-file-ignores = { "src/ensemble.py" = ["C901"] }
 
 [tool.ruff.lint.isort]
 known-first-party = ["src"]
