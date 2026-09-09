@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "If you use this repository, please cite it as below."
+message: "If you use this software or its associated research outputs, please cite the repository using the metadata below."
 
 title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
 
@@ -11,13 +11,22 @@ authors:
     orcid: "https://orcid.org/0009-0007-5270-3970"
 
 abstract: >
-  This repository accompanies the research project *“Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019”*.
-  It provides a reproducible deep learning pipeline combining ResNet, EfficientNet, DenseNet, and ConvNeXt architectures with ensemble averaging for robust multi-class skin lesion diagnosis.
-  The project emphasizes generalization, interpretability, and standardized evaluation across internal (HAM10000) and external (ISIC 2019) datasets.
+  Reproducible deep learning framework for multiclass dermoscopic skin-lesion
+  classification with internal validation on HAM10000 and external validation
+  on ISIC 2019. The repository provides implementations and evaluation
+  workflows for seven deep learning backbones spanning conventional CNNs,
+  ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny,
+  MobileNetV3-Large, and ViT-B/16, together with probability-level
+  soft-voting ensemble inference. The framework includes standardized data
+  preprocessing, training and evaluation pipelines, class-imbalance handling,
+  model calibration, discrimination and classification metrics,
+  interpretability analysis, and reproducibility artifacts for assessing
+  generalization across internal and external dermoscopic datasets.
 
 repository-code: "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
-license: "MIT"
+
 doi: "10.5281/zenodo.17390952"
+license: "MIT"
 version: "1.0.0"
 date-released: 2025-10-19
 
@@ -25,17 +34,12 @@ keywords:
   - deep learning
   - ensemble learning
   - skin lesion classification
-  - medical imaging
+  - dermoscopy
+  - medical image analysis
+  - external validation
+  - model calibration
+  - interpretability
+  - convolutional neural networks
+  - vision transformers
   - HAM10000
   - ISIC 2019
-
-preferred-citation:
-  type: article
-  title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
-  authors:
-    - family-names: "Saykat"
-      given-names: "Md Naim Hassan"
-  year: 2025
-  doi: "10.5281/zenodo.17390952"
-  journal: "Zenodo"
-  url: "https://zenodo.org/doi/10.5281/zenodo.17390952"
