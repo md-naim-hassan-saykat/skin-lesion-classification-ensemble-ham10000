@@ -1184,7 +1184,7 @@ This research was conducted independently as part of the Master's programme
 in Artificial Intelligence at **Université Paris-Saclay**.
 
 The author's academic studies were supported by the **French Government
-Scholarship (BGF — Bourses du Gouvernement Français)**. The scholarship did
+Scholarship (BGF - Bourses du Gouvernement Français)**. The scholarship did
 not specifically fund the design, implementation, or reporting of this
 research.
 
