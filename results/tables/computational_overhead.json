@@ -1,0 +1,74 @@
+[
+ {
+  "model": "CNN",
+  "params_M": 26.083591,
+  "input": 224,
+  "macs_G": 0.762678784,
+  "ckpt_MB": 99.51555442810059,
+  "peak_mem_MB": 606.01025390625,
+  "ms_per_image": 0.7003484353124989
+ },
+ {
+  "model": "ResNet-50",
+  "params_M": 23.522375,
+  "input": 224,
+  "macs_G": 4.087150592,
+  "ckpt_MB": 90.03670692443848,
+  "peak_mem_MB": 435.966796875,
+  "ms_per_image": 3.05159805749998
+ },
+ {
+  "model": "DenseNet-121",
+  "params_M": 6.961031,
+  "input": 224,
+  "macs_G": 2.833144832,
+  "ckpt_MB": 27.139864921569824,
+  "peak_mem_MB": 362.24462890625,
+  "ms_per_image": 3.103504801093777
+ },
+ {
+  "model": "EfficientNet-B3",
+  "params_M": 10.706991,
+  "input": 300,
+  "macs_G": 1.825616144,
+  "ckpt_MB": 41.38032531738281,
+  "peak_mem_MB": 941.31640625,
+  "ms_per_image": 4.942900166093764
+ },
+ {
+  "model": "ConvNeXt-Tiny",
+  "params_M": 27.825511,
+  "input": 224,
+  "macs_G": 4.45476864,
+  "ckpt_MB": 106.21183395385742,
+  "peak_mem_MB": 503.154296875,
+  "ms_per_image": 4.298417723749992
+ },
+ {
+  "model": "MobileNetV3-L",
+  "params_M": 4.210999,
+  "input": 224,
+  "macs_G": 0.21531872,
+  "ckpt_MB": 16.26313591003418,
+  "peak_mem_MB": 264.234375,
+  "ms_per_image": 0.6870517804687282
+ },
+ {
+  "model": "ViT-B/16",
+  "params_M": 85.804039,
+  "input": 224,
+  "macs_G": 17.5630656,
+  "ckpt_MB": 327.3959674835205,
+  "peak_mem_MB": 613.62939453125,
+  "ms_per_image": 11.777175712343748
+ },
+ {
+  "model": "Ensemble (all 7)",
+  "params_M": 185.114537,
+  "input": "-",
+  "macs_G": 31.741743312,
+  "ckpt_MB": 707.9433889389038,
+  "peak_mem_MB": 941.31640625,
+  "ms_per_image": 28.56099667656249
+ }
+]

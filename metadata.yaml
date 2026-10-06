@@ -1,23 +1,24 @@
 # =============================================================================
 # Project Metadata
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification
-# Internal and External Validation on HAM10000 and ISIC 2019
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+# Classification: Internal Evaluation on HAM10000 and External Evaluation
+# on ISIC 2019
 # =============================================================================
 
-title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+title: "Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019"
 
 description: >
-  Reproducible deep learning framework for multiclass dermoscopic skin-lesion
-  classification with internal validation on HAM10000 and external validation
-  on ISIC 2019. The repository provides implementations and evaluation
-  workflows for seven deep learning backbones spanning a conventional CNN,
-  ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny,
-  MobileNetV3-Large, and ViT-B/16, together with probability-level
-  soft-voting ensemble inference. The framework includes standardized data
-  preprocessing, training and evaluation pipelines, class-imbalance handling,
-  model calibration, discrimination and classification metrics,
-  interpretability analysis, and reproducibility artifacts for assessing
-  generalization across internal and external dermoscopic datasets.
+  Reproducible evaluation framework for seven-class dermoscopic skin-lesion
+  classification. Seven archived HAM10000-trained models (a custom CNN,
+  ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large,
+  and ViT-B/16) and their equal-weight probability ensemble are evaluated on a
+  standardized 2,003-image HAM10000 cohort and on ISIC 2019. Because ISIC 2019
+  contains the HAM10000 images, external results are also reported on the
+  15,320 ISIC 2019 images that no model saw during training. The repository
+  provides the evaluation code with the audited preprocessing and class
+  ordering of each checkpoint, statistical comparisons, calibration analysis
+  with post-hoc temperature scaling, computational-cost measurements,
+  qualitative Grad-CAM attribution, and curated result tables and figures.
 
 authors:
   - name: "Md Naim Hassan Saykat"
@@ -46,13 +47,16 @@ software:
 
 datasets:
   - name: "HAM10000"
-    role: "Internal development and validation dataset"
+    role: "Training data of all archived checkpoints; standardized 2,003-image retrospective evaluation cohort"
     modality: "Dermoscopic images"
     classes: 7
     url: "https://www.kaggle.com/datasets/kmader/skin-cancer-mnist-ham10000"
 
   - name: "ISIC 2019"
-    role: "External validation dataset"
+    role: >-
+      External evaluation (25,331 images in the seven-class label space). The
+      set contains 10,011 HAM10000 images; the 15,320 BCN_20000 and MSK images
+      are the genuinely unseen remainder.
     modality: "Dermoscopic images"
     url: "https://challenge.isic-archive.com/data.html"
 
@@ -67,7 +71,7 @@ models:
     - "ViT-B/16"
 
 ensemble:
-  method: "Probability-level soft voting"
+  method: "Equal-weight probability averaging (1/7 per model)"
   implementation: "src/ensemble.py"
 
 evaluation:
@@ -76,21 +80,40 @@ evaluation:
   metrics:
     - "Accuracy"
     - "Weighted F1-score"
-    - "Macro ROC-AUC"
-    - "Micro ROC-AUC"
-    - "Expected Calibration Error (ECE)"
+    - "Macro ROC-AUC (one-vs-rest)"
+    - "Micro ROC-AUC (one-vs-rest, HAM10000)"
+    - "Weighted ROC-AUC (one-vs-rest, ISIC 2019)"
+    - "Expected Calibration Error (15 bins)"
+  statistics:
+    - "Bootstrap percentile confidence intervals (1,000 resamples, base seed 42)"
+    - "McNemar's test with continuity correction"
+    - "Paired bootstrap differences"
+  calibration: "Post-hoc temperature scaling, out-of-fold (5-fold stratified, seed 42)"
+  interpretability: "Grad-CAM"
 
-reproducibility:
+archived_training:
+  note: >-
+    The archived checkpoints were trained under differing historical
+    pipelines; see docs/training_pipeline.md and Supplementary Table S6.
+  loss: "Unweighted cross-entropy (all seven models)"
+  class_imbalance: "WeightedRandomSampler for ResNet-50 only"
+  optimizer: "Adam with constant learning rate; ConvNeXt-Tiny used AdamW with ReduceLROnPlateau and mixed precision"
+  learning_rate: "1e-4 (ViT-B/16: 2e-5)"
+  batch_size: "32 (ViT-B/16: 16; CNN not recoverable)"
+  maximum_epochs: 50
+  early_stopping: "Validation accuracy, patience 5 (CNN: 7)"
+  resnet50: "Linear probe: frozen ImageNet backbone, only the 7-class head trained"
+
+quick_start_training:
+  note: "Defaults of src/train.py for new runs; not the archived configuration."
   random_seed: 42
   batch_size: 32
-  optimizer: "Adam"
+  optimizer: "AdamW"
   initial_learning_rate: 0.0001
   learning_rate_schedule: "Cosine annealing"
   maximum_epochs: 50
-  loss: "Weighted cross-entropy"
+  loss: "Class-weighted cross-entropy"
   input_normalization: "ImageNet normalization"
-  calibration: "Temperature scaling"
-  interpretability: "Grad-CAM++"
 
 keywords:
   - "deep learning"
@@ -98,7 +121,8 @@ keywords:
   - "skin lesion classification"
   - "dermoscopy"
   - "medical image analysis"
-  - "external validation"
+  - "external evaluation"
+  - "domain shift"
   - "model calibration"
   - "interpretability"
   - "convolutional neural networks"
@@ -108,7 +132,7 @@ keywords:
 
 citation:
   text: >
-    Saykat, M. N. H. (2025). Generalizable Ensemble Deep Learning for Skin
-    Lesion Classification: Internal and External Validation on HAM10000 and
-    ISIC 2019. Zenodo. https://doi.org/10.5281/zenodo.17390952
+    Saykat, M. N. H. Generalizable Ensemble Deep Learning for Dermoscopic
+    Skin-Lesion Classification: Internal Evaluation on HAM10000 and External
+    Evaluation on ISIC 2019. Zenodo. https://doi.org/10.5281/zenodo.17390952
   doi: "10.5281/zenodo.17390952"

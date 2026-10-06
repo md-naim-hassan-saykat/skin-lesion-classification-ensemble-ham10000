@@ -1,8 +1,9 @@
 # Ensemble Method
 
 This document describes the ensemble strategy implemented in the
-**Generalizable Ensemble Deep Learning for Skin Lesion Classification:
-Internal and External Validation on HAM10000 and ISIC 2019** project.
+**Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+Classification: Internal Evaluation on HAM10000 and External Evaluation on
+ISIC 2019** project.
 
 The final ensemble combines the probability outputs of seven independently
 trained deep learning models using equal-weight probability-level late fusion.
@@ -57,48 +58,71 @@ every metric. Individual-model and ensemble performance should therefore be
 interpreted from the reported evaluation results rather than from the ensemble
 construction alone.
 
+In the reported results, ViT-B/16 has the highest HAM10000 point estimates and
+ConvNeXt-Tiny the highest accuracy and weighted F1 on ISIC 2019; the ensemble
+has the highest macro and weighted ROC-AUC on the 15,320 ISIC 2019 images that
+no model saw during training.
+
+### 2.1 Calibration of the averaged probabilities
+
+Averaging the probabilities of models that disagree spreads probability mass
+across classes. On HAM10000 the seven models agree on only 54.9% of images,
+and the ensemble is **under-confident**: accuracy 0.9386 against mean
+confidence 0.8232 (ECE 11.54%). A single out-of-fold temperature applied to
+the ensemble output ($T = 0.482$) reduces ECE to 1.26% without changing any
+prediction. See [`evaluation_metrics.md`](evaluation_metrics.md), Section 5.
+
+### 2.2 Computational cost
+
+The ensemble runs all seven models. Measured on an NVIDIA Tesla T4 (batch 32),
+it takes 28.56 ms per image, 31.74 GMACs and 708 MB of checkpoints, against
+4.30 ms and 106 MB for ConvNeXt-Tiny. Because the members are evaluated
+sequentially, peak GPU memory is that of the largest member (EfficientNet-B3
+at 300 x 300, 941 MB). See
+[`results/tables/computational_cost.csv`](../results/tables/computational_cost.csv).
+
 ---
 
 ## 3. Equal-Weight Probability Fusion
 
-For model $begin:math:text$i$end:math:text$, let
+For model $i$, let
 
-$begin:math:display$
-\\mathbf\{p\}\_i \=
-\\left\(
-p\_\{i\,1\}\,
-p\_\{i\,2\}\,
-\\ldots\,
-p\_\{i\,7\}
-\\right\)
-$end:math:display$
+$$
+\mathbf{p}_i =
+\left(
+p_{i,1},
+p_{i,2},
+\ldots,
+p_{i,7}
+\right)
+$$
 
 denote its predicted probability vector over the seven canonical classes.
 
 For the seven-model ensemble, the final probability vector is
 
-$begin:math:display$
-\\mathbf\{p\}\_\{\\mathrm\{ens\}\}
-\=
-\\frac\{1\}\{7\}
-\\sum\_\{i\=1\}\^\{7\}
-\\mathbf\{p\}\_i\.
-$end:math:display$
+$$
+\mathbf{p}_{\mathrm{ens}}
+=
+\frac{1}{7}
+\sum_{i=1}^{7}
+\mathbf{p}_i.
+$$
 
 Each model therefore contributes equal weight:
 
-$begin:math:display$
-w\_i \= \\frac\{1\}\{7\}\.
-$end:math:display$
+$$
+w_i = \frac{1}{7}.
+$$
 
 The final predicted class is
 
-$begin:math:display$
-\\hat\{y\}
-\=
-\\operatorname\*\{arg\\\,max\}\_\{c\}
-p\_\{\\mathrm\{ens\}\,c\}\.
-$end:math:display$
+$$
+\hat{y}
+=
+\operatorname*{arg\,max}_{c}
+p_{\mathrm{ens},c}.
+$$
 
 The final repository implementation does not use validation-performance-based
 or manually assigned model weights.
@@ -148,12 +172,15 @@ The canonical class order used throughout the repository is:
 Historical checkpoint outputs must be mapped to this order before their
 probabilities are combined.
 
-If an archived checkpoint used a different output ordering, the corresponding
-output permutation must be established from the historical checkpoint metadata
-or evaluation records. Such mappings must not be guessed.
+Two archived checkpoints, ResNet-50 and ViT-B/16, were trained with class
+indices in HAM10000 metadata order (`bkl, nv, df, mel, vasc, bcc, akiec`).
+Their outputs are mapped to the canonical order with the audited permutation
+`6,5,0,2,3,1,4`; the other five use the identity. Averaging unmapped outputs
+would combine probabilities for different diagnoses.
 
-See [`src/config.yaml`](../src/config.yaml) for the documented
-output-permutation configuration.
+The permutations are stored under `archived_checkpoints` in
+[`src/config.yaml`](../src/config.yaml) and applied automatically by
+`src/evaluate.py`.
 
 ---
 

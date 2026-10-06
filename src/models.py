@@ -11,12 +11,14 @@ except Exception:
 
 class CustomCNN(nn.Module):
     """
-    Four-block CNN matching the architecture family described in the repository.
+    Four-block baseline CNN, identical to the archived HAM10000 checkpoint.
 
-    IMPORTANT:
-    Historical checkpoint compatibility depends on the exact archived CNN
-    architecture. If the original CNN checkpoint used different channel widths
-    or classifier dimensions, this class must be adjusted to match that checkpoint.
+    Each block is Conv(3x3) -> BatchNorm -> ReLU -> MaxPool(2). For a
+    224 x 224 input the last block yields a 256 x 14 x 14 feature map, which is
+    flattened and passed to a two-layer classifier with dropout. Parameter
+    names match the archived state dict, so it loads with strict=True.
+
+    The flattened size fixes the input resolution at 224 x 224.
     """
 
     def __init__(self, num_classes: int = 7) -> None:
@@ -41,14 +43,76 @@ class CustomCNN(nn.Module):
             nn.MaxPool2d(2),
         )
 
-        self.pool = nn.AdaptiveAvgPool2d((1, 1))
-        self.classifier = nn.Linear(256, num_classes)
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(256 * 14 * 14, 512),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(512, num_classes),
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = self.features(x)
-        x = self.pool(x)
-        x = torch.flatten(x, 1)
-        return self.classifier(x)
+        return self.classifier(self.features(x))
+
+
+class LogitsOnly(nn.Module):
+    """Return a plain logits tensor from models that return an output object."""
+
+    def __init__(self, model: nn.Module) -> None:
+        super().__init__()
+        self.model = model
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        out = self.model(x)
+        return out.logits if hasattr(out, "logits") else out
+
+
+def build_archived_vit(
+    num_classes: int = 7,
+    config_dir: str | None = None,
+) -> nn.Module:
+    """
+    Build the Hugging Face ViT-B/16 used for the archived ViT checkpoint.
+
+    The archived checkpoint is a ViTForImageClassification state dict
+    (google/vit-base-patch16-224 backbone, seven-class head), not a torchvision
+    ViT, so it cannot be loaded into torchvision.models.vit_b_16. If a
+    config.json is present in config_dir it is used; otherwise the ViT-B/16
+    defaults (224 x 224, patch 16, hidden 768, 12 layers, 12 heads) are used,
+    which need no download.
+
+    The returned module yields a logits tensor.
+    """
+
+    try:
+        from transformers import ViTConfig, ViTForImageClassification
+    except ImportError as exc:  # pragma: no cover - depends on environment
+        raise RuntimeError(
+            "The archived ViT checkpoint requires the 'transformers' package."
+        ) from exc
+
+    config = None
+    if config_dir:
+        from pathlib import Path
+
+        if (Path(config_dir) / "config.json").is_file():
+            config = ViTConfig.from_pretrained(config_dir, local_files_only=True)
+
+    if config is None:
+        config = ViTConfig(
+            image_size=224,
+            patch_size=16,
+            num_channels=3,
+            hidden_size=768,
+            num_hidden_layers=12,
+            num_attention_heads=12,
+            intermediate_size=3072,
+            hidden_dropout_prob=0.0,
+            attention_probs_dropout_prob=0.0,
+        )
+
+    config.num_labels = num_classes
+    return ViTForImageClassification(config)
 
 
 def get_model(
@@ -61,6 +125,10 @@ def get_model(
 
     Evaluation of archived checkpoints should normally use pretrained=False,
     because all learned weights should come from the checkpoint itself.
+
+    For "vit_b_16" this returns a torchvision ViT, which is suitable for new
+    training runs. The archived ViT checkpoint is a Hugging Face model; build
+    it with build_archived_vit() instead.
     """
 
     n = (name or "").lower().replace("-", "_")
@@ -143,4 +211,4 @@ def get_model(
     raise RuntimeError(f"Unhandled model: {n}")
 
 
-__all__ = ["CustomCNN", "get_model"]
+__all__ = ["CustomCNN", "LogitsOnly", "build_archived_vit", "get_model"]

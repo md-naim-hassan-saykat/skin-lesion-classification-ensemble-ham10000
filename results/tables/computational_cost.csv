@@ -1,0 +1,9 @@
+Model,Parameters (M),Input resolution,MACs (G),Checkpoint size (MB),Peak GPU memory (MB),Latency (ms per image)
+CNN,26.084,224,0.76,100,606,0.7
+ResNet-50,23.522,224,4.09,90,436,3.05
+DenseNet-121,6.961,224,2.83,27,362,3.1
+EfficientNet-B3,10.707,300,1.83,41,941,4.94
+ConvNeXt-Tiny,27.826,224,4.45,106,503,4.3
+MobileNetV3-L,4.211,224,0.22,16,264,0.69
+ViT-B/16,85.804,224,17.56,327,614,11.78
+Ensemble (all 7),185.115,-,31.74,708,941,28.56

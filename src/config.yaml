@@ -8,14 +8,14 @@
 #   1. canonical class definitions;
 #   2. reported evaluation settings;
 #   3. ensemble membership;
-#   4. checkpoint-output compatibility metadata;
+#   4. audited evaluation settings for the seven archived checkpoints;
 #   5. repository execution defaults; and
 #   6. quick-start training settings.
 #
 # IMPORTANT:
-# Repository execution defaults do not necessarily reproduce the exact
-# historical training or preprocessing configuration of every archived
-# manuscript checkpoint.
+# The quick-start training settings at the end of this file are for new
+# training runs. They are not the configuration used to train the archived
+# manuscript checkpoints, which is documented in docs/training_pipeline.md.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -41,11 +41,15 @@ evaluation:
   # Standardized retrospective HAM10000 evaluation cohort.
   cohort_size_ham10000: 2003
 
-  # Bootstrap uncertainty analysis.
+  # Bootstrap uncertainty analysis (Supplementary Table S1).
+  # Each metric is bootstrapped separately with seed bootstrap_seed + k:
+  # accuracy 42, weighted F1 43, macro ROC-AUC 44, micro ROC-AUC 45.
+  # See scripts/revision_analysis/bootstrap_ci.py.
   bootstrap_resamples: 1000
   bootstrap_seed: 42
 
-  # Maximum-confidence multiclass Expected Calibration Error.
+  # Maximum-confidence multiclass Expected Calibration Error with equal-width,
+  # right-closed bins (lo, hi].
   ece_bins: 15
 
   # Reported HAM10000 discrimination metrics:
@@ -79,44 +83,85 @@ ensemble:
     - vit_b_16
 
 # -----------------------------------------------------------------------------
-# Historical checkpoint output ordering
+# Archived checkpoints: audited evaluation settings
 # -----------------------------------------------------------------------------
 #
-# Archived models may not all emit probabilities in the canonical class order.
+# Values extracted from the archived training code (manuscript Supplementary
+# Table S6). They are the settings used for every reported result and are read
+# by src/evaluate.py and scripts/eval_all.sh. The same values are defined in
+# src/archived.py; tests/test_archived.py checks that the two agree.
 #
-# Each permutation is interpreted as:
+# normalization:
+#   imagenet -> mean [0.485, 0.456, 0.406], std [0.229, 0.224, 0.225]
+#   half     -> mean [0.5, 0.5, 0.5],       std [0.5, 0.5, 0.5]
 #
-#   canonical_probs = raw_probs[:, permutation]
+# output_permutation maps raw checkpoint outputs to the canonical order:
 #
-# Canonical identity ordering:
+#   canonical_probs = raw_probs[:, output_permutation]
 #
-#   [0, 1, 2, 3, 4, 5, 6]
+# ResNet-50 and ViT-B/16 were trained with class indices in the unsorted order
+# in which diagnoses appear in HAM10000_metadata.csv
+# (bkl, nv, df, mel, vasc, bcc, akiec). Scoring them without this permutation
+# reproduces the near-chance ISIC 2019 values of the original submission.
 #
-# Historical permutations must be populated only from audited checkpoint or
-# evaluation metadata. Unknown values must remain null rather than being
-# inferred or guessed.
-#
-output_permutations:
-  cnn: [0, 1, 2, 3, 4, 5, 6]
-  densenet121: [0, 1, 2, 3, 4, 5, 6]
-  efficientnet_b3: [0, 1, 2, 3, 4, 5, 6]
-  convnext_tiny: [0, 1, 2, 3, 4, 5, 6]
-  mobilenet_v3_large: [0, 1, 2, 3, 4, 5, 6]
+archived_checkpoints:
+  cnn:
+    file: cnn_ham10000_best_model.pth
+    loader: torchvision
+    image_size: 224
+    normalization: half
+    output_permutation: [0, 1, 2, 3, 4, 5, 6]
 
-  # REQUIRED for exact archived-checkpoint reproduction:
-  # replace only when verified from historical audit metadata.
-  resnet50: null
-  vit_b_16: null
+  resnet50:
+    file: resnet50_ham10000.pth
+    loader: torchvision
+    image_size: 224
+    normalization: imagenet
+    output_permutation: [6, 5, 0, 2, 3, 1, 4]
+
+  densenet121:
+    file: densenet121_ham10000.pth
+    loader: torchvision
+    image_size: 224
+    normalization: half
+    output_permutation: [0, 1, 2, 3, 4, 5, 6]
+
+  efficientnet_b3:
+    file: efficientnet_b3_best.pth
+    loader: torchvision
+    image_size: 300
+    normalization: half
+    output_permutation: [0, 1, 2, 3, 4, 5, 6]
+
+  convnext_tiny:
+    file: convnext_tiny_ham10000.pth
+    loader: torchvision
+    image_size: 224
+    normalization: imagenet
+    output_permutation: [0, 1, 2, 3, 4, 5, 6]
+
+  mobilenet_v3_large:
+    file: mobilenetv3_ham10000.pth
+    loader: torchvision
+    image_size: 224
+    normalization: half
+    output_permutation: [0, 1, 2, 3, 4, 5, 6]
+
+  vit_b_16:
+    # Hugging Face ViTForImageClassification state dict
+    # (google/vit-base-patch16-224 backbone, 7-class head).
+    file: vit_ham10000_best_model.pth
+    loader: hf_vit
+    image_size: 224
+    normalization: half
+    output_permutation: [6, 5, 0, 2, 3, 1, 4]
 
 # -----------------------------------------------------------------------------
-# Repository preprocessing defaults
+# Quick-start training image sizes
 # -----------------------------------------------------------------------------
 #
-# These values support current repository execution and quick-start workflows.
-#
-# They must not be interpreted as proof that every historical manuscript
-# checkpoint used identical preprocessing. Exact reproduction of archived
-# predictions requires the preprocessing associated with each checkpoint.
+# Used by src/train.py for new training runs. Archived-checkpoint evaluation
+# uses archived_checkpoints above instead.
 #
 preprocessing:
   cnn:
@@ -129,7 +174,7 @@ preprocessing:
     image_size: 224
 
   efficientnet_b3:
-    image_size: 224
+    image_size: 300
 
   convnext_tiny:
     image_size: 224
@@ -179,11 +224,14 @@ output:
 #
 # These settings support new repository training runs.
 #
-# They do NOT claim to reconstruct the seven historical archived manuscript
-# training runs.
+# They are NOT the settings used to train the seven archived manuscript
+# checkpoints. Those used unweighted cross-entropy, Adam with a constant
+# learning rate (ConvNeXt-Tiny: AdamW with ReduceLROnPlateau and mixed
+# precision), and early stopping on validation accuracy; ResNet-50 was a linear
+# probe on a frozen backbone. See docs/training_pipeline.md.
 #
-# Current src/train.py uses:
-#   - weighted cross-entropy;
+# The quick-start src/train.py uses:
+#   - class-weighted cross-entropy;
 #   - AdamW optimizer;
 #   - cosine-annealing learning-rate scheduling;
 #   - weighted F1 for early stopping/model selection.

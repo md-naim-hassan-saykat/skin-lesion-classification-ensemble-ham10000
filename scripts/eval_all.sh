@@ -3,6 +3,11 @@
 # Evaluate all seven archived HAM10000-trained checkpoints using the
 # repository's canonical seven-class evaluation pipeline.
 #
+# Each checkpoint is evaluated with its own audited preprocessing (input size
+# and normalization) and output permutation, read from src/config.yaml
+# (archived_checkpoints). A single shared preprocessing, or scoring ResNet-50
+# and ViT-B/16 without their permutation, gives wrong results.
+#
 # Models:
 #   - CNN
 #   - ResNet-50
@@ -45,6 +50,17 @@
 #   PYTHON=/path/to/python \
 #   bash scripts/eval_all.sh
 #
+# External evaluation on an ISIC 2019 ImageFolder with the same seven class
+# folders:
+#
+#   DATASET=isic2019 \
+#   HAM_EVAL_DIR=/path/to/isic2019/evaluation \
+#   OUT_DIR=outputs/harmonized_isic2019 \
+#   bash scripts/eval_all.sh
+#
+# Note: ISIC 2019 contains the HAM10000 images. To obtain the genuinely
+# external estimate, use scripts/revision_analysis/external_decontamination.py.
+#
 
 set -euo pipefail
 
@@ -58,6 +74,8 @@ PYTHON="${PYTHON:-$ROOT/.venv/bin/python}"
 HAM_EVAL_DIR="${HAM_EVAL_DIR:-$ROOT/data/evaluation/HAM10000_standardized}"
 CHECKPOINT_DIR="${CHECKPOINT_DIR:-$ROOT/checkpoints}"
 OUT_DIR="${OUT_DIR:-$ROOT/outputs/harmonized_ham10000}"
+DATASET="${DATASET:-ham10000}"
+CONFIG="${CONFIG:-$ROOT/src/config.yaml}"
 
 EVALUATOR="$ROOT/src/evaluate.py"
 ENSEMBLER="$ROOT/src/ensemble.py"
@@ -88,6 +106,17 @@ fi
 if [[ ! -f "$ENSEMBLER" ]]; then
   echo "ERROR: Ensemble script not found:"
   echo "  $ENSEMBLER"
+  exit 1
+fi
+
+if [[ "$DATASET" != "ham10000" && "$DATASET" != "isic2019" ]]; then
+  echo "ERROR: DATASET must be 'ham10000' or 'isic2019', got: $DATASET"
+  exit 1
+fi
+
+if [[ ! -f "$CONFIG" ]]; then
+  echo "ERROR: Configuration file not found:"
+  echo "  $CONFIG"
   exit 1
 fi
 
@@ -143,7 +172,9 @@ done
 #   key | model_name | checkpoint_pattern
 #
 # `key` controls output file names.
-# `model_name` must be supported by src/models.py.
+# `model_name` must be a key of archived_checkpoints in src/config.yaml.
+# The patterns match the archived file names, for example
+# mobilenetv3_ham10000.pth and vit_ham10000_best_model.pth.
 #
 
 MODEL_CONFIGS=(
@@ -152,8 +183,8 @@ MODEL_CONFIGS=(
   "densenet121|densenet121|*densenet*121*.pth"
   "efficientnet_b3|efficientnet_b3|*efficientnet*b3*.pth"
   "convnext_tiny|convnext_tiny|*convnext*tiny*.pth"
-  "mobilenet_v3_large|mobilenet_v3_large|*mobilenet*v3*large*.pth"
-  "vit_b_16|vit_b_16|*vit*b*16*.pth"
+  "mobilenet_v3_large|mobilenet_v3_large|*mobilenet*v3*.pth"
+  "vit_b_16|vit_b_16|*vit*.pth"
 )
 
 EXPECTED_MODELS=7
@@ -202,7 +233,7 @@ find_checkpoint() {
 
 echo
 echo "============================================================"
-echo "HAM10000 harmonized evaluation"
+echo "Harmonized evaluation: $DATASET"
 echo "============================================================"
 echo "Evaluation cohort:"
 echo "  $HAM_EVAL_DIR"
@@ -234,7 +265,8 @@ for config in "${MODEL_CONFIGS[@]}"; do
     --checkpoint "$ckpt" \
     --data_dir "$HAM_EVAL_DIR" \
     --model "$model_name" \
-    --dataset ham10000 \
+    --dataset "$DATASET" \
+    --config "$CONFIG" \
     --out "$metrics" \
     --save_csv "$predictions"
 
@@ -276,7 +308,7 @@ echo
 
 "$PYTHON" "$ENSEMBLER" \
   --csvs "${PREDICTION_CSVS[@]}" \
-  --dataset ham10000 \
+  --dataset "$DATASET" \
   --out "$OUT_DIR/ensemble_metrics.json"
 
 if [[ ! -s "$OUT_DIR/ensemble_metrics.json" ]]; then
@@ -290,34 +322,15 @@ if [[ ! -s "$OUT_DIR/ensemble_predictions.csv" ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# Optional manuscript-level statistical analyses
+# Manuscript-level statistical analyses
 # -----------------------------------------------------------------------------
 
-if [[ -f "$ROOT/src/analyze_ham10000.py" ]]; then
-  echo
-  echo "============================================================"
-  echo "HAM10000 statistical and calibration analysis"
-  echo "============================================================"
-  echo
-
-  "$PYTHON" "$ROOT/src/analyze_ham10000.py" \
-    --predictions-dir "$OUT_DIR" \
-    --bootstrap-resamples 1000 \
-    --seed 42 \
-    --ece-bins 15 \
-    --out-dir "$OUT_DIR/analysis"
-else
-  echo
-  echo "NOTE:"
-  echo "  src/analyze_ham10000.py is not currently present."
-  echo "  Individual inference and equal-weight ensemble evaluation"
-  echo "  are complete."
-  echo
-  echo "  Additional manuscript analyses such as bootstrap confidence"
-  echo "  intervals, McNemar tests, paired bootstrap comparisons, and"
-  echo "  derived calibration/figure generation must therefore be"
-  echo "  reproduced using the corresponding released analysis workflow."
-fi
+echo
+echo "NOTE:"
+echo "  Individual inference and equal-weight ensemble evaluation are complete."
+echo "  Bootstrap confidence intervals, temperature scaling, the partition of"
+echo "  ISIC 2019 by source, and the computational-cost benchmark are produced by"
+echo "  the scripts in scripts/revision_analysis/ (see the README)."
 
 # -----------------------------------------------------------------------------
 # Summary
@@ -357,7 +370,6 @@ echo
 echo "  Canonical class ordering and any checkpoint-specific output"
 echo "  permutation must remain consistent with the archived models."
 echo
-echo "  If an archived checkpoint requires preprocessing different"
-echo "  from the defaults in src/evaluate.py, reproduce that exact"
-echo "  preprocessing before treating the resulting metrics as"
-echo "  manuscript-equivalent."
+echo "  Each checkpoint was evaluated with the input size, normalization"
+echo "  and output permutation recorded in archived_checkpoints of"
+echo "  src/config.yaml."

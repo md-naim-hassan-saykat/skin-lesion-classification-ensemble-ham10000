@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software or its associated research outputs, please cite the repository using the metadata below."
 
-title: "Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019"
+title: "Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019"
 
 authors:
   - family-names: "Saykat"
@@ -11,17 +11,17 @@ authors:
     orcid: "https://orcid.org/0009-0007-5270-3970"
 
 abstract: >
-  Reproducible deep learning framework for multiclass dermoscopic skin-lesion
-  classification with internal validation on HAM10000 and external validation
-  on ISIC 2019. The repository provides implementations and evaluation
-  workflows for seven deep learning backbones spanning conventional CNNs,
-  ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny,
-  MobileNetV3-Large, and ViT-B/16, together with probability-level
-  soft-voting ensemble inference. The framework includes standardized data
-  preprocessing, training and evaluation pipelines, class-imbalance handling,
-  model calibration, discrimination and classification metrics,
-  interpretability analysis, and reproducibility artifacts for assessing
-  generalization across internal and external dermoscopic datasets.
+  Reproducible evaluation framework for seven-class dermoscopic skin-lesion
+  classification. Seven archived HAM10000-trained models (a custom CNN,
+  ResNet-50, DenseNet-121, EfficientNet-B3, ConvNeXt-Tiny, MobileNetV3-Large,
+  and ViT-B/16) and their equal-weight probability ensemble are evaluated on a
+  standardized 2,003-image HAM10000 cohort and on ISIC 2019. Because ISIC 2019
+  contains the HAM10000 images, external results are also reported on the
+  15,320 ISIC 2019 images that no model saw during training. The repository
+  provides the evaluation code with the audited preprocessing and class
+  ordering of each checkpoint, statistical comparisons, calibration analysis
+  with post-hoc temperature scaling, computational-cost measurements,
+  qualitative Grad-CAM attribution, and curated result tables and figures.
 
 repository-code: "https://github.com/md-naim-hassan-saykat/skin-lesion-classification-ensemble-ham10000"
 
@@ -36,7 +36,8 @@ keywords:
   - skin lesion classification
   - dermoscopy
   - medical image analysis
-  - external validation
+  - external evaluation
+  - domain shift
   - model calibration
   - interpretability
   - convolutional neural networks

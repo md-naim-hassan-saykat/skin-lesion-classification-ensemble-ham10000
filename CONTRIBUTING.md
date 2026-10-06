@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-Thank you for your interest in contributing to Generalizable Ensemble Deep Learning for Skin Lesion Classification: Internal and External Validation on HAM10000 and ISIC 2019.
+Thank you for your interest in contributing to Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019.
 
 Contributions that improve the correctness, reproducibility, documentation, evaluation, or maintainability of the project are welcome. These may include bug fixes, documentation improvements, tests, model or evaluation enhancements, and reproducibility improvements.
 
@@ -137,7 +137,7 @@ Examples:
 fix: correct class-weight computation
 feat: add calibration evaluation
 test: extend ensemble smoke tests
-docs: clarify external validation workflow
+docs: clarify external evaluation workflow
 chore: update development tooling
 
 Avoid combining unrelated changes into a single commit.

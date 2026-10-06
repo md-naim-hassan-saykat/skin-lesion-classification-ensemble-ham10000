@@ -41,6 +41,7 @@ results/*
 !results/figures/
 results/tables/*
 !results/tables/*.csv
+!results/tables/*.json
 !results/tables/*.tex
 results/figures/*
 !results/figures/*.png
@@ -50,6 +51,7 @@ results/figures/*
 # Ignore arbitrary/generated CSV files elsewhere in the project.
 *.csv
 # Allow curated manuscript result tables.
+!results/tables/*.csv
 # === Python cache/build artifacts ===
 __pycache__/
 *.py[cod]

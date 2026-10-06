@@ -18,8 +18,9 @@ import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-from src.models import get_model
-from src.utils import compute_metrics, save_json
+from src.archived import NORMALIZATION, resolve_eval_settings
+from src.models import LogitsOnly, build_archived_vit, get_model
+from src.utils import compute_metrics, load_yaml, save_json
 
 CANONICAL_CLASSES = [
     "akiec",
@@ -43,26 +44,26 @@ def best_device() -> torch.device:
 
 
 def build_eval_transform(
-    model_name: str,
     image_size: int,
+    normalization: str,
 ) -> transforms.Compose:
     """
-    Generic repository evaluation transform.
+    Evaluation transform for one archived checkpoint.
 
-    IMPORTANT:
-    The manuscript used the preprocessing pipeline associated with each
-    archived checkpoint. If a checkpoint used different resize/crop or
-    normalization parameters, reproduce those exact parameters here.
+    Resize to image_size x image_size, convert to a tensor, and normalize with
+    the statistics the checkpoint was trained with ("imagenet" or "half"; see
+    src/archived.py). For the ViT checkpoint, resize to 224 with "half"
+    normalization is what ViTImageProcessor for google/vit-base-patch16-224
+    applies.
     """
+
+    mean, std = NORMALIZATION[normalization]
 
     return transforms.Compose(
         [
             transforms.Resize((image_size, image_size)),
             transforms.ToTensor(),
-            transforms.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
-            ),
+            transforms.Normalize(mean=mean, std=std),
         ]
     )
 
@@ -137,9 +138,9 @@ def validate_imagefolder_classes(
         )
 
 
-def parse_permutation(value: str | None) -> list[int]:
+def parse_permutation(value: str | None) -> list[int] | None:
     if value is None:
-        return list(range(7))
+        return None
 
     permutation = [int(x.strip()) for x in value.split(",")]
 
@@ -147,6 +148,30 @@ def parse_permutation(value: str | None) -> list[int]:
         raise ValueError("Permutation must contain every index 0..6 exactly once.")
 
     return permutation
+
+
+def build_archived_model(
+    settings: dict,
+    checkpoint: str,
+    device: torch.device,
+) -> torch.nn.Module:
+    """Build the architecture for an archived checkpoint and load it strictly."""
+
+    if settings["loader"] == "hf_vit":
+        model = build_archived_vit(
+            num_classes=7,
+            config_dir=str(Path(checkpoint).parent),
+        )
+        load_checkpoint_strict(model, checkpoint, device)
+        return LogitsOnly(model).to(device)
+
+    model = get_model(
+        settings["model"],
+        num_classes=7,
+        pretrained=False,
+    )
+    load_checkpoint_strict(model, checkpoint, device)
+    return model.to(device)
 
 
 def run_inference(
@@ -165,6 +190,9 @@ def run_inference(
             images = images.to(device)
 
             logits = model(images)
+
+            if hasattr(logits, "logits"):
+                logits = logits.logits
 
             if logits.ndim != 2 or logits.shape[1] != 7:
                 raise ValueError(f"Expected model output (N, 7), got {tuple(logits.shape)}")
@@ -191,7 +219,10 @@ def run_inference(
 
 def main() -> None:
     ap = argparse.ArgumentParser(
-        description=("Evaluate one archived checkpoint using canonical seven-class outputs.")
+        description=(
+            "Evaluate one archived checkpoint with its audited preprocessing and "
+            "output permutation, reporting canonical seven-class outputs."
+        )
     )
 
     ap.add_argument(
@@ -217,9 +248,21 @@ def main() -> None:
         default=7,
     )
     ap.add_argument(
+        "--config",
+        default=str(_PROJECT_ROOT / "src" / "config.yaml"),
+        help="Configuration file holding the audited archived-checkpoint settings.",
+    )
+    ap.add_argument(
         "--image_size",
         type=int,
-        default=224,
+        default=None,
+        help="Override the audited input resolution for this checkpoint.",
+    )
+    ap.add_argument(
+        "--normalization",
+        choices=sorted(NORMALIZATION),
+        default=None,
+        help="Override the audited normalization for this checkpoint.",
     )
     ap.add_argument(
         "--batch_size",
@@ -235,8 +278,9 @@ def main() -> None:
         "--output_permutation",
         default=None,
         help=(
-            "Comma-separated mapping from raw checkpoint output columns "
-            "to canonical order. Example: 0,1,2,3,4,5,6"
+            "Override the audited mapping from raw checkpoint output columns "
+            "to canonical order (canonical = raw[:, permutation]). "
+            "Example: 6,5,0,2,3,1,4"
         ),
     )
     ap.add_argument(
@@ -253,25 +297,28 @@ def main() -> None:
     if args.num_classes != 7:
         raise ValueError("This study uses exactly seven canonical classes.")
 
-    permutation = parse_permutation(args.output_permutation)
+    config = load_yaml(args.config) if args.config and Path(args.config).is_file() else None
+
+    settings = resolve_eval_settings(
+        args.model,
+        config=config,
+        image_size=args.image_size,
+        normalization=args.normalization,
+        output_permutation=parse_permutation(args.output_permutation),
+    )
+    permutation = settings["output_permutation"]
 
     device = best_device()
 
-    model = get_model(
-        args.model,
-        num_classes=7,
-        pretrained=False,
-    ).to(device)
-
-    load_checkpoint_strict(
-        model,
+    model = build_archived_model(
+        settings,
         args.checkpoint,
         device,
     )
 
     transform = build_eval_transform(
-        args.model,
-        args.image_size,
+        settings["image_size"],
+        settings["normalization"],
     )
 
     ds = datasets.ImageFolder(
@@ -305,9 +352,11 @@ def main() -> None:
     metrics.update(
         {
             "samples": int(len(y_true)),
-            "model": args.model,
+            "model": settings["model"],
             "dataset": args.dataset,
             "canonical_classes": CANONICAL_CLASSES,
+            "image_size": settings["image_size"],
+            "normalization": settings["normalization"],
             "output_permutation": permutation,
             "checkpoint": str(args.checkpoint),
         }

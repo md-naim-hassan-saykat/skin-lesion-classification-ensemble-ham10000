@@ -1,8 +1,9 @@
 # Installation Guide
 
 This guide describes how to configure a local environment for the
-**Generalizable Ensemble Deep Learning for Skin Lesion Classification:
-Internal and External Validation on HAM10000 and ISIC 2019** repository.
+**Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+Classification: Internal Evaluation on HAM10000 and External Evaluation on
+ISIC 2019** repository.
 
 The recommended environment uses Python 3.11 and PyTorch. The repository
 provides executable training, evaluation, ensemble, testing, and
@@ -432,7 +433,7 @@ without the corresponding archived experimental information.
 
 Additional methodological and reproducibility details are available in:
 
-- [`training_pipeline.md`](training_pipeline.md) — training and checkpoint workflow
-- [`evaluation_metrics.md`](evaluation_metrics.md) — implemented evaluation metrics
-- [`ensemble_method.md`](ensemble_method.md) — seven-model probability ensemble
-- [`../README.md`](../README.md) — repository overview and usage
+- [`training_pipeline.md`](training_pipeline.md): training and checkpoint workflow
+- [`evaluation_metrics.md`](evaluation_metrics.md): implemented evaluation metrics
+- [`ensemble_method.md`](ensemble_method.md): seven-model probability ensemble
+- [`../README.md`](../README.md): repository overview and usage

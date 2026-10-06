@@ -1,0 +1,4 @@
+Subset,N,Share,Seen during training
+ISIC 2019 as evaluated,25331,100.0%,partly
+HAM10000 source images,10011,39.5%,yes
+non-HAM10000 remainder,15320,60.5%,no

@@ -1,7 +1,8 @@
 # =============================================================================
 # Project Requirements
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification
-# Internal and External Validation on HAM10000 and ISIC 2019
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+# Classification: Internal Evaluation on HAM10000 and External Evaluation
+# on ISIC 2019
 # =============================================================================
 #
 # Recommended Python version: 3.11
@@ -19,6 +20,10 @@
 torch==2.9.0
 torchvision==0.24.0
 einops>=0.7,<1.0
+
+# Required to load the archived ViT-B/16 checkpoint, which is a Hugging Face
+# ViTForImageClassification state dict.
+transformers>=4.40,<5.0
 
 # -----------------------------------------------------------------------------
 # Data Handling and Scientific Computing

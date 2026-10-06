@@ -28,7 +28,12 @@ def expected_calibration_error(
     n_bins: int = 15,
 ) -> float:
     """
-    Maximum-confidence multiclass Expected Calibration Error using equal-width bins.
+    Maximum-confidence multiclass Expected Calibration Error.
+
+    Confidences are grouped into n_bins equal-width, right-closed bins
+    (lo, hi]; the first bin also includes 0. This is the convention used for
+    the reported ECE values and for the reliability table (Supplementary
+    Table S7). Empty bins are skipped.
     """
 
     y_true = np.asarray(y_true, dtype=int)
@@ -42,10 +47,10 @@ def expected_calibration_error(
     ece = 0.0
 
     for i in range(n_bins):
-        if i == n_bins - 1:
+        if i == 0:
             mask = (confidence >= edges[i]) & (confidence <= edges[i + 1])
         else:
-            mask = (confidence >= edges[i]) & (confidence < edges[i + 1])
+            mask = (confidence > edges[i]) & (confidence <= edges[i + 1])
 
         if not np.any(mask):
             continue

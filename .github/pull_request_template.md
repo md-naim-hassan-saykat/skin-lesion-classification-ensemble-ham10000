@@ -30,7 +30,7 @@ Select all that apply:
 - [ ] Evaluation or metrics update
 - [ ] Ensemble-method update
 - [ ] Data-processing update
-- [ ] Interpretability / Grad-CAM++ update
+- [ ] Interpretability / Grad-CAM update
 - [ ] Statistical-analysis update
 - [ ] Code refactoring or optimization
 - [ ] Tests added or updated
@@ -76,7 +76,7 @@ For research-related changes, describe whether the PR affects:
 - manuscript-related methodology;
 - reported or curated results;
 - reproducibility;
-- external validation; or
+- external evaluation; or
 - documentation only.
 
 If the change intentionally alters previous behavior or results, explain why.
@@ -296,7 +296,7 @@ If useful for review, include relevant:
 - figures;
 - confusion matrices;
 - ROC curves; or
-- Grad-CAM++ visualizations.
+- Grad-CAM visualizations.
 
 Include only the information needed to review the change.
 

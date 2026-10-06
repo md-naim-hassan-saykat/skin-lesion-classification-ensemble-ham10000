@@ -1,8 +1,9 @@
 # Training Pipeline
 
 This document describes the repository training and evaluation workflow for the
-**Generalizable Ensemble Deep Learning for Skin Lesion Classification:
-Internal and External Validation on HAM10000 and ISIC 2019** project.
+**Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+Classification: Internal Evaluation on HAM10000 and External Evaluation on
+ISIC 2019** project.
 
 The repository provides executable training support for seven model
 architectures together with canonical seven-class evaluation and equal-weight
@@ -37,10 +38,56 @@ src/utils.py
 The current training implementation provides a reproducible executable
 quick-start workflow for new experiments and methodological inspection.
 
-It should not automatically be interpreted as an exact reconstruction of every
-historical training run used to produce the archived manuscript checkpoints.
-Exact historical reproduction requires the corresponding model-specific
-experimental records.
+It is not the configuration used to train the archived manuscript
+checkpoints. Section 1.1 records how those were actually trained.
+
+### 1.1 How the archived manuscript checkpoints were trained
+
+The seven archived checkpoints were produced by separate historical training
+runs. The values below were extracted from the archived training code
+(manuscript Supplementary Table S6;
+[`results/tables/HAM10000_protocol_audit.csv`](../results/tables/HAM10000_protocol_audit.csv)).
+
+| Model | Historical split | Train / Val / Test | Optimizer | Training class order | Evaluation preprocessing |
+|---|---|---|---|---|---|
+| CNN | not recoverable | n/a | Adam | canonical (assumed) | 224; mean/std 0.5 |
+| ResNet-50 (linear probe) | 80/20, then 90/10 | 7210 / 802 / 2003 | Adam | metadata order | 224; ImageNet |
+| DenseNet-121 | 80/20, then 80/20 | 6409 / 1603 / 2003 | Adam | canonical | 224; mean/std 0.5 |
+| EfficientNet-B3 | 70/15/15 | 7010 / 1502 / 1503 | Adam | canonical | 300; mean/std 0.5 |
+| ConvNeXt-Tiny | 70/15/15 | 7010 / 1502 / 1503 | AdamW | canonical | 224; ImageNet |
+| MobileNetV3-L | 80/20, then 80/20 | 6409 / 1603 / 2003 | Adam | canonical | 224; mean/std 0.5 |
+| ViT-B/16 | inherited from ResNet-50 loaders | n/a | Adam | metadata order | ViTImageProcessor (224; mean/std 0.5) |
+
+Common to all models unless stated:
+
+- **Loss:** unweighted multiclass cross-entropy for all seven models. No class
+  weighting was used.
+- **Class imbalance:** addressed at training time for ResNet-50 only, with a
+  `WeightedRandomSampler` (inverse-frequency sample weights, drawn with
+  replacement). No resampling or oversampling for the other six.
+- **ResNet-50:** the ImageNet backbone was frozen and only the replaced
+  seven-class fully connected layer was trained, so this checkpoint is a
+  linear probe rather than a fine-tuned network. All other models trained all
+  parameters.
+- **Optimizer and schedule:** Adam with a constant learning rate, except
+  ConvNeXt-Tiny, which used AdamW (weight decay 1e-2), a `ReduceLROnPlateau`
+  schedule and mixed precision.
+- **Learning rate and batch size:** 1e-4 and 32, except ViT-B/16 (2e-5 and
+  16). The CNN batch size is not recoverable.
+- **Stopping:** up to 50 epochs, early stopping on validation accuracy
+  (patience 5; 7 for the CNN), best-epoch weights restored.
+- **Augmentation:** random horizontal flip and random rotation (10 degrees;
+  15 for MobileNetV3-L, 20 for ResNet-50). ViT-B/16 used no geometric
+  augmentation; the CNN policy is not recoverable.
+- **Splits** were made at the image level, not the lesion level.
+
+Metadata class order is `bkl, nv, df, mel, vasc, bcc, akiec`, the order in
+which diagnoses first appear in `HAM10000_metadata.csv`. ResNet-50 and ViT
+outputs must be permuted to the canonical order before evaluation (Section 12).
+
+Because ResNet-50 is a linear probe and ConvNeXt-Tiny alone used a different
+optimizer and schedule, differences between these models and the others
+cannot be attributed to architecture alone.
 
 ---
 
@@ -208,14 +255,17 @@ HAM10000 has an imbalanced class distribution.
 For the executable training workflow, class weights are calculated from the
 training dataset.
 
-For class $begin:math:text$c$end:math:text$, the initial weight is inversely related to its observed
+This class weighting belongs to the quick-start workflow only; none of the
+archived manuscript checkpoints used a weighted loss (Section 1.1).
+
+For class $c$, the initial weight is inversely related to its observed
 training frequency:
 
-$begin:math:display$
-w\_c \\propto \\frac\{1\}\{n\_c\}\,
-$end:math:display$
+$$
+w_c \propto \frac{1}{n_c},
+$$
 
-where $begin:math:text$n\_c$end:math:text$ is the number of training samples belonging to class $begin:math:text$c$end:math:text$.
+where $n_c$ is the number of training samples belonging to class $c$.
 
 The weights are normalized before being supplied to:
 
@@ -260,9 +310,9 @@ Checkpoint criterion:  Validation weighted F1-score
 
 These settings describe the current repository quick-start implementation.
 
-They should not be presented as proof that all seven historical archived
-checkpoints were trained using exactly the same optimizer, augmentation,
-preprocessing, or other hyperparameters.
+They are not the settings of the archived manuscript checkpoints, which
+differ in loss, optimizer, schedule, augmentation and preprocessing
+(Section 1.1).
 
 ---
 
@@ -350,7 +400,10 @@ python src/evaluate.py \
 
 The evaluator:
 
-- constructs the requested architecture;
+- looks up the audited input size, normalization and output permutation of
+  the checkpoint in `src/config.yaml`;
+- constructs the requested architecture (a Hugging Face ViT for the archived
+  ViT checkpoint);
 - loads the supplied checkpoint;
 - validates the canonical seven-class ImageFolder ordering;
 - performs inference without gradient computation;
@@ -400,14 +453,27 @@ For example, the identity permutation is:
 --output_permutation 0,1,2,3,4,5,6
 ```
 
-Historical output permutations must be established from archived evaluation
-records or checkpoint metadata and must not be guessed.
+The audited permutations, applied automatically by `src/evaluate.py`, are:
 
-The repository's documented permutation configuration is maintained in:
+| Model | Output permutation |
+|---|---|
+| ResNet-50 | `6,5,0,2,3,1,4` |
+| ViT-B/16 | `6,5,0,2,3,1,4` |
+| All other models | `0,1,2,3,4,5,6` (identity) |
 
-```text
-src/config.yaml
-```
+ResNet-50 and ViT-B/16 were trained with class indices in HAM10000 metadata
+order (`bkl, nv, df, mel, vasc, bcc, akiec`). Scored without this permutation,
+they appear to fail almost completely on ISIC 2019 (accuracy 0.1035 and
+0.0840 in the original submission); with it, their accuracies are 0.4969 and
+0.6651. The permutation is the unique optimum of a brute-force search over all
+5,040 orderings for ViT (`scripts/revision_analysis/verify_label_order.py`).
+
+The values are stored under `archived_checkpoints` in `src/config.yaml` and in
+`src/archived.py`, and are checked by `tests/test_archived.py`.
+
+Evaluation preprocessing is also checkpoint-specific (Section 1.1) and is
+applied automatically in the same way; `--image_size`, `--normalization` and
+`--output_permutation` override the audited values.
 
 ---
 
@@ -448,19 +514,19 @@ architectures.
 The final ensemble uses the equal-weight arithmetic mean of the seven aligned
 probability outputs:
 
-$begin:math:display$
-\\mathbf\{p\}\_\{\\mathrm\{ens\}\}
-\=
-\\frac\{1\}\{7\}
-\\sum\_\{i\=1\}\^\{7\}
-\\mathbf\{p\}\_i\.
-$end:math:display$
+$$
+\mathbf{p}_{\mathrm{ens}}
+=
+\frac{1}{7}
+\sum_{i=1}^{7}
+\mathbf{p}_i.
+$$
 
 Each model therefore contributes weight:
 
-$begin:math:display$
-w\_i \= \\frac\{1\}\{7\}\.
-$end:math:display$
+$$
+w_i = \frac{1}{7}.
+$$
 
 The ensemble implementation requires exactly seven aligned prediction CSV
 files.
@@ -521,8 +587,12 @@ retrospective harmonized evaluation cohort.
 It should not be described as a universally untouched test split that was
 identically held out during development of every archived model.
 
-ISIC 2019 provides external validation evidence under dataset shift relative to
-HAM10000.
+ISIC 2019 provides external evidence under dataset shift relative to HAM10000,
+with one caveat: the ISIC 2019 challenge set includes the HAM10000 images.
+Of the 25,331 images used, 10,011 (39.5%) were seen during training by every
+archived checkpoint. The genuinely external estimate is the 15,320-image
+BCN_20000 and MSK remainder (see
+[`evaluation_metrics.md`](evaluation_metrics.md), Section 10).
 
 ---
 
@@ -590,7 +660,7 @@ information.
 
 Additional details are available in:
 
-- [`installation.md`](installation.md) — environment and dataset setup
-- [`evaluation_metrics.md`](evaluation_metrics.md) — implemented metrics
-- [`ensemble_method.md`](ensemble_method.md) — seven-model ensemble methodology
-- [`../README.md`](../README.md) — repository overview and primary usage
+- [`installation.md`](installation.md): environment and dataset setup
+- [`evaluation_metrics.md`](evaluation_metrics.md): implemented metrics
+- [`ensemble_method.md`](ensemble_method.md): seven-model ensemble methodology
+- [`../README.md`](../README.md): repository overview and primary usage

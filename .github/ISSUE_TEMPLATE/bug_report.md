@@ -38,7 +38,7 @@ Select the component most closely related to the issue:
 - [ ] Individual-model evaluation
 - [ ] Ensemble evaluation
 - [ ] Metrics / statistical analysis
-- [ ] Interpretability / Grad-CAM++
+- [ ] Interpretability / Grad-CAM
 - [ ] Documentation
 - [ ] Tests / CI / pre-commit
 - [ ] Other

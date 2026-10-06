@@ -7,7 +7,73 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- `scripts/eval_all.sh` and `src/evaluate.py` evaluated every checkpoint with
+  one ImageNet transform at 224 x 224 and with identity class ordering, which
+  reproduces the two defects corrected in the revised manuscript. Each
+  checkpoint is now evaluated with its audited input size, normalization and
+  output permutation (`archived_checkpoints` in `src/config.yaml`,
+  `src/archived.py`).
+- Filled the ResNet-50 and ViT-B/16 output permutations, previously `null`,
+  with the audited value `6,5,0,2,3,1,4` (training class indices in HAM10000
+  metadata order).
+- `CustomCNN` now matches the archived CNN checkpoint (flattened 256 x 14 x 14
+  features, 512-unit hidden layer, dropout 0.5), so the checkpoint loads with
+  strict matching.
+- The archived ViT-B/16 checkpoint is a Hugging Face
+  `ViTForImageClassification` state dict; it is now built with
+  `build_archived_vit()` instead of the torchvision ViT, and `transformers` is
+  added to `requirements.txt`.
+- Checkpoint search patterns in `scripts/eval_all.sh` now match the archived
+  file names `mobilenetv3_ham10000.pth` and `vit_ham10000_best_model.pth`.
+- `results/tables/HAM10000_master_results_with_95CI.csv` now matches
+  Supplementary Table S1 and the README. The previous file used one shared
+  bootstrap stream; the published intervals use per-metric seeds 42 to 45.
+- Added the ensemble row to `results/tables/ISIC2019_per_class_F1.csv` and
+  corrected the README statement that ConvNeXt-Tiny had the highest DF and VASC
+  F1 (the ensemble does).
+- ECE bins are now right-closed, `(lo, hi]`, matching the reported values and
+  Supplementary Table S7. Reported ECE values are unchanged.
+- `metadata.yaml` listed weighted cross-entropy, cosine annealing and
+  Grad-CAM++ as the study settings. The archived models used unweighted
+  cross-entropy and Adam with a constant learning rate (ConvNeXt-Tiny: AdamW
+  with `ReduceLROnPlateau`), and attribution used Grad-CAM.
+- Updated the project title in `CITATION.cff`, `metadata.yaml`, the
+  documentation and `CONTRIBUTING.md`, and replaced remaining Grad-CAM++
+  references.
+- Repaired broken mathematical markup in the README and documentation.
+- `.gitignore` re-ignored `results/tables/*.csv` after allowing them, so new
+  curated tables could not be added without `git add -f`.
+
 ### Added
+
+- Partition of ISIC 2019 by source: 10,011 of 25,331 images are HAM10000
+  training images; results on the 15,320 unseen images
+  (`ISIC2019_partitioned_by_source.csv`, `ISIC2019_contamination_summary.csv`,
+  `ISIC2019_unseen_per_class_F1.csv`).
+- Post-hoc temperature scaling of the ensemble and each model, with the
+  ensemble reliability table (`calibration_temperature_scaling.csv`,
+  `HAM10000_ensemble_reliability.csv`).
+- Computational cost of each model and the ensemble on an NVIDIA T4
+  (`computational_cost.csv`, `computational_overhead.json`).
+- Archived training-protocol and test-membership audits
+  (`HAM10000_protocol_audit.csv`,
+  `HAM10000_historical_test_membership_audit.csv`), and the archived training
+  protocol of each checkpoint in `docs/training_pipeline.md`.
+- Analysis scripts under `scripts/revision_analysis/`: `bootstrap_ci.py`,
+  `calibration_analysis.py`, `external_decontamination.py`,
+  `verify_label_order.py`, `benchmark_overhead.py`, `kaggle_preflight.py`,
+  `per_class_f1.py`.
+- `tests/test_archived.py`, pinning the audited permutations and
+  preprocessing.
+- README sections on computational cost and on the corrections made to the
+  original submission.
+- Research notebook: a Revision Analyses section (checkpoint pre-flight,
+  computational cost, ISIC 2019 partition by source, per-class F1 on the unseen
+  remainder, temperature scaling and reliability table); the Overview and ISIC
+  section state the ISIC 2019 overlap; the master 95% CI table is now taken from
+  Supplementary Table S1 instead of a second bootstrap with different intervals.
 
 - Harmonized retrospective evaluation framework for seven dermoscopic
   skin-lesion classification architectures:

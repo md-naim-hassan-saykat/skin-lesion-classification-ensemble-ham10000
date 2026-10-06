@@ -1,8 +1,9 @@
 # Evaluation Metrics
 
 This document describes the evaluation metrics implemented in the
-**Generalizable Ensemble Deep Learning for Skin Lesion Classification:
-Internal and External Validation on HAM10000 and ISIC 2019** project.
+**Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion
+Classification: Internal Evaluation on HAM10000 and External Evaluation on
+ISIC 2019** project.
 
 The evaluation framework considers overall classification performance,
 class imbalance, probability discrimination, calibration, and external
@@ -60,23 +61,23 @@ The implemented ISIC 2019 metric suite reports:
 For multiclass classification, accuracy is the proportion of evaluated samples
 assigned to the correct class:
 
-$begin:math:display$
-\\mathrm\{Accuracy\}
-\=
-\\frac\{1\}\{n\}
-\\sum\_\{i\=1\}\^\{n\}
-\\mathbf\{1\}
-\\left\(
-\\hat\{y\}\_i \= y\_i
-\\right\)\,
-$end:math:display$
+$$
+\mathrm{Accuracy}
+=
+\frac{1}{n}
+\sum_{i=1}^{n}
+\mathbf{1}
+\left(
+\hat{y}_i = y_i
+\right),
+$$
 
 where:
 
-- $begin:math:text$n$end:math:text$ is the number of evaluated samples;
-- $begin:math:text$y\_i$end:math:text$ is the ground-truth class of sample $begin:math:text$i$end:math:text$;
-- $begin:math:text$\\hat\{y\}\_i$end:math:text$ is the predicted class; and
-- $begin:math:text$\\mathbf\{1\}\(\\cdot\)$end:math:text$ is the indicator function.
+- $n$ is the number of evaluated samples;
+- $y_i$ is the ground-truth class of sample $i$;
+- $\hat{y}_i$ is the predicted class; and
+- $\mathbf{1}(\cdot)$ is the indicator function.
 
 The repository computes accuracy using:
 
@@ -94,37 +95,37 @@ weighted F1-score and ROC-AUC.
 
 ## 3. Weighted F1-Score
 
-For class $begin:math:text$c$end:math:text$, the F1-score is the harmonic mean of precision and recall:
+For class $c$, the F1-score is the harmonic mean of precision and recall:
 
-$begin:math:display$
-F1\_c
-\=
+$$
+F1_c
+=
 2
-\\frac\{
-\\mathrm\{Precision\}\_c
-\\mathrm\{Recall\}\_c
-\}\{
-\\mathrm\{Precision\}\_c
-\+
-\\mathrm\{Recall\}\_c
-\}\.
-$end:math:display$
+\frac{
+\mathrm{Precision}_c
+\mathrm{Recall}_c
+}{
+\mathrm{Precision}_c
++
+\mathrm{Recall}_c
+}.
+$$
 
 The weighted multiclass F1-score is:
 
-$begin:math:display$
-F1\_\{\\mathrm\{weighted\}\}
-\=
-\\sum\_\{c\=1\}\^\{C\}
-\\frac\{n\_c\}\{n\}
-F1\_c\,
-$end:math:display$
+$$
+F1_{\mathrm{weighted}}
+=
+\sum_{c=1}^{C}
+\frac{n_c}{n}
+F1_c,
+$$
 
 where:
 
-- $begin:math:text$C$end:math:text$ is the number of classes;
-- $begin:math:text$n\_c$end:math:text$ is the number of ground-truth samples belonging to class $begin:math:text$c$end:math:text$; and
-- $begin:math:text$n$end:math:text$ is the total number of evaluated samples.
+- $C$ is the number of classes;
+- $n_c$ is the number of ground-truth samples belonging to class $c$; and
+- $n$ is the total number of evaluated samples.
 
 The implementation uses:
 
@@ -160,13 +161,13 @@ For multiclass evaluation, the repository uses one-vs-rest (OvR) ROC-AUC.
 Macro ROC-AUC computes the one-vs-rest AUC independently for each class and
 then gives every class equal weight:
 
-$begin:math:display$
-\\mathrm\{AUC\}\_\{\\mathrm\{macro\}\}
-\=
-\\frac\{1\}\{C\}
-\\sum\_\{c\=1\}\^\{C\}
-\\mathrm\{AUC\}\_c\.
-$end:math:display$
+$$
+\mathrm{AUC}_{\mathrm{macro}}
+=
+\frac{1}{C}
+\sum_{c=1}^{C}
+\mathrm{AUC}_c.
+$$
 
 Macro ROC-AUC is reported for both HAM10000 and ISIC 2019.
 
@@ -191,13 +192,13 @@ This metric is part of the implemented HAM10000 evaluation suite.
 For ISIC 2019, the repository additionally reports weighted one-vs-rest
 ROC-AUC:
 
-$begin:math:display$
-\\mathrm\{AUC\}\_\{\\mathrm\{weighted\}\}
-\=
-\\sum\_\{c\=1\}\^\{C\}
-\\frac\{n\_c\}\{n\}
-\\mathrm\{AUC\}\_c\.
-$end:math:display$
+$$
+\mathrm{AUC}_{\mathrm{weighted}}
+=
+\sum_{c=1}^{C}
+\frac{n_c}{n}
+\mathrm{AUC}_c.
+$$
 
 Each class-specific AUC is weighted according to its ground-truth support.
 
@@ -213,47 +214,94 @@ confidence and empirical correctness.
 The repository implements maximum-confidence multiclass ECE using equal-width
 confidence bins.
 
-For sample $begin:math:text$i$end:math:text$, predictive confidence is:
+For sample $i$, predictive confidence is:
 
-$begin:math:display$
-\\mathrm\{conf\}\_i
-\=
-\\max\_c p\_\{i\,c\}\,
-$end:math:display$
+$$
+\mathrm{conf}_i
+=
+\max_c p_{i,c},
+$$
 
 and the predicted class is:
 
-$begin:math:display$
-\\hat\{y\}\_i
-\=
-\\operatorname\*\{arg\\\,max\}\_c p\_\{i\,c\}\.
-$end:math:display$
+$$
+\hat{y}_i
+=
+\operatorname*{arg\,max}_c p_{i,c}.
+$$
 
-The predictions are partitioned into $begin:math:text$M$end:math:text$ confidence bins
-$begin:math:text$B\_1\, \\ldots\, B\_M$end:math:text$.
+The predictions are partitioned into $M$ confidence bins
+$B_1, \ldots, B_M$.
 
-For bin $begin:math:text$B\_m$end:math:text$, empirical accuracy and mean confidence are compared. ECE is
+For bin $B_m$, empirical accuracy and mean confidence are compared. ECE is
 then calculated as:
 
-$begin:math:display$
-\\mathrm\{ECE\}
-\=
-\\sum\_\{m\=1\}\^\{M\}
-\\frac\{\|B\_m\|\}\{n\}
-\\left\|
-\\mathrm\{acc\}\(B\_m\)
-\-
-\\mathrm\{conf\}\(B\_m\)
-\\right\|\.
-$end:math:display$
+$$
+\mathrm{ECE}
+=
+\sum_{m=1}^{M}
+\frac{|B_m|}{n}
+\left|
+\mathrm{acc}(B_m)
+-
+\mathrm{conf}(B_m)
+\right|.
+$$
 
-The repository uses 15 equal-width bins by default:
+The repository uses 15 equal-width, right-closed bins $(lo, hi]$ (the first
+bin also includes 0), which is the convention of the reported values and of
+the reliability table in Supplementary Table S7:
 
 ```text
 ece_bins = 15
 ```
 
+Bins that contain no predictions are skipped. Because maximum confidence in a
+seven-class problem is never below $1/7$, the two lowest bins are always empty; on
+the HAM10000 cohort, 11 of the 15 bins are populated for the ensemble.
+
 ECE is included in the implemented HAM10000 metric suite.
+
+### 5.1 Direction of miscalibration
+
+ECE measures the size of the miscalibration but not its direction. The
+direction is the sign of accuracy minus mean confidence: positive values mean
+the model is **under-confident**, negative values **over-confident**.
+
+On HAM10000, five of the seven models are over-confident. The equal-weight
+ensemble is **under-confident**: its accuracy (0.9386) exceeds its mean
+confidence (0.8232) in every populated bin. Averaging the probabilities of
+models that disagree spreads probability mass across classes; the seven models
+predict the same class for only 54.9% of the cohort.
+
+### 5.2 Post-hoc temperature scaling
+
+Temperature scaling divides the logits by a single scalar $T$ before the
+softmax. For probability outputs, the logits are recovered as
+$L = \log p$, which is exact up to an additive constant. $T$ is fitted by
+minimizing multiclass negative log-likelihood. $T < 1$ sharpens the
+distribution (correcting under-confidence) and $T > 1$ softens it.
+
+To avoid fitting and scoring on the same images, $T$ is estimated out of fold
+with 5-fold stratified cross-fitting (seed 42): it is fitted on four folds and
+applied to the fifth, and the calibrated predictions are pooled.
+
+A single positive temperature is a monotone transformation of the scores, so
+the predicted class of every image, and therefore accuracy and weighted F1,
+cannot change.
+
+| HAM10000 ensemble | ECE | Accuracy | Weighted F1 | $T$ |
+|---|---:|---:|---:|---:|
+| Uncalibrated | 11.54% | 0.9386 | 0.9374 | - |
+| Temperature scaled (out of fold) | 1.26% | 0.9386 | 0.9374 | 0.482 |
+
+Calibrating each model separately and then averaging gives 13.17%, worse than
+the uncalibrated ensemble; calibration is effective when applied to the
+ensemble output.
+
+Implementation: `scripts/revision_analysis/calibration_analysis.py`.
+Results: `results/tables/calibration_temperature_scaling.csv` and
+`results/tables/HAM10000_ensemble_reliability.csv`.
 
 A lower ECE indicates closer agreement between predictive confidence and
 empirical correctness under this binning definition. ECE should be interpreted
@@ -270,7 +318,7 @@ Probability-based metrics require a probability matrix of shape:
 (N, 7)
 ```
 
-where $begin:math:text$N$end:math:text$ is the number of evaluated samples and the seven columns correspond
+where $N$ is the number of evaluated samples and the seven columns correspond
 to the canonical class order:
 
 ```python
@@ -330,7 +378,7 @@ Depending on the analysis artifact, these include:
 - confusion matrices;
 - model-comparison figures;
 - calibration analyses; and
-- Grad-CAM++ interpretability visualizations.
+- Grad-CAM interpretability visualizations.
 
 Curated manuscript and reproducibility figures are maintained under:
 
@@ -362,6 +410,42 @@ These include, where applicable:
 - point-difference summaries; and
 - calibration summaries.
 
+### 9.1 Bootstrap confidence intervals
+
+Point estimates are computed once on the complete 2,003-image cohort. Each
+metric is then bootstrapped separately with 1,000 resamples of the cohort,
+drawn with replacement using `numpy.random.default_rng`, and the 2.5th and
+97.5th percentiles form the 95% interval. The generator is seeded per metric
+from a base seed of 42: accuracy 42, weighted F1 43, macro ROC-AUC 44, and
+micro ROC-AUC 45. A resample on which a metric is undefined is excluded.
+
+These are the intervals in Supplementary Table S1 and in
+`results/tables/HAM10000_master_results_with_95CI.csv`, reproduced exactly by
+`scripts/revision_analysis/bootstrap_ci.py`. Running all four metrics on one
+shared random stream gives intervals that differ in the third or fourth
+decimal place.
+
+### 9.2 McNemar's test
+
+Paired correctness of the ensemble and each individual model is compared with
+McNemar's chi-square test with continuity correction,
+
+$$
+\chi^2 = \frac{(|b - c| - 1)^2}{b + c},
+$$
+
+where $b$ counts images the ensemble classifies correctly and the model does
+not, and $c$ the converse. The test establishes whether the two differ; the
+direction is read from $b$ and $c$. On HAM10000, $b > c$ for six models and
+$c > b$ for ViT (47 versus 88), so that significant difference favors ViT.
+
+### 9.3 Paired bootstrap differences
+
+Differences (ensemble minus model) in accuracy, weighted F1 and macro ROC-AUC
+are bootstrapped with 1,000 paired resamples, using deterministic model- and
+metric-specific seeds derived from a base seed of 42. Intervals that exclude
+zero indicate a difference in the stated direction.
+
 Such analyses complement the core point-estimate metrics and should be
 considered when interpreting differences between individual models and the
 ensemble.
@@ -377,8 +461,26 @@ analysis.
 It should not be characterized as a universally untouched test split that was
 identically held out during development of every archived model.
 
-ISIC 2019 is used for external validation to assess generalization under a
-dataset shift relative to HAM10000.
+ISIC 2019 is used for external evaluation under dataset shift relative to
+HAM10000.
+
+**ISIC 2019 contains HAM10000.** The ISIC 2019 challenge training set is
+assembled from HAM10000, BCN_20000 and MSK. Identified by image identifier,
+10,011 of the 25,331 ISIC 2019 images used here (39.5%) are HAM10000 images
+that every archived checkpoint saw during training. Metrics on the full
+25,331-image set therefore overstate cross-dataset generalization.
+
+The external evaluation is reported in two parts:
+
+- the full set, for continuity with earlier results; and
+- the 15,320 BCN_20000 and MSK images that no model saw, which is the
+  genuinely external estimate.
+
+On the unseen remainder, accuracy is 12.1 to 17.4 points lower than on the
+full set for every model. Implementation:
+`scripts/revision_analysis/external_decontamination.py`. Results:
+`results/tables/ISIC2019_partitioned_by_source.csv` and
+`results/tables/ISIC2019_unseen_per_class_F1.csv`.
 
 Internal and external results therefore provide complementary evidence and
 should not be interpreted as interchangeable estimates of performance.
@@ -397,7 +499,8 @@ The evaluation framework therefore considers:
 - **Macro ROC-AUC** for class-balanced discrimination;
 - **Micro ROC-AUC** for the specified HAM10000 discrimination summary;
 - **Weighted ROC-AUC** for the specified ISIC 2019 discrimination summary; and
-- **ECE**, where reported, for probability calibration.
+- **ECE**, where reported, for probability calibration, together with the
+  direction of miscalibration.
 
 Model comparisons should be based on the complete metric profile, external
 validation, and available uncertainty or statistical-comparison analyses rather

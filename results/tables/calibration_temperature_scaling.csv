@@ -1,0 +1,9 @@
+Model,HAM10000 ECE (%),HAM10000 temperature T,HAM10000 ECE after TS (%),HAM10000 accuracy,HAM10000 mean confidence,HAM10000 direction,ISIC 2019 ECE (%),ISIC 2019 temperature T,ISIC 2019 ECE after TS (%)
+CNN,3.13,1.057,3.49,0.7898,0.7776,under-confident,17.53,3.355,11.71
+ResNet-50,9.33,0.708,2.85,0.685,0.592,under-confident,3.48,0.852,3.32
+DenseNet-121,6.96,1.562,2.13,0.8787,0.9434,over-confident,21.98,2.639,3.33
+EfficientNet-B3,4.46,1.496,1.51,0.8997,0.939,over-confident,27.53,2.86,4.52
+ConvNeXt-Tiny,5.47,1.799,1.37,0.9126,0.9657,over-confident,23.1,2.881,4.16
+MobileNetV3-L,6.66,1.797,1.82,0.8587,0.9251,over-confident,25.25,3.588,1.43
+ViT,1.37,1.146,1.2,0.9591,0.9691,over-confident,22.42,2.289,4.96
+Ensemble,11.54,0.482,1.26,0.9386,0.8232,under-confident,6.13,1.177,4.65

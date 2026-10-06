@@ -6,6 +6,7 @@ import sys
 import pytest
 
 SOURCE_MODULES = [
+    "src.archived",
     "src.data",
     "src.ensemble",
     "src.evaluate",

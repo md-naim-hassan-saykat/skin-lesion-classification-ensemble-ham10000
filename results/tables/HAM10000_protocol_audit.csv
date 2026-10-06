@@ -1,0 +1,8 @@
+Model,Historical split,Train N,Validation N,Test N,Historical test membership,Training label order,Evaluation preprocessing,Table 1 reproduced,Audit status
+CNN,Not recoverable from current notebook state,,,,Unresolved,Canonical/alphabetical assumed in available evaluation,"224x224; Normalize([0.5]*3, [0.5]*3)",Yes,Checkpoint/architecture available; historical split unresolved
+ResNet-50,"80/20, then 90/10 of development",7210.0,802.0,2003.0,Verified,"Metadata order: bkl,nv,df,mel,vasc,bcc,akiec",224x224; ImageNet normalization,Yes,Historical split and class-index mapping reconstructed
+DenseNet-121,"80/20, then 80/20 of development",6409.0,1603.0,2003.0,Verified,Canonical alphabetical,"224x224; Normalize([0.5]*3, [0.5]*3)",Yes,Historical split reconstructed
+EfficientNet-B3,70/15/15,7010.0,1502.0,1503.0,Verified,Canonical alphabetical,"300x300; Normalize([0.5]*3, [0.5]*3)",Yes,Historical split reconstructed
+ConvNeXt-Tiny,70/15/15,7010.0,1502.0,1503.0,Verified,Canonical alphabetical,224x224; ImageNet normalization,Only with historical 0.5-normalized evaluation,Training used ImageNet normalization; submitted Table 1 values were reproduced using mismatched 0.5 normalization
+MobileNetV3-L,"80/20, then 80/20 of development",6409.0,1603.0,2003.0,Verified,Canonical alphabetical,"224x224; Normalize([0.5]*3, [0.5]*3)",Yes,Historical split reconstructed
+ViT-B/16,Training uses pre-existing train_loader/val_loader; ResNet-style split is strongly indicated but not independently defined in available ViT section,,,,Not independently verified for ViT,"Metadata order: bkl,nv,df,mel,vasc,bcc,akiec",ViTImageProcessor (google/vit-base-patch16-224),Yes (0.9591 accuracy),Class-index mapping verified; historical ViT split provenance depends on pre-existing loaders

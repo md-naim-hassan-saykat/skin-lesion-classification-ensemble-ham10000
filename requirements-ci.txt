@@ -1,6 +1,6 @@
 # =============================================================================
 # Development and CI Requirements
-# Generalizable Ensemble Deep Learning for Skin Lesion Classification
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification
 # =============================================================================
 #
 # Install after the main project dependencies:

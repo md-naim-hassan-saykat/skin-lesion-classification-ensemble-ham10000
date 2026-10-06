@@ -40,18 +40,27 @@ Grad-CAM attribution within a common seven-class evaluation framework.
 - **HAM10000 evaluation:** standardized retrospective evaluation cohort of
   **2,003 images** across seven diagnostic classes.
 - **External evaluation:** harmonized **ISIC 2019 cohort of 25,331 images**
-  mapped to the same seven-class label space.
+  mapped to the same seven-class label space. ISIC 2019 contains the HAM10000
+  images, so results are also reported on the **15,320 images no model saw
+  during training**, the genuinely external estimate.
 - **Strongest internal model:** ViT-B/16 with **0.9591 accuracy**,
   **0.9585 weighted F1**, **0.9959 macro ROC-AUC**, and
   **0.9978 micro ROC-AUC**.
 - **Strongest external model:** ConvNeXt-Tiny with **0.6963 accuracy**,
   **0.6755 weighted F1**, **0.9021 macro ROC-AUC**, and
-  **0.9053 weighted ROC-AUC**.
-- **Ensemble performance:** strong internally and externally, but the
-  equal-weight ensemble does **not** uniformly outperform the strongest
-  individual architecture.
-- **Calibration:** ViT achieved the lowest HAM10000 ECE (**1.37%**), whereas
-  the ensemble had an ECE of **11.54%**.
+  **0.9053 weighted ROC-AUC** on the full ISIC 2019 set, and the highest
+  accuracy (**0.5245**) and weighted F1 (**0.4904**) on the unseen remainder.
+- **Ensemble performance:** the equal-weight ensemble does **not** uniformly
+  outperform the strongest individual architecture. It is second on HAM10000
+  and attains the highest macro (**0.8194**) and weighted (**0.8207**) ROC-AUC
+  on the unseen ISIC 2019 remainder.
+- **Calibration:** ViT achieved the lowest HAM10000 ECE (**1.37%**). The
+  ensemble had the highest (**11.54%**) and is **under-confident**; one
+  out-of-fold temperature ($T = 0.482$) reduces it to **1.26%** without
+  changing any prediction.
+- **Computational cost:** the ensemble needs **28.56 ms per image** and
+  **708 MB** of checkpoints on an NVIDIA T4, against 4.30 ms and 106 MB for
+  ConvNeXt-Tiny.
 - **Statistical analysis:** McNemar's test and paired bootstrap comparisons
   quantify ensemble-versus-model differences.
 - **Interpretability:** Grad-CAM is used as a qualitative model-attribution
@@ -89,6 +98,8 @@ Grad-CAM attribution within a common seven-class evaluation framework.
 - [Calibration](#calibration)
 - [Statistical Comparisons](#statistical-comparisons)
 - [External Per-Class Performance](#external-per-class-performance)
+- [Computational Cost](#computational-cost)
+- [Corrections to the Original Submission](#corrections-to-the-original-submission)
 - [Explainability](#explainability)
 - [Reproducibility](#reproducibility)
 - [Installation](#installation)
@@ -183,6 +194,14 @@ The harmonized external evaluation cohort contains:
 
 The external experiment evaluates model behavior under dataset shift. It does
 not constitute prospective clinical validation.
+
+> **ISIC 2019 contains HAM10000.** The ISIC 2019 challenge training set is
+> assembled from HAM10000, BCN_20000 and MSK. HAM10000 occupies the contiguous
+> identifier block `ISIC_0024307` to `ISIC_0034317`, which contains **10,011**
+> of the 25,331 images used here (**39.5%**). Every archived checkpoint saw
+> these images during training. Results on the full set therefore overstate
+> cross-dataset generalization, and the **15,320** BCN_20000 and MSK images
+> are reported separately as the genuinely external estimate.
 
 > Dataset files are not redistributed through this repository. Users must
 > obtain HAM10000 and ISIC 2019 from their authorized public distributions and
@@ -302,7 +321,11 @@ For the HAM10000 uncertainty analysis:
 - point estimates are calculated on the full 2,003-image evaluation cohort;
 - **1,000 bootstrap resamples** are used;
 - **95% bootstrap percentile confidence intervals** are reported; and
-- the base random seed is **42**.
+- each metric is bootstrapped with its own seed derived from a base seed of
+  **42** (accuracy 42, weighted F1 43, macro ROC-AUC 44, micro ROC-AUC 45).
+
+`scripts/revision_analysis/bootstrap_ci.py` reproduces the published
+intervals exactly.
 
 ### Calibration
 
@@ -312,7 +335,8 @@ Expected Calibration Error is evaluated on HAM10000 using:
 - **15 equal-width confidence bins**.
 
 Lower ECE indicates closer agreement between predictive confidence and
-observed accuracy.
+observed accuracy. Post-hoc temperature scaling is evaluated with 5-fold
+stratified out-of-fold fitting (seed 42).
 
 For the precise metric implementations, see
 [`docs/evaluation_metrics.md`](docs/evaluation_metrics.md).
@@ -331,8 +355,8 @@ The final ensemble combines all seven evaluated models:
 6. MobileNetV3-Large
 7. ViT-B/16
 
-For image $begin:math:text$i$end:math:text$, each model produces a seven-class probability vector
-$begin:math:text$p\_m\^\{\(i\)\}$end:math:text$.
+For image $i$, each model produces a seven-class probability vector
+$p_m^{(i)}$.
 
 The ensemble probability is the arithmetic mean:
 
@@ -428,16 +452,38 @@ The same fixed HAM10000-trained models are evaluated on the harmonized
 | ViT | 0.6651 | 0.6239 | 0.8995 | 0.8962 |
 | Ensemble | 0.6830 | 0.6446 | 0.8981 | 0.9011 |
 
-**ConvNeXt-Tiny achieved the highest point estimate across all four external
-evaluation metrics.**
+**ConvNeXt-Tiny achieved the highest point estimate across all four metrics on
+the full ISIC 2019 set.**
 
-The change in ranking relative to HAM10000 demonstrates
-architecture-dependent sensitivity to cross-dataset domain shift. In
-particular, ViT provides the strongest internal results but does not retain
-the highest external ranking.
+ViT provides the strongest internal results but does not retain the highest
+external ranking. Because 39.5% of this set consists of HAM10000 training
+images, these full-set values should not be read as measures of cross-dataset
+generalization on their own.
 
 Source table:
 [`results/tables/ISIC2019_model_performance.csv`](results/tables/ISIC2019_model_performance.csv)
+
+### Partitioned by source: the genuinely external estimate
+
+| Model | Acc. (full) | Acc. (seen, n = 10,011) | Acc. (unseen, n = 15,320) | Weighted F1 (unseen) | Macro AUC (unseen) | Weighted AUC (unseen) |
+|---|---:|---:|---:|---:|---:|---:|
+| CNN | 0.5816 | 0.8019 | 0.4376 | 0.3739 | 0.6352 | 0.6673 |
+| ResNet-50 | 0.4969 | 0.6814 | 0.3763 | 0.4027 | 0.7420 | 0.7417 |
+| DenseNet-121 | 0.6842 | 0.9377 | 0.5186 | 0.4695 | 0.7925 | 0.7997 |
+| EfficientNet-B3 | 0.6344 | 0.8717 | 0.4793 | 0.3928 | 0.7801 | 0.7981 |
+| ConvNeXt-Tiny | 0.6963 | 0.9591 | **0.5245** | **0.4904** | 0.8012 | 0.8098 |
+| MobileNetV3-L | 0.6430 | 0.8777 | 0.4896 | 0.4321 | 0.7658 | 0.7657 |
+| ViT | 0.6651 | 0.9135 | 0.5027 | 0.4386 | 0.8134 | 0.8124 |
+| Ensemble | 0.6830 | 0.9500 | 0.5086 | 0.4419 | **0.8194** | **0.8207** |
+
+On the unseen images, accuracy is **12.1 to 17.4 points lower** than on the
+full set for every model. ConvNeXt-Tiny keeps the highest accuracy and
+weighted F1, while the ensemble attains the highest macro and weighted
+ROC-AUC, ahead of ViT and ConvNeXt-Tiny.
+
+Source tables:
+[`ISIC2019_partitioned_by_source.csv`](results/tables/ISIC2019_partitioned_by_source.csv),
+[`ISIC2019_contamination_summary.csv`](results/tables/ISIC2019_contamination_summary.csv)
 
 ### External ensemble ROC curves
 
@@ -462,15 +508,32 @@ Expected Calibration Error on the standardized HAM10000 evaluation cohort:
 
 ViT achieved the lowest ECE (**1.37%**).
 
-The ensemble exhibited the highest ECE (**11.54%**), illustrating that strong
-classification and discrimination performance does not necessarily imply
-well-calibrated predictive probabilities.
+The ensemble exhibited the highest ECE (**11.54%**), and its miscalibration is
+**under-confidence**, not over-confidence: accuracy (0.9386) exceeds mean
+confidence (0.8232) in every one of the eleven populated confidence bins. Five
+of the seven individual models are over-confident, but the seven models
+predict the same class for only 54.9% of images, and averaging their
+probabilities spreads mass across classes.
 
-Explicit ensemble-level calibration should be investigated before
-probability estimates are considered for downstream clinical interpretation.
+### Post-hoc temperature scaling
 
-Source table:
-[`results/tables/HAM10000_calibration_ece.csv`](results/tables/HAM10000_calibration_ece.csv)
+A single temperature applied to the ensemble output, fitted out of fold
+(5-fold stratified, seed 42), corrects this without changing any prediction:
+
+| HAM10000 | ECE | Accuracy | Weighted F1 | $T$ |
+|---|---:|---:|---:|---:|
+| Ensemble, uncalibrated | 11.54% | 0.9386 | 0.9374 | - |
+| Ensemble, temperature scaled | **1.26%** | 0.9386 | 0.9374 | 0.482 |
+
+$T < 1$ sharpens the distribution, confirming under-confidence. Calibrating
+each model separately and then averaging gives 13.17%, so calibration belongs
+at the ensemble level. On ISIC 2019 the ensemble ECE is 6.13% (4.65% after
+scaling, $T = 1.18$).
+
+Source tables:
+[`HAM10000_calibration_ece.csv`](results/tables/HAM10000_calibration_ece.csv),
+[`calibration_temperature_scaling.csv`](results/tables/calibration_temperature_scaling.csv),
+[`HAM10000_ensemble_reliability.csv`](results/tables/HAM10000_ensemble_reliability.csv)
 
 ---
 
@@ -479,7 +542,8 @@ Source table:
 ### McNemar's test
 
 Paired classification outcomes between the equal-weight ensemble and each
-individual model were compared on HAM10000.
+individual model were compared on HAM10000 with McNemar's chi-square test with
+continuity correction.
 
 | Comparison | b | c | p-value |
 |---|---:|---:|---:|
@@ -539,12 +603,35 @@ Per-class F1 scores on the harmonized ISIC 2019 external evaluation cohort:
 | **ConvNeXt-Tiny** | **0.37** | 0.44 | **0.52** | **0.47** | **0.53** | **0.85** | **0.75** |
 | MobileNetV3-L | 0.23 | 0.38 | 0.43 | 0.34 | 0.44 | 0.80 | 0.68 |
 | ViT | 0.19 | 0.43 | 0.46 | 0.39 | 0.48 | 0.81 | 0.74 |
+| Ensemble | 0.35 | 0.44 | 0.51 | **0.48** | 0.49 | 0.81 | **0.78** |
 
-ConvNeXt-Tiny achieved the highest reported F1 for **AKIEC, BKL, DF, MEL,
-NV, and VASC**, whereas DenseNet-121 achieved the highest F1 for **BCC**.
+ConvNeXt-Tiny achieved the highest F1 for **AKIEC, BKL, MEL and NV**,
+DenseNet-121 for **BCC**, and the equal-weight ensemble for the two rarest
+classes, **DF and VASC**.
 
 Source table:
 [`results/tables/ISIC2019_per_class_F1.csv`](results/tables/ISIC2019_per_class_F1.csv)
+
+### Per-class F1 on the unseen remainder (n = 15,320)
+
+| Model | AKIEC | BCC | BKL | DF | MEL | NV | VASC |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| CNN | 0.03 | 0.22 | 0.17 | 0.00 | 0.24 | 0.64 | 0.11 |
+| ResNet-50 | 0.13 | 0.33 | 0.24 | 0.03 | 0.27 | 0.61 | 0.13 |
+| DenseNet-121 | 0.11 | **0.35** | 0.27 | 0.08 | **0.38** | 0.70 | 0.39 |
+| EfficientNet-B3 | 0.15 | 0.26 | 0.19 | 0.03 | 0.23 | 0.65 | 0.36 |
+| ConvNeXt-Tiny | **0.20** | 0.31 | **0.33** | **0.12** | 0.38 | **0.74** | 0.37 |
+| MobileNetV3-L | 0.09 | 0.30 | 0.25 | 0.05 | 0.32 | 0.68 | 0.31 |
+| ViT | 0.04 | 0.32 | 0.26 | 0.10 | 0.32 | 0.69 | 0.32 |
+| Ensemble | 0.10 | 0.30 | 0.28 | 0.05 | 0.32 | 0.69 | **0.41** |
+
+Full-set scores are higher in 54 of the 56 model-class cells. On the unseen
+images, ConvNeXt-Tiny leads for AKIEC, BKL, DF and NV, DenseNet-121 for BCC
+and, by a margin below the displayed precision, MEL (0.3777 against 0.3757),
+and the ensemble for VASC.
+
+Source table:
+[`results/tables/ISIC2019_unseen_per_class_F1.csv`](results/tables/ISIC2019_unseen_per_class_F1.csv)
 
 ### Ensemble classwise ROC-AUC on ISIC 2019
 
@@ -559,7 +646,64 @@ Source table:
 | VASC | 0.980 |
 
 The ensemble's highest classwise external AUC was observed for
-**VASC (0.980)**, followed by **NV (0.933)** and **DF (0.920)**.
+**VASC (0.980)**, followed by **NV (0.933)** and **DF (0.920)** (full ISIC 2019
+set).
+
+---
+
+## Computational Cost
+
+Measured on an NVIDIA Tesla T4 in full precision: latency and peak GPU memory
+at batch size 32 after 50 warm-up batches, averaged over 200 iterations;
+multiply-accumulate operations (MACs) at a single image at each model's own
+resolution.
+
+| Model | Params (M) | Input | MACs (G) | Size (MB) | Peak memory (MB) | Latency (ms/image) |
+|---|---:|---:|---:|---:|---:|---:|
+| CNN | 26.084 | 224 | 0.76 | 100 | 606 | 0.70 |
+| ResNet-50 | 23.522 | 224 | 4.09 | 90 | 436 | 3.05 |
+| DenseNet-121 | 6.961 | 224 | 2.83 | 27 | 362 | 3.10 |
+| EfficientNet-B3 | 10.707 | 300 | 1.83 | 41 | 941 | 4.94 |
+| ConvNeXt-Tiny | 27.826 | 224 | 4.45 | 106 | 503 | 4.30 |
+| MobileNetV3-L | 4.211 | 224 | 0.22 | 16 | 264 | 0.69 |
+| ViT-B/16 | 85.804 | 224 | 17.56 | 327 | 614 | 11.78 |
+| **Ensemble (all 7)** | 185.115 | - | 31.74 | 708 | 941 | 28.56 |
+
+Ensemble parameters, MACs, storage and latency are sums over the seven
+sequentially evaluated members; its peak memory is that of the largest member.
+The ensemble costs 2.4 times ViT-B/16 and 41.6 times MobileNetV3-L in latency.
+
+Source:
+[`computational_cost.csv`](results/tables/computational_cost.csv),
+[`computational_overhead.json`](results/tables/computational_overhead.json)
+
+---
+
+## Corrections to the Original Submission
+
+The revised analysis corrects four problems in the evaluation reported in the
+original submission. They are listed here so that earlier figures are not
+reused.
+
+1. **Class-index mismatch.** ResNet-50 and ViT-B/16 were trained with class
+   indices in HAM10000 metadata order, but the original external evaluation
+   scored them in canonical order. Their ISIC 2019 accuracies of 0.1035 and
+   0.0840 were artifacts; the corrected values are 0.4969 and 0.6651. The
+   audited permutation is now applied automatically.
+2. **Uniform preprocessing.** The original external evaluation used one
+   preprocessing pipeline for all seven checkpoints. Each checkpoint is now
+   evaluated with its own input size and normalization (ConvNeXt-Tiny: 0.5721
+   to 0.6963 accuracy).
+3. **Training protocol.** The original text described weighted cross-entropy
+   for all models. All seven used unweighted cross-entropy; ResNet-50 is a
+   linear probe on a frozen backbone; ConvNeXt-Tiny alone used AdamW,
+   `ReduceLROnPlateau` and mixed precision. See
+   [`docs/training_pipeline.md`](docs/training_pipeline.md).
+4. **Dataset overlap.** ISIC 2019 contains 10,011 HAM10000 images. External
+   results are now also reported on the 15,320 unseen images.
+
+The original text also described the ensemble as over-confident; it is
+under-confident.
 
 ---
 
@@ -630,6 +774,33 @@ prospectively using the same predefined train/validation/test split.
 
 This distinction is essential when interpreting the retrospective HAM10000
 comparison.
+
+### Reproducing the reported analyses
+
+The analyses run on the released prediction arrays (Zenodo archive) and need
+no GPU:
+
+| Analysis | Script | Output |
+|---|---|---|
+| 95% bootstrap CIs (Table S1) | `scripts/revision_analysis/bootstrap_ci.py` | `HAM10000_master_results_with_95CI.csv` |
+| Temperature scaling (Table 5, S7) | `scripts/revision_analysis/calibration_analysis.py` | `calibration_temperature_scaling.csv` |
+| ISIC 2019 partition by source (Table 3) | `scripts/revision_analysis/external_decontamination.py` | `ISIC2019_partitioned_by_source.csv` |
+| Per-class F1, full and unseen (S4, S5) | `scripts/revision_analysis/per_class_f1.py` | `ISIC2019_unseen_per_class_F1.csv` |
+| Class-order diagnosis | `scripts/revision_analysis/verify_label_order.py` | printed report |
+| Computational cost (Table 6), GPU | `scripts/revision_analysis/benchmark_overhead.py` | `computational_overhead.json` |
+
+For example:
+
+```bash
+python scripts/revision_analysis/bootstrap_ci.py /path/to/arrays
+python scripts/revision_analysis/calibration_analysis.py /path/to/arrays
+python scripts/revision_analysis/external_decontamination.py \
+  /path/to/ISIC_2019_Training_GroundTruth.csv \
+  /path/to/isic2019_external_eval_predictions.npz
+```
+
+`benchmark_overhead.py` (with `kaggle_preflight.py`) is written for a Kaggle
+notebook with a T4 GPU and the seven checkpoints attached.
 
 ---
 
@@ -783,14 +954,19 @@ The batch evaluation workflow is provided through:
 bash scripts/eval_all.sh
 ```
 
-Before running it, ensure that:
+It locates one checkpoint per model in `checkpoints/` (archived names such as
+`resnet50_ham10000.pth`, `mobilenetv3_ham10000.pth` and
+`vit_ham10000_best_model.pth`) and evaluates each with its audited input size,
+normalization and output permutation from `archived_checkpoints` in
+`src/config.yaml`. The archived ViT-B/16 is a Hugging Face model, so
+`transformers` must be installed (it is listed in `requirements.txt`).
 
-1. the required checkpoint files are available;
-2. dataset paths are configured correctly;
-3. checkpoint-specific compatibility requirements are preserved;
-4. output class ordering is mapped correctly; and
-5. the required seven model outputs are available before constructing the
-   ensemble.
+For ISIC 2019, arrange the images in the same seven class folders and run:
+
+```bash
+DATASET=isic2019 HAM_EVAL_DIR=/path/to/isic2019 \
+OUT_DIR=outputs/harmonized_isic2019 bash scripts/eval_all.sh
+```
 
 The reported manuscript values should be reproduced from the documented fixed
 checkpoint and harmonized evaluation artifacts rather than by substituting
@@ -876,17 +1052,30 @@ skin-lesion-classification-ensemble-ham10000/
 │
 ├── scripts/
 │   ├── eval_all.sh
-│   └── prepare_ham10000.sh
+│   ├── prepare_ham10000.sh
+│   └── revision_analysis/
+│       ├── benchmark_overhead.py
+│       ├── bootstrap_ci.py
+│       ├── calibration_analysis.py
+│       ├── external_decontamination.py
+│       ├── kaggle_preflight.py
+│       ├── per_class_f1.py
+│       └── verify_label_order.py
 │
 ├── src/
+│   ├── archived.py
 │   ├── config.yaml
 │   ├── data.py
 │   ├── ensemble.py
 │   ├── evaluate.py
+│   ├── models.py
 │   ├── train.py
 │   └── utils.py
 │
 ├── tests/
+│   ├── conftest.py
+│   ├── test_archived.py
+│   └── test_smoke.py
 │
 ├── .gitattributes
 ├── .gitignore
@@ -923,8 +1112,17 @@ tables in machine-readable CSV form:
 - [`HAM10000_mcnemar_ensemble_vs_models.csv`](results/tables/HAM10000_mcnemar_ensemble_vs_models.csv)
 - [`HAM10000_paired_bootstrap_differences.csv`](results/tables/HAM10000_paired_bootstrap_differences.csv)
 - [`HAM10000_point_deltas_ensemble_vs_models.csv`](results/tables/HAM10000_point_deltas_ensemble_vs_models.csv)
+- [`calibration_temperature_scaling.csv`](results/tables/calibration_temperature_scaling.csv)
+- [`HAM10000_ensemble_reliability.csv`](results/tables/HAM10000_ensemble_reliability.csv)
+- [`HAM10000_protocol_audit.csv`](results/tables/HAM10000_protocol_audit.csv)
+- [`HAM10000_historical_test_membership_audit.csv`](results/tables/HAM10000_historical_test_membership_audit.csv)
 - [`ISIC2019_model_performance.csv`](results/tables/ISIC2019_model_performance.csv)
+- [`ISIC2019_partitioned_by_source.csv`](results/tables/ISIC2019_partitioned_by_source.csv)
+- [`ISIC2019_contamination_summary.csv`](results/tables/ISIC2019_contamination_summary.csv)
 - [`ISIC2019_per_class_F1.csv`](results/tables/ISIC2019_per_class_F1.csv)
+- [`ISIC2019_unseen_per_class_F1.csv`](results/tables/ISIC2019_unseen_per_class_F1.csv)
+- [`computational_cost.csv`](results/tables/computational_cost.csv)
+- [`computational_overhead.json`](results/tables/computational_overhead.json)
 
 ### Curated figures
 
@@ -1004,16 +1202,30 @@ Potential differences between HAM10000 and ISIC 2019 include:
 The current experiments do not isolate the causal contribution of individual
 sources of domain shift.
 
+ISIC 2019 also contains the HAM10000 training images (39.5% of the set used).
+Only the 15,320-image BCN_20000 and MSK remainder is genuinely external, and
+it comes from institutions and acquisition settings that differ from
+HAM10000 in ways this study cannot separate.
+
 ### 3. Calibration
 
-The ensemble achieved strong discrimination metrics but an ECE of **11.54%**
-on HAM10000.
+The uncalibrated ensemble has an ECE of **11.54%** on HAM10000, from
+under-confidence. Out-of-fold temperature scaling reduces it to **1.26%**, but
+the temperature was fitted on the same cohort, and on ISIC 2019 the fitted
+temperature reverses direction ($T = 1.18$). Calibration on independent
+clinical data would be required before predicted probabilities could support
+clinical decisions.
 
-Independent calibration assessment and explicit calibration procedures would
-be required before predictive probabilities could be considered for clinical
-decision support.
+### 4. Heterogeneous training protocols
 
-### 4. Interpretability
+The archived checkpoints were not trained under one protocol. ResNet-50 is a
+linear probe on a frozen backbone, which is the likeliest explanation for its
+being the weakest model, and ConvNeXt-Tiny alone used AdamW with a learning-rate
+schedule and mixed precision. Differences between these and the other models
+cannot be attributed to architecture alone. Historical splits were made at the
+image level rather than the lesion level.
+
+### 5. Interpretability
 
 Grad-CAM analysis was performed qualitatively on representative HAM10000
 examples.
@@ -1021,14 +1233,14 @@ examples.
 Corresponding attribution analysis on the external ISIC 2019 cohort was not
 part of the reported study.
 
-### 5. No dermatologist validation
+### 6. No dermatologist validation
 
 Predictions and attribution maps were not evaluated by dermatologists.
 
 The results therefore do not establish clinical diagnostic utility or
 clinically meaningful localization.
 
-### 6. Further external validation
+### 7. Further external evaluation
 
 Additional evaluation across independent institutions, demographic groups,
 acquisition settings, and prospective clinical cohorts is needed before
@@ -1146,7 +1358,7 @@ Important directions include:
   train/validation/test protocol;
 - evaluation on additional independent clinical datasets;
 - domain adaptation and domain generalization;
-- explicit ensemble-level calibration;
+- calibration that transfers across datasets;
 - external-dataset attribution analysis;
 - self-supervised and semi-supervised learning;
 - multimodal clinical information;

@@ -1,0 +1,5 @@
+Comparison,Same historical test membership,Intersection N
+DenseNet-121 vs MobileNetV3-L,True,2003
+EfficientNet-B3 vs ConvNeXt-Tiny,True,1503
+DenseNet-121 vs ResNet-50,False,450
+MobileNetV3-L vs ResNet-50,False,450
