@@ -7,6 +7,22 @@ and the project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-06
+
+Released together with Zenodo archive version 2.1.0
+([10.5281/zenodo.23187641](https://doi.org/10.5281/zenodo.23187641)).
+
+### Archive
+
+- The Zenodo archive now contains the revision analyses (ISIC 2019 partition by
+  source, per-class F1 on the unseen images, temperature scaling, reliability
+  table, computational cost), the analysis scripts and the research notebook.
+- The master confidence-interval table in the archive now equals
+  Supplementary Table S1, and the archive README was corrected.
+- The archive no longer redistributes the HAM10000 and ISIC 2019 images.
+  Earlier archive versions are now licensed CC BY-NC 4.0 and MIT to match the
+  dataset licences.
+
 ### Fixed
 
 - `scripts/eval_all.sh` and `src/evaluate.py` evaluated every checkpoint with

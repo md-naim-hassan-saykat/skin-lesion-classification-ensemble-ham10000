@@ -27,8 +27,16 @@ repository-code: "https://github.com/md-naim-hassan-saykat/skin-lesion-classific
 
 doi: "10.5281/zenodo.17390952"
 license: "MIT"
-version: "1.0.0"
-date-released: 2025-10-19
+version: "2.1.0"
+date-released: 2026-10-06
+
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.17390952"
+    description: "Concept DOI for all archived versions (resolves to the latest)"
+  - type: doi
+    value: "10.5281/zenodo.23187641"
+    description: "Zenodo archive version 2.1.0 (model checkpoints, prediction outputs, revision analyses, notebook)"
 
 keywords:
   - deep learning

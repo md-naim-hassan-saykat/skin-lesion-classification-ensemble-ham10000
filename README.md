@@ -1145,8 +1145,15 @@ Larger archived resources are distributed through Zenodo where applicable,
 including model, prediction, and supporting analysis artifacts associated with
 the study.
 
-**Zenodo DOI:**
+**Zenodo DOI (all versions):**
 [10.5281/zenodo.17390952](https://doi.org/10.5281/zenodo.17390952)
+
+**Current archive version 2.1.0:**
+[10.5281/zenodo.23187641](https://doi.org/10.5281/zenodo.23187641). Because of
+its size, version 2.1.0 is provided as four zip files; extract all four into the
+same folder to recreate `skin_lesion_models_outputs_v2.1/`. The archive does not
+redistribute the HAM10000 or ISIC 2019 images, which must be obtained from their
+original sources.
 
 GitHub should be treated as the version-controlled code and curated-results
 repository, while Zenodo provides the persistent archival record for the
@@ -1297,10 +1304,11 @@ If you use the repository, software, evaluation framework, or associated
 reproducibility artifacts, please cite the archived project:
 
 ```bibtex
-@misc{saykat2025dermoscopic,
+@misc{saykat2026dermoscopic,
   author    = {Saykat, Md Naim Hassan},
   title     = {Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification: Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019},
-  year      = {2025},
+  year      = {2026},
+  version   = {2.1.0},
   publisher = {Zenodo},
   doi       = {10.5281/zenodo.17390952},
   url       = {https://doi.org/10.5281/zenodo.17390952},
