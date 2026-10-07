@@ -1,4 +1,4 @@
-# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification k
+# Generalizable Ensemble Deep Learning for Dermoscopic Skin-Lesion Classification
 
 **Internal Evaluation on HAM10000 and External Evaluation on ISIC 2019**
 
